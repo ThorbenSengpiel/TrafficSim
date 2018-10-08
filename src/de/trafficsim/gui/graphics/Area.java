@@ -73,14 +73,6 @@ public class Area extends Canvas {
                 scale = 0.001;
             }
         });
-
-        AnimationTimer timer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                draw();
-            }
-        };
-        timer.start();
     }
 
 
@@ -129,7 +121,7 @@ public class Area extends Canvas {
 
     AreaGraphicsContext agc;
 
-    public void draw() {
+    public void draw(long now) {
         agc = new AreaGraphicsContext(getGraphicsContext2D(), center, scale, getWidth(), getHeight());
 
         drawArea();

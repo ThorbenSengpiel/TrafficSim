@@ -4,7 +4,7 @@ import de.trafficsim.gui.graphics.Area;
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 
-public class WindowController {
+public class GuiController {
 
     @FXML
     AnchorPane paneCanvas;
@@ -19,4 +19,7 @@ public class WindowController {
     }
 
 
+    public void update(long now) {
+        area.draw(now);
+    }
 }
