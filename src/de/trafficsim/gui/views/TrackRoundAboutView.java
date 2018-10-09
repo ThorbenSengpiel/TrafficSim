@@ -2,7 +2,7 @@ package de.trafficsim.gui.views;
 
 import de.trafficsim.gui.graphics.AreaGraphicsContext;
 import de.trafficsim.gui.graphics.util.Hitbox;
-import de.trafficsim.logic.tracks.TrackRoundAbout;
+import de.trafficsim.logic.streets.StreetRoundAbout;
 import de.trafficsim.util.geometry.Circle;
 import de.trafficsim.util.geometry.Position;
 import javafx.scene.paint.Color;
@@ -13,7 +13,7 @@ public class TrackRoundAboutView extends TrackView {
     private static final double streetWidth = 10;
     private static final double lineWidth = 0.2;
 
-    public TrackRoundAboutView(TrackRoundAbout track) {
+    public TrackRoundAboutView(StreetRoundAbout track) {
         super(track, new Hitbox(new Circle(new Position(), radius+(streetWidth/2))).addSub(new Circle(new Position(), radius-(streetWidth/2))));
     }
 

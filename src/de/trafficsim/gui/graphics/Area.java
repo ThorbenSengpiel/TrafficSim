@@ -2,10 +2,9 @@ package de.trafficsim.gui.graphics;
 
 import de.trafficsim.gui.views.TrackRoundAboutView;
 import de.trafficsim.gui.views.TrackView;
-import de.trafficsim.logic.tracks.TrackRoundAbout;
+import de.trafficsim.logic.streets.StreetRoundAbout;
 import de.trafficsim.util.Util;
 import de.trafficsim.util.geometry.Position;
-import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
@@ -47,10 +46,10 @@ public class Area extends Canvas {
         });*/
 
         views = new ArrayList<>();
-        views.add(new TrackRoundAboutView(new TrackRoundAbout(new Position(0, 0))));
-        views.add(new TrackRoundAboutView(new TrackRoundAbout(new Position(50, 100))));
+        views.add(new TrackRoundAboutView(new StreetRoundAbout(new Position(0, 0))));
+        views.add(new TrackRoundAboutView(new StreetRoundAbout(new Position(50, 100))));
         for (int i = 0; i < 10; i++) {
-            views.add(new TrackRoundAboutView(new TrackRoundAbout(new Position(Math.random() * 2000 - 1000, Math.random() * 2000 - 1000).snapToGrid(Area.GRID_SPACING))));
+            views.add(new TrackRoundAboutView(new StreetRoundAbout(new Position(Math.random() * 2000 - 1000, Math.random() * 2000 - 1000).snapToGrid(Area.GRID_SPACING))));
         }
 
         setOnMouseDragged(e -> {
@@ -89,7 +88,7 @@ public class Area extends Canvas {
         dragStartPos = pos;
         dragCurrentPos = pos;
         if (hit != null) {
-            dragStartCenter = hit.getTrack().getPosition();
+            dragStartCenter = hit.getStreet().getPosition();
             dragged = hit;
         } else {
             dragStartCenter = center;
@@ -101,7 +100,7 @@ public class Area extends Canvas {
         dragStartPos = null;
         dragStartCenter = null;
         if (dragged != null) {
-            dragged.getTrack().setPosition(dragged.getTrack().getPosition().snapToGrid(GRID_SPACING));
+            dragged.getStreet().setPosition(dragged.getStreet().getPosition().snapToGrid(GRID_SPACING));
             dragged = null;
         }
     }
@@ -113,7 +112,7 @@ public class Area extends Canvas {
         if (dragged == null) {
             center = dragStartCenter.sub(dragCurrentPos.sub(dragStartPos));
         } else {
-            dragged.getTrack().setPosition(dragStartCenter.add(dragCurrentPos.sub(dragStartPos)));
+            dragged.getStreet().setPosition(dragStartCenter.add(dragCurrentPos.sub(dragStartPos)));
         }
         //System.out.println(center);
     }
