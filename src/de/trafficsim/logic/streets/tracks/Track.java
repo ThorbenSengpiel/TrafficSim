@@ -35,6 +35,12 @@ public abstract class Track {
         outTracks.add(track);
     }
 
+
+    /**
+     * Rendert Grundlegene Tackvisualisierung (Connection Punkte)
+     * @param agc
+     * @param offset
+     */
     public void render(AreaGraphicsContext agc, Position offset) {
         Position f = agc.areaToCanvas(from.add(offset));
         Position t = agc.areaToCanvas(to.add(offset));
@@ -54,5 +60,12 @@ public abstract class Track {
 
         renderTrack(agc, f, t);
     }
+
+    /**
+     * Track Spezifische Visualisierung
+     * @param agc
+     * @param f
+     * @param t
+     */
     protected abstract void renderTrack(AreaGraphicsContext agc, Position f, Position t);
 }

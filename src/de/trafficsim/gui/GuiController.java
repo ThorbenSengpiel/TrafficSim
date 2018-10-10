@@ -1,6 +1,7 @@
 package de.trafficsim.gui;
 
 import de.trafficsim.gui.graphics.Area;
+import de.trafficsim.logic.streets.Street;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.AnchorPane;
@@ -36,5 +37,13 @@ public class GuiController {
 
     public void update(long now) {
         area.draw(now);
+    }
+
+    public void addStreet(Street street) {
+
+    }
+
+    public void removeStreet(Street street) {
+
     }
 }
