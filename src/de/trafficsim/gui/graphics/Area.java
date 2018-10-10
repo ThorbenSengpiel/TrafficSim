@@ -5,6 +5,7 @@ import de.trafficsim.logic.streets.Street;
 import de.trafficsim.logic.vehicles.Vehicle;
 import de.trafficsim.util.Util;
 import de.trafficsim.util.geometry.Position;
+import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
@@ -27,7 +28,8 @@ public class Area extends Canvas {
     private Position dragStartPos;
     private Position dragStartCenter;
 
-    private List<StreetView> streetViewList;
+    private List<StreetView> streetViewList = new ArrayList<>();
+    private List<Vehicle> vehicleList = new ArrayList<>();
 
 
     private boolean showTracks = false;
@@ -48,8 +50,6 @@ public class Area extends Canvas {
         /*setOnMouseMoved(event -> {
             System.out.println(event.getX() + " " + event.getY());
         });*/
-
-        streetViewList = new ArrayList<>();
 
         setOnMouseDragged(e -> {
             mouseDrag(e);
@@ -126,8 +126,8 @@ public class Area extends Canvas {
         agc.setTransparent(true);
         drawPreviewElement();
         agc.setTransparent(false);
-        //drawElements(false);
         drawElements(showTracks);
+        drawVehicles();
         if (showBoundingBox) {
             drawdrawBoundingBoxes();
         }
@@ -135,6 +135,15 @@ public class Area extends Canvas {
             drawdrawHitBoxes();
         }
         drawOverlay();
+    }
+
+    private void drawVehicles() {
+        for (Vehicle vehicle : vehicleList) {
+            agc.setFill(Color.color(0.8, 0.2, 0.2));
+            Position position = agc.areaToCanvas(vehicle.getPosition());
+            double size = agc.scaleToCanvas(3);
+            agc.gc.fillRect(position.x - (size/2), position.y - (size/2), size, size);
+        }
     }
 
 
@@ -240,8 +249,10 @@ public class Area extends Canvas {
     }
 
     public void addVehicle(Vehicle vehicle) {
+        vehicleList.add(vehicle);
     }
 
     public void removeVehicle(Vehicle vehicle) {
+        vehicleList.remove(vehicle);
     }
 }

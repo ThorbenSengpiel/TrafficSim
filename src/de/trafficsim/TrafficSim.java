@@ -21,6 +21,7 @@ public class TrafficSim extends Application {
     private VehicleManager vehicleManager;
 
 
+
     @Override
     public void start(Stage primaryStage) throws Exception{
 
@@ -56,6 +57,7 @@ public class TrafficSim extends Application {
     }
 
     private void mainLoop(long now) {
+        //System.out.println(now);
         streetNetworkManager.update(now);
         vehicleManager.update(now);
         guiController.update(now);
