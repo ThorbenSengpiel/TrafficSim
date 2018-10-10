@@ -1,7 +1,7 @@
 package de.trafficsim;
 
 import de.trafficsim.gui.GuiController;
-import de.trafficsim.logic.network.TrackNetworkManager;
+import de.trafficsim.logic.network.StreetNetworkManager;
 import de.trafficsim.logic.vehicles.VehicleManager;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -16,7 +16,7 @@ public class TrafficSim extends Application {
 
     private GuiController guiController;
 
-    private TrackNetworkManager trackNetworkManager;
+    private StreetNetworkManager streetNetworkManager;
 
     private VehicleManager vehicleManager;
 
@@ -25,7 +25,8 @@ public class TrafficSim extends Application {
     public void start(Stage primaryStage) throws Exception{
 
         guiController = new GuiController();
-        trackNetworkManager = new TrackNetworkManager();
+        streetNetworkManager = new StreetNetworkManager(this.guiController);
+        streetNetworkManager.initialize();
         vehicleManager = new VehicleManager();
 
 
@@ -54,7 +55,7 @@ public class TrafficSim extends Application {
     }
 
     private void mainLoop(long now) {
-        trackNetworkManager.update(now);
+        streetNetworkManager.update(now);
         vehicleManager.update(now);
         guiController.update(now);
     }
