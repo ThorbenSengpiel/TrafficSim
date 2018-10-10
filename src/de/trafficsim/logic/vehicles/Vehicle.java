@@ -8,15 +8,16 @@ import java.util.List;
 public class Vehicle {
 
     protected double velocity = 1.0;
-    protected double currentPosInTrack;
+    protected double currentPosInTrack = 0;
     protected Track currentTrack;
     protected List<Track> path;
 
-    public Vehicle(double velocity){
+    public Vehicle(double velocity,Track track){
         this.velocity = velocity;
+        this.currentTrack = track;
     }
     public Position getPosition(){
-        return new Position(0,0);
+        return currentTrack.getPosOnArea(currentPosInTrack);
     }
     public Position getDirection(){
         return new Position(1,0);

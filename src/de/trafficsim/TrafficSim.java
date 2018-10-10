@@ -35,6 +35,7 @@ public class TrafficSim extends Application {
         buildGui(primaryStage);
 
         streetNetworkManager.initialize();
+        vehicleManager.initialize();
 
         new AnimationTimer() {
             @Override

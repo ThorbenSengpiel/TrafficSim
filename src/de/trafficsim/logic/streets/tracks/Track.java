@@ -1,6 +1,7 @@
 package de.trafficsim.logic.streets.tracks;
 
 import de.trafficsim.gui.graphics.AreaGraphicsContext;
+import de.trafficsim.logic.streets.Street;
 import de.trafficsim.logic.vehicles.Vehicle;
 import de.trafficsim.util.Direction;
 import de.trafficsim.util.geometry.Position;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Track {
+    protected final Street street;
     protected Direction inDir;
     protected Direction outDir;
 
@@ -24,10 +26,11 @@ public abstract class Track {
 
     protected List<Track> outTrackList = new ArrayList<>();
 
-    public Track(Position from, Position to, double length) {
+    public Track(Position from, Position to, double length, Street street) {
         this.from = from;
         this.to = to;
         this.length = length;
+        this.street = street;
     }
 
     public void connectOutToInOf(Track track) {

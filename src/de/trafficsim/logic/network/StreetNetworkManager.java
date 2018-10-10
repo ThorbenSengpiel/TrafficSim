@@ -57,4 +57,7 @@ public class StreetNetworkManager {
         return instance;
     }
 
+    public List<Street> getStreetList() {
+        return streetList;
+    }
 }

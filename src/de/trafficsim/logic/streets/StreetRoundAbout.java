@@ -12,10 +12,10 @@ public class StreetRoundAbout extends Street {
     public StreetRoundAbout(Position position) {
         super(position, StreetType.ROUNDABOUT);
 
-        Track r0 = new TrackCurve(new Position(50, 0), new Position(0, 50), false);
-        Track r1 = new TrackCurve(new Position(0, 50), new Position(-50, 0), true);
-        Track r2 = new TrackCurve(new Position(-50, 0), new Position(0, -50), false);
-        Track r3 = new TrackCurve(new Position(0, -50), new Position(50, 0), true);
+        Track r0 = new TrackCurve(new Position(50, 0), new Position(0, 50), false,this);
+        Track r1 = new TrackCurve(new Position(0, 50), new Position(-50, 0), true,this);
+        Track r2 = new TrackCurve(new Position(-50, 0), new Position(0, -50), false,this);
+        Track r3 = new TrackCurve(new Position(0, -50), new Position(50, 0), true,this);
 
         r0.connectOutToInOf(r1);
         r1.connectOutToInOf(r2);

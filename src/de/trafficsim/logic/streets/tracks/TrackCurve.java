@@ -1,6 +1,7 @@
 package de.trafficsim.logic.streets.tracks;
 
 import de.trafficsim.gui.graphics.AreaGraphicsContext;
+import de.trafficsim.logic.streets.Street;
 import de.trafficsim.util.geometry.Position;
 import javafx.scene.shape.ArcType;
 
@@ -8,8 +9,8 @@ public class TrackCurve extends Track {
 
     boolean curveDirection;
 
-    public TrackCurve(Position from, Position to, boolean curveDirection) {
-        super(from, to, Math.abs(from.x - to.x) * Math.PI / 2);
+    public TrackCurve(Position from, Position to, boolean curveDirection, Street street) {
+        super(from, to, Math.abs(from.x - to.x) * Math.PI / 2,street);
         if (Math.abs(from.x - to.x) != Math.abs(from.y - to.y)) {
             throw new RuntimeException("TrackCurve can only be 90°");
         }

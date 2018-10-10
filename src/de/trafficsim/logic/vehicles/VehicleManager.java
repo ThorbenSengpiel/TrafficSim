@@ -1,6 +1,7 @@
 package de.trafficsim.logic.vehicles;
 
 import de.trafficsim.gui.GuiController;
+import de.trafficsim.logic.network.StreetNetworkManager;
 import de.trafficsim.logic.streets.Street;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ public class VehicleManager {
 
 
     public void initialize() {
-        addVehicle(new Vehicle());
+        addVehicle(new Vehicle(27.55, StreetNetworkManager.getInstance().getStreetList().get(1).getTracks().get(0)));
     }
 
     public void update(double delta) {
