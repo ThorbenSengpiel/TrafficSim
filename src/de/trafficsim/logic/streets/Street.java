@@ -23,4 +23,8 @@ public abstract class Street {
     public void setPosition(Position p) {
         position = p;
     }
+
+    public List<Track> getTracks() {
+        return tracks;
+    }
 }

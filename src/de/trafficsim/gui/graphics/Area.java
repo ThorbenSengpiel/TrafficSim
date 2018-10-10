@@ -1,7 +1,7 @@
 package de.trafficsim.gui.graphics;
 
-import de.trafficsim.gui.views.TrackRoundAboutView;
-import de.trafficsim.gui.views.TrackView;
+import de.trafficsim.gui.views.StreetRoundAboutView;
+import de.trafficsim.gui.views.StreetView;
 import de.trafficsim.logic.streets.StreetRoundAbout;
 import de.trafficsim.util.Util;
 import de.trafficsim.util.geometry.Position;
@@ -22,12 +22,12 @@ public class Area extends Canvas {
     private double scale;
     public static int GRID_SPACING = 25;
 
-    private TrackView dragged;
+    private StreetView dragged;
     private Position dragCurrentPos;
     private Position dragStartPos;
     private Position dragStartCenter;
 
-    private List<TrackView> views;
+    private List<StreetView> views;
 
 
 
@@ -46,10 +46,10 @@ public class Area extends Canvas {
         });*/
 
         views = new ArrayList<>();
-        views.add(new TrackRoundAboutView(new StreetRoundAbout(new Position(0, 0))));
-        views.add(new TrackRoundAboutView(new StreetRoundAbout(new Position(50, 100))));
+        views.add(new StreetRoundAboutView(new StreetRoundAbout(new Position(0, 0))));
+        views.add(new StreetRoundAboutView(new StreetRoundAbout(new Position(50, 100))));
         for (int i = 0; i < 10; i++) {
-            views.add(new TrackRoundAboutView(new StreetRoundAbout(new Position(Math.random() * 2000 - 1000, Math.random() * 2000 - 1000).snapToGrid(Area.GRID_SPACING))));
+            views.add(new StreetRoundAboutView(new StreetRoundAbout(new Position(Math.random() * 2000 - 1000, Math.random() * 2000 - 1000).snapToGrid(Area.GRID_SPACING))));
         }
 
         setOnMouseDragged(e -> {
@@ -77,7 +77,7 @@ public class Area extends Canvas {
 
     private void mousePressed(MouseEvent e) {
         Position pos = agc.canvasToArea(new Position(e.getX(), e.getY()));
-        TrackView hit = null;
+        StreetView hit = null;
         for (int i = views.size()-1; i >= 0; i--) {
             if (views.get(i).PointHit(pos)) {
                 hit = views.get(i);
@@ -127,11 +127,13 @@ public class Area extends Canvas {
         agc.setTransparent(true);
         drawPreviewElement();
         agc.setTransparent(false);
-        drawElements();
+        //drawElements(false);
+        drawElements(true);
         //drawdrawBoundingBoxes();
         //drawdrawHitBoxes();
         drawOverlay();
     }
+
 
     private void drawPreviewElement() {
         if (dragged != null) {
@@ -157,10 +159,15 @@ public class Area extends Canvas {
         }
     }
 
-    private void drawElements() {
-        for (TrackView view : views) {
+    private void drawElements(boolean showTracks) {
+        for (StreetView view : views) {
             if (view.isVisible(agc)) {
                 view.draw(agc);
+                if (showTracks) {
+                    agc.gc.setLineWidth(1);
+                    agc.gc.setStroke(Color.CYAN);
+                    view.drawTracks(agc);
+                }
             }
         }
     }
@@ -169,7 +176,7 @@ public class Area extends Canvas {
         agc.gc.setFill(Color.TRANSPARENT);
         agc.gc.setLineWidth(2);
         agc.gc.setStroke(Color.LIME);
-        for (TrackView view : views) {
+        for (StreetView view : views) {
             if (view.isVisible(agc)) {
                 view.drawBoundingBox(agc);
             }
@@ -180,7 +187,7 @@ public class Area extends Canvas {
         agc.gc.setFill(Color.TRANSPARENT);
         agc.gc.setLineWidth(2);
         agc.gc.setStroke(Color.RED);
-        for (TrackView view : views) {
+        for (StreetView view : views) {
             if (view.isVisible(agc)) {
                 view.drawHitBox(agc);
             }

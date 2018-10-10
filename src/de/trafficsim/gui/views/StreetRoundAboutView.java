@@ -7,14 +7,14 @@ import de.trafficsim.util.geometry.Circle;
 import de.trafficsim.util.geometry.Position;
 import javafx.scene.paint.Color;
 
-public class TrackRoundAboutView extends TrackView {
+public class StreetRoundAboutView extends StreetView {
 
     private static final double radius = 50;
     private static final double streetWidth = 10;
     private static final double lineWidth = 0.2;
 
-    public TrackRoundAboutView(StreetRoundAbout track) {
-        super(track, new Hitbox(new Circle(new Position(), radius+(streetWidth/2))).addSub(new Circle(new Position(), radius-(streetWidth/2))));
+    public StreetRoundAboutView(StreetRoundAbout street) {
+        super(street, new Hitbox(new Circle(new Position(), radius+(streetWidth/2))).addSub(new Circle(new Position(), radius-(streetWidth/2))));
     }
 
     @Override
@@ -40,11 +40,6 @@ public class TrackRoundAboutView extends TrackView {
         agc.gc.setLineDashes(agc.scaleToCanvas(lineWidth*3*Math.PI));
         agc.gc.strokeOval(c.x-r, c.y-r, 2*r, 2*r);
         agc.gc.setLineDashes(null);
-    }
-
-    @Override
-    public void drawPaths(AreaGraphicsContext agc) {
-
     }
 }
 

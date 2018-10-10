@@ -4,16 +4,17 @@ import de.trafficsim.gui.graphics.Area;
 import de.trafficsim.gui.graphics.AreaGraphicsContext;
 import de.trafficsim.gui.graphics.util.Hitbox;
 import de.trafficsim.logic.streets.Street;
+import de.trafficsim.logic.streets.tracks.Track;
 import de.trafficsim.util.geometry.Position;
 import de.trafficsim.util.geometry.Rectangle;
 
-public abstract class TrackView {
+public abstract class StreetView {
     protected Street street;
 
     private Hitbox hitBox;
     private Rectangle boundingBox;
 
-    public TrackView(Street street, Hitbox hitBox) {
+    public StreetView(Street street, Hitbox hitBox) {
         this.street = street;
         this.hitBox = hitBox;
 
@@ -30,7 +31,11 @@ public abstract class TrackView {
         draw(agc, street.getPosition().snapToGrid(Area.GRID_SPACING));
     }
 
-    public abstract void drawPaths(AreaGraphicsContext agc);
+    public void drawTracks(AreaGraphicsContext agc) {
+        for (Track track : street.getTracks()) {
+            track.render(agc, street.getPosition());
+        }
+    }
 
     public boolean PointHit(Position p) {
         return hitBox.hit(p.sub(street.getPosition()));
