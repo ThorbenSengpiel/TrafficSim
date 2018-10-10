@@ -7,11 +7,14 @@ import java.util.List;
 
 public class Vehicle {
 
-    protected double velocity;
+    protected double velocity = 1.0;
     protected double currentPosInTrack;
     protected Track currentTrack;
     protected List<Track> path;
 
+    public Vehicle(double velocity){
+        this.velocity = velocity;
+    }
     public Position getPosition(){
         return new Position(0,0);
     }
@@ -24,10 +27,10 @@ public class Vehicle {
             Track nextTrack = currentTrack.getOutTrackList().get(0);
             double distanceInNewTrack = newPositionInCurrentTrack-currentTrack.getLength();
             currentPosInTrack = distanceInNewTrack;
+            currentTrack = nextTrack;
         } else {
             currentPosInTrack = newPositionInCurrentTrack;
         }
-
     }
 
 }

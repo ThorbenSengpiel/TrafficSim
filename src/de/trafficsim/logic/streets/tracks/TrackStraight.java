@@ -1,12 +1,15 @@
 package de.trafficsim.logic.streets.tracks;
 
 import de.trafficsim.gui.graphics.AreaGraphicsContext;
+import de.trafficsim.util.Direction;
 import de.trafficsim.util.geometry.Position;
 
 public class TrackStraight extends Track {
 
     public TrackStraight(Position from, Position to) {
         super(from, to, from.distance(to));
+        inDir = Direction.generateDirection(from,to);
+        outDir = inDir;
         if (from.x != to.x && from.y != to.y) {
             throw new RuntimeException("TrackStraight can only be straight");
         }
@@ -21,6 +24,15 @@ public class TrackStraight extends Track {
             double middle = (t.x + f.x) / 2;
             agc.gc.strokeLine(middle-5, f.y, middle+5, t.y-5);
             agc.gc.strokeLine(middle-5, f.y, middle+5, t.y+5);
+        }
+    }
+
+    @Override
+    public Position getPosOnArea(double pos) {
+        if (inDir == Direction.NORTH || inDir == Direction.SOUTH ) {
+            return new Position(from.x,from.y + inDir.vector.y * pos);
+        } else {
+            return new Position(from.x + inDir.vector.x * pos,from.y);
         }
     }
 }

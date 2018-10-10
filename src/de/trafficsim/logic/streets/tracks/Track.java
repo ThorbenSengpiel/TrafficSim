@@ -2,6 +2,7 @@ package de.trafficsim.logic.streets.tracks;
 
 import de.trafficsim.gui.graphics.AreaGraphicsContext;
 import de.trafficsim.logic.vehicles.Vehicle;
+import de.trafficsim.util.Direction;
 import de.trafficsim.util.geometry.Position;
 import javafx.scene.paint.Color;
 
@@ -9,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Track {
+    protected Direction inDir;
+    protected Direction outDir;
 
     protected double length;
 
@@ -70,7 +73,7 @@ public abstract class Track {
      * @param t
      */
     protected abstract void renderTrack(AreaGraphicsContext agc, Position f, Position t);
-
+    public abstract Position getPosOnArea(double pos);
     public double getLength() {
         return length;
     }

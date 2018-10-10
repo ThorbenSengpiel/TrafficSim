@@ -18,6 +18,11 @@ public class TrackCurve extends Track {
 
 
     @Override
+    public Position getPosOnArea(double pos) {
+        return new Position(0,0);
+    }
+
+    @Override
     protected void renderTrack(AreaGraphicsContext agc, Position f, Position t) {
         int angle;
 
