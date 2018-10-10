@@ -10,14 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StreetNetworkManager {
+
+    private static StreetNetworkManager instance;
+
     private List<Street> streetList = new ArrayList<>();
 
-    private GuiController guiController;
-    public StreetNetworkManager(GuiController guicon){
-        this.guiController = guicon;
-    }
 
-    public void update(long now) {
+    public void update(double delta) {
 
     }
 
@@ -41,14 +40,21 @@ public class StreetNetworkManager {
 
     public void addStreet(Street... streets){
         for (Street street : streets) {
-            this.streetList.add(street);
-            this.guiController.addStreet(street);
+            streetList.add(street);
+            GuiController.getInstance().addStreet(street);
         }
     }
 
     public void addStreet(Street street){
-        this.streetList.add(street);
-        this.guiController.addStreet(street);
+        streetList.add(street);
+        GuiController.getInstance().addStreet(street);
+    }
+
+    public static StreetNetworkManager getInstance() {
+        if (instance == null) {
+            instance = new StreetNetworkManager();
+        }
+        return instance;
     }
 
 }

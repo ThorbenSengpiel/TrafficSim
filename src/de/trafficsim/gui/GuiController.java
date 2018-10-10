@@ -9,6 +9,8 @@ import javafx.scene.layout.AnchorPane;
 
 public class GuiController {
 
+    private static GuiController instance;
+
     @FXML
     AnchorPane paneCanvas;
 
@@ -36,8 +38,8 @@ public class GuiController {
     }
 
 
-    public void update(long now) {
-        area.draw(now);
+    public void update(double delta) {
+        area.draw(delta);
     }
 
     public void addStreet(Street street) {
@@ -54,5 +56,12 @@ public class GuiController {
 
     public void removeVehicle(Vehicle vehicle) {
         area.removeVehicle(vehicle);
+    }
+
+    public static GuiController getInstance() {
+        if (instance == null) {
+            instance = new GuiController();
+        }
+        return instance;
     }
 }

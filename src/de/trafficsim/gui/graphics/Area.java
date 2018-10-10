@@ -119,7 +119,7 @@ public class Area extends Canvas {
 
     AreaGraphicsContext agc;
 
-    public void draw(long now) {
+    public void draw(double delta) {
         agc = new AreaGraphicsContext(getGraphicsContext2D(), center, scale, getWidth(), getHeight());
 
         drawArea();

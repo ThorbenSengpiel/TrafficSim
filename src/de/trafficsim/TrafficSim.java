@@ -20,14 +20,15 @@ public class TrafficSim extends Application {
 
     private VehicleManager vehicleManager;
 
+    long lastNow = 0;
 
 
     @Override
     public void start(Stage primaryStage) throws Exception{
 
-        guiController = new GuiController();
-        streetNetworkManager = new StreetNetworkManager(this.guiController);
-        vehicleManager = new VehicleManager();
+        guiController = GuiController.getInstance();
+        streetNetworkManager = StreetNetworkManager.getInstance();
+        vehicleManager = VehicleManager.getInstance();
 
 
 
@@ -57,10 +58,15 @@ public class TrafficSim extends Application {
     }
 
     private void mainLoop(long now) {
-        //System.out.println(now);
-        streetNetworkManager.update(now);
-        vehicleManager.update(now);
-        guiController.update(now);
+        if (lastNow == 0) {
+            lastNow = now;
+        } else {
+            double delta = ((now-lastNow) / 1000) / 1000000.0;
+            lastNow = now;
+            streetNetworkManager.update(delta);
+            vehicleManager.update(delta);
+            guiController.update(delta);
+        }
     }
 
     public static void main(String[] args) {
