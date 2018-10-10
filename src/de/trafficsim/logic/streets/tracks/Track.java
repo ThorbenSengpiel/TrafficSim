@@ -96,4 +96,6 @@ public abstract class Track {
     public List<Track> getOutTrackList() {
         return outTrackList;
     }
+
+    public abstract Position getDirectionOnPos(double currentPosInTrack);
 }

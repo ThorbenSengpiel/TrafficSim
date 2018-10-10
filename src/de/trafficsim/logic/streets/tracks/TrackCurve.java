@@ -24,6 +24,11 @@ public class TrackCurve extends Track {
     }
 
     @Override
+    public Position getDirectionOnPos(double currentPosInTrack) {
+        return null;
+    }
+
+    @Override
     protected void renderTrack(AreaGraphicsContext agc, Position f, Position t) {
         int angle;
 

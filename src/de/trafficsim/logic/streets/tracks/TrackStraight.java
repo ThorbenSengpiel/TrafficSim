@@ -30,11 +30,15 @@ public class TrackStraight extends Track {
 
     @Override
     public Position getPosOnArea(double pos) {
-        System.out.println(from+" inDir ="+inDir);
         if (inDir == Direction.NORTH || inDir == Direction.SOUTH ) {
             return new Position(from.x,from.y + inDir.vector.y * pos).add(street.getPosition());
         } else {
             return new Position(from.x + inDir.vector.x * pos,from.y).add(street.getPosition());
         }
+    }
+
+    @Override
+    public Position getDirectionOnPos(double currentPosInTrack) {
+        return inDir.vector;
     }
 }
