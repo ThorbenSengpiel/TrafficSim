@@ -32,6 +32,7 @@ public class TrafficSim extends Application {
 
         buildGui(primaryStage);
 
+        streetNetworkManager.initialize();
 
         new AnimationTimer() {
             @Override
@@ -40,7 +41,6 @@ public class TrafficSim extends Application {
             }
         }.start();
 
-        streetNetworkManager.initialize();
     }
 
     private void buildGui(Stage primaryStage) throws IOException {

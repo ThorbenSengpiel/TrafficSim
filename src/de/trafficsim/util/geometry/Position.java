@@ -38,6 +38,32 @@ public class Position {
         return new Position(xg, yg);
     }
 
+    public Position getCenterBetween(Position p) {
+        double fromX;
+        double fromY;
+        double toX;
+        double toY;
+
+        if (x > p.x) {
+            fromX = p.x;
+            toX = x;
+        } else {
+            fromX = x;
+            toX = p.x;
+        }
+
+        if (y > p.y) {
+            fromY = p.y;
+            toY = y;
+        } else {
+            fromY = y;
+            toY = p.y;
+        }
+
+        return new Position((toX - fromX) / 2, (toY - fromY) / 2);
+
+    }
+
     @Override
     public String toString() {
         return "[" +"x=" + x +", y=" + y +']';

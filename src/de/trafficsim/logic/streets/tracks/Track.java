@@ -15,24 +15,21 @@ public abstract class Track {
     protected Position from;
 
     protected Position to;
-    protected List<Vehicle> vehiclesOnTrack;
+    protected List<Vehicle> vehiclesOnTrack = new ArrayList<>();
 
-    protected List<Track> inTracks;
+    protected List<Track> inTrackList = new ArrayList<>();
 
-    protected List<Track> outTracks;
+    protected List<Track> outTrackList = new ArrayList<>();
 
     public Track(Position from, Position to, double length) {
         this.from = from;
         this.to = to;
         this.length = length;
-        vehiclesOnTrack = new ArrayList<>();
-        inTracks = new ArrayList<>();
-        outTracks = new ArrayList<>();
     }
 
     public void connectOutToInOf(Track track) {
-        track.inTracks.add(this);
-        outTracks.add(track);
+        track.inTrackList.add(this);
+        outTrackList.add(track);
     }
 
 
@@ -45,18 +42,18 @@ public abstract class Track {
         Position f = agc.areaToCanvas(from.add(offset));
         Position t = agc.areaToCanvas(to.add(offset));
         agc.gc.setLineWidth(1.5);
-        if (inTracks.size() < 1) {
+        if (inTrackList.size() < 1) {
             agc.gc.setStroke(Color.LIME);
             agc.gc.strokeOval(f.x - 5, f.y - 5, 10, 10);
         }
-        if (outTracks.size() < 1) {
+        if (outTrackList.size() < 1) {
             agc.gc.setStroke(Color.RED);
             agc.gc.strokeOval(t.x - 5, t.y - 5, 10, 10);
         }
 
 
         agc.gc.setStroke(Color.YELLOW);
-        if (inTracks.size() > 0) {
+        if (inTrackList.size() > 0) {
             agc.gc.strokeLine(f.x - 7, f.y - 7, f.x + 7, f.y + 7);
             agc.gc.strokeLine(f.x - 7, f.y + 7, f.x + 7, f.y - 7);
         }

@@ -7,9 +7,9 @@ public class Rectangle extends Shape {
     public Position to;
 
     public Rectangle(Position from, Position to) {
-        super(new Position((to.x - from.x) / 2, (to.y - from.y) / 2));
-        this.from = from;
-        this.to = to;
+        super(from.getCenterBetween(to));
+        this.from = new Position(from.x > to.x ? to.x : from.x, from.y > to.y ? to.y : from.y);
+        this.to = new Position(from.x > to.x ? from.x : to.x, from.y > to.y ? from.y : to.y);
     }
 
     public Rectangle(Position center, double xRadius, double yRadius) {

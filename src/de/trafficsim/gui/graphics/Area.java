@@ -26,7 +26,7 @@ public class Area extends Canvas {
     private Position dragStartPos;
     private Position dragStartCenter;
 
-    private List<StreetView> streetViews;
+    private List<StreetView> streetViewList;
 
 
     private boolean showTracks = false;
@@ -48,7 +48,7 @@ public class Area extends Canvas {
             System.out.println(event.getX() + " " + event.getY());
         });*/
 
-        streetViews = new ArrayList<>();
+        streetViewList = new ArrayList<>();
 
         setOnMouseDragged(e -> {
             mouseDrag(e);
@@ -76,9 +76,9 @@ public class Area extends Canvas {
     private void mousePressed(MouseEvent e) {
         Position pos = agc.canvasToArea(new Position(e.getX(), e.getY()));
         StreetView hit = null;
-        for (int i = streetViews.size()-1; i >= 0; i--) {
-            if (streetViews.get(i).PointHit(pos)) {
-                hit = streetViews.get(i);
+        for (int i = streetViewList.size()-1; i >= 0; i--) {
+            if (streetViewList.get(i).PointHit(pos)) {
+                hit = streetViewList.get(i);
                 break;
             }
         }
@@ -162,7 +162,7 @@ public class Area extends Canvas {
     }
 
     private void drawElements(boolean showTracks) {
-        for (StreetView view : streetViews) {
+        for (StreetView view : streetViewList) {
             if (view.isVisible(agc)) {
                 view.draw(agc);
                 if (showTracks) {
@@ -176,7 +176,7 @@ public class Area extends Canvas {
         agc.gc.setFill(Color.TRANSPARENT);
         agc.gc.setLineWidth(2);
         agc.gc.setStroke(Color.LIME);
-        for (StreetView view : streetViews) {
+        for (StreetView view : streetViewList) {
             if (view.isVisible(agc)) {
                 view.drawBoundingBox(agc);
             }
@@ -187,7 +187,7 @@ public class Area extends Canvas {
         agc.gc.setFill(Color.TRANSPARENT);
         agc.gc.setLineWidth(2);
         agc.gc.setStroke(Color.RED);
-        for (StreetView view : streetViews) {
+        for (StreetView view : streetViewList) {
             if (view.isVisible(agc)) {
                 view.drawHitBox(agc);
             }
@@ -226,13 +226,13 @@ public class Area extends Canvas {
     }
 
     public void addStreet(Street street) {
-        streetViews.add(street.createView());
+        streetViewList.add(street.createView());
     }
 
     public void removeStreet(Street street) {
-        for (StreetView streetView : streetViews) {
+        for (StreetView streetView : streetViewList) {
             if (streetView.getStreet() == street) {
-                streetViews.remove(streetView);
+                streetViewList.remove(streetView);
                 break;
             }
         }

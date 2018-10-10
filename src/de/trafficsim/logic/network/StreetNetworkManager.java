@@ -36,6 +36,7 @@ public class StreetNetworkManager {
 
         this.addStreet(new StreetRoundAbout(new Position(0, 0)));
         this.addStreet(s0, s1, s2, s3);
+        addStreet(new StreetStraight(new Position(-100,-150),new Position(100,-150)));
     }
 
     public void addStreet(Street... streets){
