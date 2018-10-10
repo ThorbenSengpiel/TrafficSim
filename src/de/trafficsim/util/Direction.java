@@ -3,16 +3,18 @@ package de.trafficsim.util;
 import de.trafficsim.util.geometry.Position;
 
 public enum Direction {
-    NORTH(new Position(0, -1)),
-    EAST(new Position(1, 0)),
-    SOUTH(new Position(0, 1)),
-    WEST(new Position(-1, 0)),
-    ZERO(new Position(0,0));
+    NORTH(new Position(0, -1),0),
+    EAST(new Position(1, 0),90),
+    SOUTH(new Position(0, 1),180),
+    WEST(new Position(-1, 0),270),
+    ZERO(new Position(0,0),0);
 
     public final Position vector;
+    public final double angle;
 
-    Direction(Position vector) {
+    Direction(Position vector, double angle) {
         this.vector = vector;
+        this.angle = angle;
     }
 
     public static Direction generateDirection(Position from,Position to) {
