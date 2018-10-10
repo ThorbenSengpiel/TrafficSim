@@ -52,11 +52,6 @@ public class Area extends Canvas {
         });*/
 
         views = new ArrayList<>();
-        views.add(new StreetRoundAboutView(new StreetRoundAbout(new Position(100, 0))));
-        views.add(new StreetRoundAboutView(new StreetRoundAbout(new Position(150, 100))));
-
-        views.add(new StreetStraightView(new StreetStraight(new Position(-25, 0), new Position(25, 0))));
-        views.add(new StreetStraightView(new StreetStraight(new Position(0, -25), new Position(0, 25))));
 
         setOnMouseDragged(e -> {
             mouseDrag(e);
