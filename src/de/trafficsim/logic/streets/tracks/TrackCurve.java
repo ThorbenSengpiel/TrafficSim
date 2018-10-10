@@ -2,25 +2,41 @@ package de.trafficsim.logic.streets.tracks;
 
 import de.trafficsim.gui.graphics.AreaGraphicsContext;
 import de.trafficsim.logic.streets.Street;
+import de.trafficsim.util.Direction;
 import de.trafficsim.util.geometry.Position;
 import javafx.scene.shape.ArcType;
 
 public class TrackCurve extends Track {
 
-    boolean curveDirection;
+    private boolean curveDirection;
+    private Position center;
+    private double radius;
 
-    public TrackCurve(Position from, Position to, boolean curveDirection, Street street) {
+    public TrackCurve(Position from, Position to, Direction inDir, Street street) {
         super(from, to, Math.abs(from.x - to.x) * Math.PI / 2,street);
+        this.inDir = inDir;
+        this.outDir = Direction.generateDirectionCurve(from, to, inDir);
+
+
         if (Math.abs(from.x - to.x) != Math.abs(from.y - to.y)) {
             throw new RuntimeException("TrackCurve can only be 90°");
         }
-        this.curveDirection = curveDirection;
+
+        radius = Math.abs(from.x - to.x);
+        if (curveDirection) {
+            center = new Position(from.x, to.y);
+        } else {
+            center = new Position(to.x, from.y);
+        }
     }
 
 
     @Override
     public Position getPosOnArea(double pos) {
-        return new Position(0,0);
+        double rad = pos / radius;
+        double x = Math.cos(rad) * radius;
+        double y = Math.sin(rad) * radius;
+        return new Position(x,y).add(center).add(street.getPosition());
     }
 
     @Override
@@ -30,11 +46,16 @@ public class TrackCurve extends Track {
 
     @Override
     protected void renderTrack(AreaGraphicsContext agc, Position f, Position t) {
+        agc.gc.strokeLine(f.x, f.y, f.x+inDir.vector.x * 40, f.y+inDir.vector.y * 40);
+        agc.gc.strokeLine(t.x, t.y, t.x+outDir.vector.x * 40, t.y+outDir.vector.y * 40);
+
+
         int angle;
 
         double w = t.x-f.x;
         double h = t.y-f.y;
 
+        Position c = agc.areaToCanvas(center);
 
         if (w < 0 && h < 0) {
             angle = 180;
@@ -47,11 +68,8 @@ public class TrackCurve extends Track {
         } else {
             angle = 0;
         }
-        Position center;
-        if (curveDirection) {
-            center = new Position(f.x, t.y);
-        } else {
-            center = new Position(t.x, f.y);
+
+        if (!curveDirection) {
             angle += 180;
             angle %= 360;
         }
@@ -59,6 +77,6 @@ public class TrackCurve extends Track {
         w = Math.abs(w);
         h = Math.abs(h);
 
-        agc.gc.strokeArc(center.x-w, center.y-h, w*2, h*2, angle, 90, ArcType.OPEN);
+        agc.gc.strokeArc(c.x-w, c.y-h, w*2, h*2, angle, 90, ArcType.OPEN);
     }
 }

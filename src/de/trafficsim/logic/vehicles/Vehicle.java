@@ -28,6 +28,8 @@ public class Vehicle {
             Track nextTrack = currentTrack.getOutTrackList().get(0);
             double distanceInNewTrack = newPositionInCurrentTrack-currentTrack.getLength();
             currentPosInTrack = distanceInNewTrack;
+            currentTrack.removeVehicle(this);
+            nextTrack.addVehicle(this);
             currentTrack = nextTrack;
         } else {
             currentPosInTrack = newPositionInCurrentTrack;

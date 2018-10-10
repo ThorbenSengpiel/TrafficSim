@@ -9,7 +9,7 @@ public class TrackStraight extends Track {
 
     public TrackStraight(Position from, Position to, Street street) {
         super(from, to, from.distance(to),street);
-        inDir = Direction.generateDirection(from,to);
+        inDir = Direction.generateDirectionStraight(from,to);
         outDir = inDir;
         if (from.x != to.x && from.y != to.y) {
             throw new RuntimeException("TrackStraight can only be straight");

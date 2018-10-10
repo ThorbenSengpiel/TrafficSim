@@ -17,6 +17,7 @@ public class VehicleManager {
 
     public void initialize() {
         addVehicle(new Vehicle(27.55, StreetNetworkManager.getInstance().getStreetList().get(1).getTracks().get(0)));
+        addVehicle(new Vehicle(27.55, StreetNetworkManager.getInstance().getStreetList().get(0).getTracks().get(0)));
     }
 
     public void update(double delta) {
