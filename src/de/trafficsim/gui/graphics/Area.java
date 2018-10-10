@@ -1,10 +1,7 @@
 package de.trafficsim.gui.graphics;
 
-import de.trafficsim.gui.views.StreetRoundAboutView;
-import de.trafficsim.gui.views.StreetStraightView;
 import de.trafficsim.gui.views.StreetView;
-import de.trafficsim.logic.streets.StreetRoundAbout;
-import de.trafficsim.logic.streets.StreetStraight;
+import de.trafficsim.logic.streets.Street;
 import de.trafficsim.util.Util;
 import de.trafficsim.util.geometry.Position;
 import javafx.scene.canvas.Canvas;
@@ -29,7 +26,7 @@ public class Area extends Canvas {
     private Position dragStartPos;
     private Position dragStartCenter;
 
-    private List<StreetView> views;
+    private List<StreetView> streetViews;
 
 
     private boolean showTracks = false;
@@ -51,7 +48,7 @@ public class Area extends Canvas {
             System.out.println(event.getX() + " " + event.getY());
         });*/
 
-        views = new ArrayList<>();
+        streetViews = new ArrayList<>();
 
         setOnMouseDragged(e -> {
             mouseDrag(e);
@@ -79,9 +76,9 @@ public class Area extends Canvas {
     private void mousePressed(MouseEvent e) {
         Position pos = agc.canvasToArea(new Position(e.getX(), e.getY()));
         StreetView hit = null;
-        for (int i = views.size()-1; i >= 0; i--) {
-            if (views.get(i).PointHit(pos)) {
-                hit = views.get(i);
+        for (int i = streetViews.size()-1; i >= 0; i--) {
+            if (streetViews.get(i).PointHit(pos)) {
+                hit = streetViews.get(i);
                 break;
             }
         }
@@ -165,7 +162,7 @@ public class Area extends Canvas {
     }
 
     private void drawElements(boolean showTracks) {
-        for (StreetView view : views) {
+        for (StreetView view : streetViews) {
             if (view.isVisible(agc)) {
                 view.draw(agc);
                 if (showTracks) {
@@ -179,7 +176,7 @@ public class Area extends Canvas {
         agc.gc.setFill(Color.TRANSPARENT);
         agc.gc.setLineWidth(2);
         agc.gc.setStroke(Color.LIME);
-        for (StreetView view : views) {
+        for (StreetView view : streetViews) {
             if (view.isVisible(agc)) {
                 view.drawBoundingBox(agc);
             }
@@ -190,7 +187,7 @@ public class Area extends Canvas {
         agc.gc.setFill(Color.TRANSPARENT);
         agc.gc.setLineWidth(2);
         agc.gc.setStroke(Color.RED);
-        for (StreetView view : views) {
+        for (StreetView view : streetViews) {
             if (view.isVisible(agc)) {
                 view.drawHitBox(agc);
             }
@@ -226,5 +223,18 @@ public class Area extends Canvas {
 
     public void setShowHitBox(boolean selected) {
         showHitBox = selected;
+    }
+
+    public void addStreet(Street street) {
+        streetViews.add(street.createView());
+    }
+
+    public void removeStreet(Street street) {
+        for (StreetView streetView : streetViews) {
+            if (streetView.getStreet() == street) {
+                streetViews.remove(streetView);
+                break;
+            }
+        }
     }
 }

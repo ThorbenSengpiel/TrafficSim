@@ -1,8 +1,12 @@
 package de.trafficsim.logic.streets;
 
-import de.trafficsim.logic.streets.tracks.Track;
+import de.trafficsim.gui.views.StreetRoundAboutView;
+import de.trafficsim.gui.views.StreetStraightView;
+import de.trafficsim.gui.views.StreetView;
 import de.trafficsim.logic.streets.tracks.TrackStraight;
 import de.trafficsim.util.geometry.Position;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class StreetStraight extends Street {
 
@@ -10,8 +14,9 @@ public class StreetStraight extends Street {
     private Position to;
 
     public StreetStraight(Position from, Position to) {
-        super(new Position((from.x + to.x)/2, (from.y + to.y)/2));
-        tracks.add(new TrackStraight(from, to));
+        super(new Position((from.x + to.x)/2, (from.y + to.y)/2), StreetType.STRAIGHT);
+        System.out.println(position);
+        tracks.add(new TrackStraight(from.sub(position), to.sub(position)));
         this.from = from;
         this.to = to;
     }
@@ -22,5 +27,10 @@ public class StreetStraight extends Street {
 
     public Position getTo() {
         return to;
+    }
+
+    @Override
+    public StreetView createView() {
+        return new StreetStraightView(this);
     }
 }

@@ -1,12 +1,16 @@
 package de.trafficsim.logic.streets;
 
+import de.trafficsim.gui.views.StreetRoundAboutView;
+import de.trafficsim.gui.views.StreetView;
 import de.trafficsim.logic.streets.tracks.Track;
 import de.trafficsim.logic.streets.tracks.TrackCurve;
 import de.trafficsim.util.geometry.Position;
 
+import java.lang.reflect.InvocationTargetException;
+
 public class StreetRoundAbout extends Street {
     public StreetRoundAbout(Position position) {
-        super(position);
+        super(position, StreetType.ROUNDABOUT);
 
         Track r0 = new TrackCurve(new Position(50, 0), new Position(0, 50), false);
         Track r1 = new TrackCurve(new Position(0, 50), new Position(-50, 0), true);
@@ -22,5 +26,10 @@ public class StreetRoundAbout extends Street {
         tracks.add(r1);
         tracks.add(r2);
         tracks.add(r3);
+    }
+
+    @Override
+    public StreetView createView() {
+        return new StreetRoundAboutView(this);
     }
 }

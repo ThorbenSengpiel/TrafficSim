@@ -16,7 +16,7 @@ public class StreetStraightView extends StreetView {
     private double length;
 
     public StreetStraightView(StreetStraight street) {
-        super(street, new Hitbox(calcHitbox(street.getFrom(), street.getTo())));
+        super(street, new Hitbox(calcHitbox(street.getFrom().sub(street.getPosition()), street.getTo().sub(street.getPosition()))));
         horizontal = street.getTo().y == street.getFrom().y;
         length = street.getFrom().distance(street.getTo());
     }

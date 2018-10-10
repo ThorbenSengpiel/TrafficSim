@@ -1,5 +1,6 @@
 package de.trafficsim.logic.streets;
 
+import de.trafficsim.gui.views.StreetView;
 import de.trafficsim.logic.streets.tracks.Track;
 import de.trafficsim.util.geometry.Position;
 
@@ -11,8 +12,11 @@ public abstract class Street {
 
     protected List<Track> tracks;
 
-    public Street(Position position) {
+    public final StreetType type;
+
+    public Street(Position position, StreetType type) {
         this.position = position;
+        this.type = type;
         tracks = new ArrayList<>();
     }
 
@@ -27,4 +31,6 @@ public abstract class Street {
     public List<Track> getTracks() {
         return tracks;
     }
+
+    public abstract StreetView createView();
 }

@@ -40,10 +40,10 @@ public class GuiController {
     }
 
     public void addStreet(Street street) {
-
+        area.addStreet(street);
     }
 
     public void removeStreet(Street street) {
-
+        area.removeStreet(street);
     }
 }

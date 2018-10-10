@@ -45,10 +45,15 @@ public abstract class Track {
         Position f = agc.areaToCanvas(from.add(offset));
         Position t = agc.areaToCanvas(to.add(offset));
         agc.gc.setLineWidth(1.5);
-        agc.gc.setStroke(Color.LIME);
-        agc.gc.strokeOval(f.x - 5, f.y - 5, 10, 10);
-        agc.gc.setStroke(Color.RED);
-        agc.gc.strokeOval(t.x - 5, t.y - 5, 10, 10);
+        if (inTracks.size() < 1) {
+            agc.gc.setStroke(Color.LIME);
+            agc.gc.strokeOval(f.x - 5, f.y - 5, 10, 10);
+        }
+        if (outTracks.size() < 1) {
+            agc.gc.setStroke(Color.RED);
+            agc.gc.strokeOval(t.x - 5, t.y - 5, 10, 10);
+        }
+
 
         agc.gc.setStroke(Color.YELLOW);
         if (inTracks.size() > 0) {

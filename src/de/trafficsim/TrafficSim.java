@@ -26,7 +26,6 @@ public class TrafficSim extends Application {
 
         guiController = new GuiController();
         streetNetworkManager = new StreetNetworkManager(this.guiController);
-        streetNetworkManager.initialize();
         vehicleManager = new VehicleManager();
 
 
@@ -40,6 +39,8 @@ public class TrafficSim extends Application {
                 mainLoop(now);
             }
         }.start();
+
+        streetNetworkManager.initialize();
     }
 
     private void buildGui(Stage primaryStage) throws IOException {
