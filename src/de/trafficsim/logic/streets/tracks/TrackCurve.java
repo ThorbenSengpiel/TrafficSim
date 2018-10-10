@@ -9,12 +9,15 @@ public class TrackCurve extends Track {
 
     private boolean curveDirection;
     private Position center;
+    private double radius;
 
     public TrackCurve(Position from, Position to, boolean curveDirection, Street street) {
         super(from, to, Math.abs(from.x - to.x) * Math.PI / 2,street);
         if (Math.abs(from.x - to.x) != Math.abs(from.y - to.y)) {
             throw new RuntimeException("TrackCurve can only be 90°");
         }
+
+        radius = Math.abs(from.x - to.x);
         this.curveDirection = curveDirection;
         if (curveDirection) {
             center = new Position(from.x, to.y);
