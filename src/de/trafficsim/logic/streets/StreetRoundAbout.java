@@ -10,23 +10,41 @@ import de.trafficsim.util.geometry.Position;
 import java.lang.reflect.InvocationTargetException;
 
 public class StreetRoundAbout extends Street {
-    public StreetRoundAbout(Position position) {
+    public StreetRoundAbout(Position position, boolean right) {
         super(position, StreetType.ROUNDABOUT);
 
-        Track r0 = new TrackCurve(new Position(-50, 0), new Position(0, -50), Direction.NORTH,this);
-        Track r1 = new TrackCurve(new Position(0, -50), new Position(50, 0), Direction.EAST,this);
-        Track r2 = new TrackCurve(new Position(50, 0), new Position(0, 50), Direction.SOUTH,this);
-        Track r3 = new TrackCurve(new Position(0, 50), new Position(-50, 0), Direction.WEST,this);
+        if (right) {
+            Track r0 = new TrackCurve(new Position(-50, 0), new Position(0, -50), Direction.NORTH,this);
+            Track r1 = new TrackCurve(new Position(0, -50), new Position(50, 0), Direction.EAST,this);
+            Track r2 = new TrackCurve(new Position(50, 0), new Position(0, 50), Direction.SOUTH,this);
+            Track r3 = new TrackCurve(new Position(0, 50), new Position(-50, 0), Direction.WEST,this);
 
-        r0.connectOutToInOf(r1);
-        r1.connectOutToInOf(r2);
-        r2.connectOutToInOf(r3);
-        r3.connectOutToInOf(r0);
+            r0.connectOutToInOf(r1);
+            r1.connectOutToInOf(r2);
+            r2.connectOutToInOf(r3);
+            r3.connectOutToInOf(r0);
 
-        tracks.add(r0);
-        tracks.add(r1);
-        tracks.add(r2);
-        tracks.add(r3);
+            tracks.add(r0);
+            tracks.add(r1);
+            tracks.add(r2);
+            tracks.add(r3);
+        } else {
+            Track r0 = new TrackCurve(new Position(-50, 0), new Position(0, 50), Direction.SOUTH,this);
+            Track r1 = new TrackCurve(new Position(0, 50), new Position(50, 0), Direction.WEST,this);
+            Track r2 = new TrackCurve(new Position(50, 0), new Position(0, -50), Direction.NORTH,this);
+            Track r3 = new TrackCurve(new Position(0, -50), new Position(-50, 0), Direction.EAST,this);
+
+            r0.connectOutToInOf(r1);
+            r1.connectOutToInOf(r2);
+            r2.connectOutToInOf(r3);
+            r3.connectOutToInOf(r0);
+
+            tracks.add(r0);
+            tracks.add(r1);
+            tracks.add(r2);
+            tracks.add(r3);
+        }
+
     }
 
     @Override

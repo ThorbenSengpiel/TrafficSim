@@ -33,7 +33,7 @@ public class StreetNetworkManager {
         s3.getTracks().get(0).connectOutToInOf(s0.getTracks().get(0));
 
 
-        this.addStreet(new StreetRoundAbout(new Position(0, 0)));
+        this.addStreet(new StreetRoundAbout(new Position(0, 0), false));
         this.addStreet(s0, s1, s2, s3);
         addStreet(new StreetStraight(new Position(-100,-150),new Position(100,-150)));
     }
