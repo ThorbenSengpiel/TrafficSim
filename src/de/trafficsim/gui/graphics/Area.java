@@ -2,6 +2,7 @@ package de.trafficsim.gui.graphics;
 
 import de.trafficsim.gui.views.StreetView;
 import de.trafficsim.logic.streets.Street;
+import de.trafficsim.logic.vehicles.Vehicle;
 import de.trafficsim.util.Util;
 import de.trafficsim.util.geometry.Position;
 import javafx.scene.canvas.Canvas;
@@ -236,5 +237,11 @@ public class Area extends Canvas {
                 break;
             }
         }
+    }
+
+    public void addVehicle(Vehicle vehicle) {
+    }
+
+    public void removeVehicle(Vehicle vehicle) {
     }
 }
