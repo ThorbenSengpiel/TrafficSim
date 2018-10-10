@@ -70,4 +70,24 @@ public abstract class Track {
      * @param t
      */
     protected abstract void renderTrack(AreaGraphicsContext agc, Position f, Position t);
+
+    public double getLength() {
+        return length;
+    }
+
+    public Position getFrom() {
+        return from;
+    }
+
+    public Position getTo() {
+        return to;
+    }
+
+    public List<Track> getInTrackList() {
+        return inTrackList;
+    }
+
+    public List<Track> getOutTrackList() {
+        return outTrackList;
+    }
 }
