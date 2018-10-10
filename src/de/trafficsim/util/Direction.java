@@ -15,7 +15,13 @@ public enum Direction {
         this.vector = vector;
     }
 
-    public static Direction generateDirection(Position from,Position to) {
+    /**
+     *
+     * @param from
+     * @param to
+     * @return
+     */
+    public static Direction generateDirectionStraight(Position from, Position to) {
         if (from.y < to.y) {
             return SOUTH;
         }
@@ -29,5 +35,26 @@ public enum Direction {
             return WEST;
         }
         return ZERO;
+    }
+
+    public static Direction generateDirectionCurve(Position from, Position to, Direction inDirection) {
+        switch (inDirection) {
+            case NORTH:
+            case SOUTH:
+                if (from.x > to.x) {
+                        return WEST;
+                } else {
+                        return EAST;
+                }
+            case EAST:
+            case WEST:
+                if (from.y > to.y) {
+                        return NORTH;
+                } else {
+                        return SOUTH;
+                }
+            default:
+                return ZERO;
+        }
     }
 }

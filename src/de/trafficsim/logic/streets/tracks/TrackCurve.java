@@ -2,6 +2,7 @@ package de.trafficsim.logic.streets.tracks;
 
 import de.trafficsim.gui.graphics.AreaGraphicsContext;
 import de.trafficsim.logic.streets.Street;
+import de.trafficsim.util.Direction;
 import de.trafficsim.util.geometry.Position;
 import javafx.scene.shape.ArcType;
 
@@ -11,14 +12,17 @@ public class TrackCurve extends Track {
     private Position center;
     private double radius;
 
-    public TrackCurve(Position from, Position to, boolean curveDirection, Street street) {
+    public TrackCurve(Position from, Position to, Direction inDir, Street street) {
         super(from, to, Math.abs(from.x - to.x) * Math.PI / 2,street);
+        this.inDir = inDir;
+        this.outDir = Direction.generateDirectionCurve(from, to, inDir);
+
+
         if (Math.abs(from.x - to.x) != Math.abs(from.y - to.y)) {
             throw new RuntimeException("TrackCurve can only be 90°");
         }
 
         radius = Math.abs(from.x - to.x);
-        this.curveDirection = curveDirection;
         if (curveDirection) {
             center = new Position(from.x, to.y);
         } else {
@@ -29,7 +33,10 @@ public class TrackCurve extends Track {
 
     @Override
     public Position getPosOnArea(double pos) {
-        return new Position(0,0);
+        double rad = pos / radius;
+        double x = Math.cos(rad) * radius;
+        double y = Math.sin(rad) * radius;
+        return new Position(x,y).add(center).add(street.getPosition());
     }
 
     @Override
@@ -39,6 +46,10 @@ public class TrackCurve extends Track {
 
     @Override
     protected void renderTrack(AreaGraphicsContext agc, Position f, Position t) {
+        agc.gc.strokeLine(f.x, f.y, f.x+inDir.vector.x * 40, f.y+inDir.vector.y * 40);
+        agc.gc.strokeLine(t.x, t.y, t.x+outDir.vector.x * 40, t.y+outDir.vector.y * 40);
+
+
         int angle;
 
         double w = t.x-f.x;

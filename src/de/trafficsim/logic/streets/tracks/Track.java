@@ -64,7 +64,11 @@ public abstract class Track {
             agc.gc.strokeLine(f.x - 7, f.y + 7, f.x + 7, f.y - 7);
         }
 
-        agc.gc.setStroke(Color.CYAN);
+        if (vehiclesOnTrack.size() > 0) {
+            agc.gc.setStroke(Color.LIME);
+        } else {
+            agc.gc.setStroke(Color.CYAN);
+        }
 
         renderTrack(agc, f, t);
     }
@@ -98,4 +102,12 @@ public abstract class Track {
     }
 
     public abstract Position getDirectionOnPos(double currentPosInTrack);
+
+    public void removeVehicle(Vehicle vehicle) {
+        vehiclesOnTrack.remove(vehicle);
+    }
+
+    public void addVehicle(Vehicle vehicle) {
+        vehiclesOnTrack.add(vehicle);
+    }
 }
