@@ -67,7 +67,7 @@ public abstract class Track {
         if (vehiclesOnTrack.size() > 0) {
             agc.gc.setStroke(Color.LIME);
         } else {
-            agc.gc.setStroke(Color.CYAN);
+            agc.gc.setStroke(Color.CYAN.deriveColor(0, 1, 1, 0.2));
         }
 
         renderTrack(agc, f, t);

@@ -8,7 +8,6 @@ import javafx.scene.shape.ArcType;
 
 public class TrackCurve extends Track {
 
-    private boolean curveDirection;
     private Position center;
     private double radius;
 
@@ -35,10 +34,10 @@ public class TrackCurve extends Track {
 
     @Override
     public Position getPosOnArea(double pos) {
-        double offsetRad = Math.toRadians(inDir.angle);
-        double rad = pos / radius + offsetRad;
+        double offsetRad = -Math.toRadians(inDir.angle);
+        double rad = -pos / radius + offsetRad;
         double x = Math.cos(rad) * radius;
-        double y = Math.sin(rad) * radius;
+        double y = -Math.sin(rad) * radius;
         return new Position(x,y).add(center).add(street.getPosition());
     }
 
@@ -53,7 +52,7 @@ public class TrackCurve extends Track {
         agc.gc.strokeLine(t.x, t.y, t.x+outDir.vector.x * 40, t.y+outDir.vector.y * 40);
 
 
-        int angle;
+        /*int angle;
 
         double w = t.x-f.x;
         double h = t.y-f.y;
@@ -80,6 +79,6 @@ public class TrackCurve extends Track {
         w = Math.abs(w);
         h = Math.abs(h);
 
-        agc.gc.strokeArc(c.x-w, c.y-h, w*2, h*2, angle, 90, ArcType.OPEN);
+        agc.gc.strokeArc(c.x-w, c.y-h, w*2, h*2, angle, 90, ArcType.OPEN);*/
     }
 }

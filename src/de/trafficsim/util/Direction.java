@@ -3,10 +3,10 @@ package de.trafficsim.util;
 import de.trafficsim.util.geometry.Position;
 
 public enum Direction {
-    NORTH(new Position(0, -1),0),
-    EAST(new Position(1, 0),90),
-    SOUTH(new Position(0, 1),180),
-    WEST(new Position(-1, 0),270),
+    NORTH(new Position(0, -1),90),
+    EAST(new Position(1, 0),180),
+    SOUTH(new Position(0, 1),270),
+    WEST(new Position(-1, 0),0),
     ZERO(new Position(0,0),0);
 
     public final Position vector;
