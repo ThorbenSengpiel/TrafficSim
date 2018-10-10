@@ -48,11 +48,16 @@ public class Rectangle extends Shape {
 
     @Override
     public Rectangle getBoundingBox() {
-        return this;
+        return new Rectangle(from, to);
     }
 
     @Override
     public boolean hit(Position p) {
+        if(p.x >= from.x && p.x <= to.x) {
+            if(p.y >= from.y && p.y <= to.y) {
+                return true;
+            }
+        }
         return false;
     }
 }

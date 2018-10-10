@@ -38,9 +38,19 @@ public abstract class Track {
     public void render(AreaGraphicsContext agc, Position offset) {
         Position f = agc.areaToCanvas(from.add(offset));
         Position t = agc.areaToCanvas(to.add(offset));
+        agc.gc.setLineWidth(1.5);
+        agc.gc.setStroke(Color.CYAN);
+        agc.gc.strokeOval(f.x - 5, f.y - 5, 10, 10);
+        agc.gc.strokeOval(t.x - 5, t.y - 5, 10, 10);
+
+        agc.gc.setStroke(Color.YELLOW);
         if (inTracks.size() > 0) {
-            agc.gc.strokeOval(f.x - 5, f.y - 5, 10, 10);
+            agc.gc.strokeLine(f.x - 7, f.y - 7, f.x + 7, f.y + 7);
+            agc.gc.strokeLine(f.x - 7, f.y + 7, f.x + 7, f.y - 7);
         }
+
+        agc.gc.setStroke(Color.CYAN);
+
         renderTrack(agc, f, t);
     }
     protected abstract void renderTrack(AreaGraphicsContext agc, Position f, Position t);

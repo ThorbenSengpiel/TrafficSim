@@ -65,4 +65,12 @@ public class AreaGraphicsContext {
     public void setTransparent(boolean transparent) {
         this.transparent = transparent;
     }
+
+    public void setFill(Color color) {
+        if (transparent) {
+            gc.setFill(color.deriveColor(0, 1, 1, 0.5));
+        } else {
+            gc.setFill(color);
+        }
+    }
 }

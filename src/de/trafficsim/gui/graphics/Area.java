@@ -1,8 +1,10 @@
 package de.trafficsim.gui.graphics;
 
 import de.trafficsim.gui.views.StreetRoundAboutView;
+import de.trafficsim.gui.views.StreetStraightView;
 import de.trafficsim.gui.views.StreetView;
 import de.trafficsim.logic.streets.StreetRoundAbout;
+import de.trafficsim.logic.streets.StreetStraight;
 import de.trafficsim.util.Util;
 import de.trafficsim.util.geometry.Position;
 import javafx.scene.canvas.Canvas;
@@ -30,6 +32,10 @@ public class Area extends Canvas {
     private List<StreetView> views;
 
 
+    private boolean showTracks = false;
+    private boolean showHitBox = false;
+    private boolean showBoundingBox = false;
+
 
 
     public Area() {
@@ -46,11 +52,11 @@ public class Area extends Canvas {
         });*/
 
         views = new ArrayList<>();
-        views.add(new StreetRoundAboutView(new StreetRoundAbout(new Position(0, 0))));
-        views.add(new StreetRoundAboutView(new StreetRoundAbout(new Position(50, 100))));
-        for (int i = 0; i < 10; i++) {
-            views.add(new StreetRoundAboutView(new StreetRoundAbout(new Position(Math.random() * 2000 - 1000, Math.random() * 2000 - 1000).snapToGrid(Area.GRID_SPACING))));
-        }
+        views.add(new StreetRoundAboutView(new StreetRoundAbout(new Position(100, 0))));
+        views.add(new StreetRoundAboutView(new StreetRoundAbout(new Position(150, 100))));
+
+        views.add(new StreetStraightView(new StreetStraight(new Position(-25, 0), new Position(25, 0))));
+        views.add(new StreetStraightView(new StreetStraight(new Position(0, -25), new Position(0, 25))));
 
         setOnMouseDragged(e -> {
             mouseDrag(e);
@@ -128,9 +134,13 @@ public class Area extends Canvas {
         drawPreviewElement();
         agc.setTransparent(false);
         //drawElements(false);
-        drawElements(true);
-        //drawdrawBoundingBoxes();
-        //drawdrawHitBoxes();
+        drawElements(showTracks);
+        if (showBoundingBox) {
+            drawdrawBoundingBoxes();
+        }
+        if (showHitBox) {
+            drawdrawHitBoxes();
+        }
         drawOverlay();
     }
 
@@ -164,8 +174,6 @@ public class Area extends Canvas {
             if (view.isVisible(agc)) {
                 view.draw(agc);
                 if (showTracks) {
-                    agc.gc.setLineWidth(1);
-                    agc.gc.setStroke(Color.CYAN);
                     view.drawTracks(agc);
                 }
             }
@@ -213,4 +221,15 @@ public class Area extends Canvas {
     }
 
 
+    public void setShowTracks(boolean selected) {
+        showTracks = selected;
+    }
+
+    public void setShowBoundingBox(boolean selected) {
+        showBoundingBox = selected;
+    }
+
+    public void setShowHitBox(boolean selected) {
+        showHitBox = selected;
+    }
 }

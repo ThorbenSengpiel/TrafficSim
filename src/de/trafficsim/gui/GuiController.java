@@ -2,12 +2,23 @@ package de.trafficsim.gui;
 
 import de.trafficsim.gui.graphics.Area;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.layout.AnchorPane;
 
 public class GuiController {
 
     @FXML
     AnchorPane paneCanvas;
+
+    @FXML
+    CheckBox checkShowTracks;
+
+    @FXML
+    CheckBox checkShowBoundingBox;
+
+    @FXML
+    CheckBox checkShowHitBox;
+
 
     private Area area;
 
@@ -16,6 +27,10 @@ public class GuiController {
         paneCanvas.getChildren().add(area);
         area.widthProperty().bind(paneCanvas.widthProperty().subtract(20));
         area.heightProperty().bind(paneCanvas.heightProperty().subtract(20));
+
+        checkShowTracks.setOnAction(event -> area.setShowTracks(checkShowTracks.isSelected()));
+        checkShowBoundingBox.setOnAction(event -> area.setShowBoundingBox(checkShowBoundingBox.isSelected()));
+        checkShowHitBox.setOnAction(event -> area.setShowHitBox(checkShowHitBox.isSelected()));
     }
 
 
