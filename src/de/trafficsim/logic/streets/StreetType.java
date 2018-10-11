@@ -6,7 +6,8 @@ import de.trafficsim.gui.views.StreetView;
 
 public enum StreetType {
     ROUNDABOUT("Roundabout"),
-    STRAIGHT("Straight");
+    STRAIGHT("Straight"),
+    TEST_CROSS("TestCross");
 
     public final String name;
 

@@ -2,6 +2,7 @@ package de.trafficsim.util.geometry;
 
 public class Position {
 
+    public static final Position ZERO = new Position(0, 0);
     public final double x;
     public final double y;
 

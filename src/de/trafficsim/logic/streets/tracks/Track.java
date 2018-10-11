@@ -7,6 +7,7 @@ import de.trafficsim.util.Direction;
 import de.trafficsim.util.geometry.Position;
 import javafx.scene.paint.Color;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,7 +68,7 @@ public abstract class Track {
         if (vehiclesOnTrack.size() > 0) {
             agc.gc.setStroke(Color.LIME);
         } else {
-            agc.gc.setStroke(Color.CYAN.deriveColor(0, 1, 1, 0.2));
+            agc.gc.setStroke(Color.CYAN.deriveColor(0, 1, 1, 0.8));
         }
 
         renderTrack(agc, f, t);
@@ -109,5 +110,13 @@ public abstract class Track {
 
     public void addVehicle(Vehicle vehicle) {
         vehiclesOnTrack.add(vehicle);
+    }
+
+    public Direction getOutDir() {
+        return outDir;
+    }
+
+    public Direction getInDir() {
+        return inDir;
     }
 }

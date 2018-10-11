@@ -4,6 +4,7 @@ import de.trafficsim.gui.GuiController;
 import de.trafficsim.logic.streets.Street;
 import de.trafficsim.logic.streets.StreetRoundAbout;
 import de.trafficsim.logic.streets.StreetStraight;
+import de.trafficsim.logic.streets.StreetTestCross;
 import de.trafficsim.util.geometry.Position;
 
 import java.util.ArrayList;
@@ -33,9 +34,11 @@ public class StreetNetworkManager {
         s3.getTracks().get(0).connectOutToInOf(s0.getTracks().get(0));
 
 
-        this.addStreet(new StreetRoundAbout(new Position(0, 0), true));
-        this.addStreet(s0, s1, s2, s3);
+        addStreet(new StreetRoundAbout(new Position(0, -150), true));
+        addStreet(s0, s1, s2, s3);
         addStreet(new StreetStraight(new Position(-100,-150),new Position(100,-150)));
+
+        addStreet(new StreetTestCross(Position.ZERO));
     }
 
     public void addStreet(Street... streets){

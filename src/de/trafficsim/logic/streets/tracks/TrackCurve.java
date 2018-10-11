@@ -48,8 +48,9 @@ public class TrackCurve extends Track {
 
     @Override
     protected void renderTrack(AreaGraphicsContext agc, Position f, Position t) {
-        agc.gc.strokeLine(f.x, f.y, f.x+inDir.vector.x * 40, f.y+inDir.vector.y * 40);
-        agc.gc.strokeLine(t.x, t.y, t.x+outDir.vector.x * 40, t.y+outDir.vector.y * 40);
+        //agc.gc.strokeLine(f.x, f.y, f.x+inDir.vector.x * 40, f.y+inDir.vector.y * 40);
+        //agc.gc.strokeLine(t.x, t.y, t.x+outDir.vector.x * 40, t.y+outDir.vector.y * 40);
+        agc.gc.strokeLine(f.x, f.y, t.x, t.y);
 
 
         /*int angle;

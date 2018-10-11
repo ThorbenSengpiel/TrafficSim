@@ -25,7 +25,7 @@ public class Vehicle {
     public void move(double delta){
         double newPositionInCurrentTrack = currentPosInTrack+velocity * delta;
         if (currentTrack.getLength()< newPositionInCurrentTrack){
-            Track nextTrack = currentTrack.getOutTrackList().get(0);
+            Track nextTrack = currentTrack.getOutTrackList().get((int) (Math.random() * currentTrack.getOutTrackList().size()));
             double distanceInNewTrack = newPositionInCurrentTrack-currentTrack.getLength();
             currentPosInTrack = distanceInNewTrack;
             currentTrack.removeVehicle(this);
