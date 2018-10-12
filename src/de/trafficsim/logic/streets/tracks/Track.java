@@ -102,7 +102,7 @@ public abstract class Track {
         return outTrackList;
     }
 
-    public abstract Position getDirectionOnPos(double currentPosInTrack);
+    public abstract double getDirectionOnPos(double currentPosInTrack);
 
     public void removeVehicle(Vehicle vehicle) {
         vehiclesOnTrack.remove(vehicle);

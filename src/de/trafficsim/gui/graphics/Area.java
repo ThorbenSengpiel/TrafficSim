@@ -5,7 +5,6 @@ import de.trafficsim.logic.streets.Street;
 import de.trafficsim.logic.vehicles.Vehicle;
 import de.trafficsim.util.Util;
 import de.trafficsim.util.geometry.Position;
-import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
@@ -126,8 +125,9 @@ public class Area extends Canvas {
         agc.setTransparent(true);
         drawPreviewElement();
         agc.setTransparent(false);
-        drawElements(showTracks);
+        drawStreets();
         drawVehicles();
+        drawTracks();
         if (showBoundingBox) {
             drawdrawBoundingBoxes();
         }
@@ -142,7 +142,12 @@ public class Area extends Canvas {
             agc.setFill(Color.color(0.8, 0.2, 0.2));
             Position position = agc.areaToCanvas(vehicle.getPosition());
             double size = agc.scaleToCanvas(3);
-            agc.gc.fillRect(position.x - (size/2), position.y - (size/2), size, size);
+            agc.gc.translate(position.x, position.y);
+            double rot = vehicle.getDirection();
+            agc.gc.rotate(rot);
+            agc.gc.fillRect(-size, -(size/2), size*2, size);
+            agc.gc.rotate(-rot);
+            agc.gc.translate(-position.x, -position.y);
         }
     }
 
@@ -171,13 +176,18 @@ public class Area extends Canvas {
         }
     }
 
-    private void drawElements(boolean showTracks) {
+    private void drawStreets() {
         for (StreetView view : streetViewList) {
             if (view.isVisible(agc)) {
                 view.draw(agc);
-                if (showTracks) {
-                    view.drawTracks(agc);
-                }
+            }
+        }
+    }
+
+    private void drawTracks() {
+        for (StreetView view : streetViewList) {
+            if (view.isVisible(agc)) {
+                view.drawTracks(agc);
             }
         }
     }

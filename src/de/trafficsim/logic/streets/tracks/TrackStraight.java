@@ -52,7 +52,7 @@ public class TrackStraight extends Track {
     }
 
     @Override
-    public Position getDirectionOnPos(double currentPosInTrack) {
-        return inDir.vector;
+    public double getDirectionOnPos(double currentPosInTrack) {
+        return inDir.angle;
     }
 }

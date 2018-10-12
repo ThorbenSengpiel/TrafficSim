@@ -42,8 +42,8 @@ public class TrackCurve extends Track {
     }
 
     @Override
-    public Position getDirectionOnPos(double currentPosInTrack) {
-        return null;
+    public double getDirectionOnPos(double currentPosInTrack) {
+        return 0;
     }
 
     @Override

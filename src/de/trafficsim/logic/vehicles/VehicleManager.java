@@ -19,6 +19,9 @@ public class VehicleManager {
         addVehicle(new Vehicle(100, StreetNetworkManager.getInstance().getStreetList().get(1).getTracks().get(0)));
         addVehicle(new Vehicle(200, StreetNetworkManager.getInstance().getStreetList().get(0).getTracks().get(0)));
         addVehicle(new Vehicle(20, StreetNetworkManager.getInstance().getStreetList().get(StreetNetworkManager.getInstance().getStreetList().size()-1).getTracks().get(0)));
+        for (int i = 0; i < 100; i++) {
+            addVehicle(new Vehicle(10+ Math.random() * 50, StreetNetworkManager.getInstance().getStreetList().get((int) (StreetNetworkManager.getInstance().getStreetList().size() * Math.random())).getTracks().get(0)));
+        }
     }
 
     public void update(double delta) {

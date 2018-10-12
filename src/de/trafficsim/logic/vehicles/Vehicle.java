@@ -19,7 +19,7 @@ public class Vehicle {
     public Position getPosition(){
         return currentTrack.getPosOnArea(currentPosInTrack);
     }
-    public Position getDirection(){
+    public double getDirection(){
         return currentTrack.getDirectionOnPos(currentPosInTrack);
     }
     public void move(double delta){
