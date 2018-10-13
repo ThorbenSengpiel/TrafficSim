@@ -27,9 +27,9 @@ public class StreetRoundAbout extends Street {
             addTracks(r0, r1, r2, r3);
         } else {
             Track r0 = new TrackCurve(new Position(-50, 0), new Position(0, 50), Direction.SOUTH,this);
-            Track r1 = new TrackCurve(new Position(0, 50), new Position(50, 0), Direction.WEST,this);
+            Track r1 = new TrackCurve(new Position(0, 50), new Position(50, 0), Direction.EAST,this);
             Track r2 = new TrackCurve(new Position(50, 0), new Position(0, -50), Direction.NORTH,this);
-            Track r3 = new TrackCurve(new Position(0, -50), new Position(-50, 0), Direction.EAST,this);
+            Track r3 = new TrackCurve(new Position(0, -50), new Position(-50, 0), Direction.WEST,this);
 
             r0.connectOutToInOf(r1);
             r1.connectOutToInOf(r2);
