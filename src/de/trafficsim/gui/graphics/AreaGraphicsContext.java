@@ -4,6 +4,7 @@ import de.trafficsim.util.geometry.Position;
 import de.trafficsim.util.geometry.Rectangle;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.StrokeLineCap;
 
 public class AreaGraphicsContext {
 
@@ -62,6 +63,37 @@ public class AreaGraphicsContext {
         }
     }
 
+    public void setStroke(StreetVisuals visuals) {
+        setStroke(visuals.stroke);
+        gc.setLineWidth(scaleToCanvas(visuals.width));
+        if (visuals.dashed != null) {
+            gc.setLineDashes(scaleToCanvas(StreetVisuals.STREET_LINE.width * visuals.dashed));
+        } else {
+            gc.setLineDashes(null);
+        }
+    }
+
+    public void draw2Lane(Position from, Position to) {
+        Position f = areaToCanvas(from);
+        Position t = areaToCanvas(to);
+
+        double w = scaleToCanvas(StreetVisuals.STREET2LANE.width / 2);
+
+        setStroke(StreetVisuals.STREET2LANE);
+        gc.setLineCap(StrokeLineCap.BUTT);
+        gc.strokeLine(f.x, f.y, t.x, t.y);
+        setStroke(StreetVisuals.STREET_LINE_DASHED);
+        gc.strokeLine(f.x, f.y, t.x, t.y);
+        setStroke(StreetVisuals.STREET_BORDER);
+        if (from.y == to.y) {
+            gc.strokeLine(f.x, f.y+w, t.x, t.y+w);
+            gc.strokeLine(f.x, f.y-w, t.x, t.y-w);
+        } else {
+            gc.strokeLine(f.x+w, f.y, t.x+w, t.y);
+            gc.strokeLine(f.x-w, f.y, t.x-w, t.y);
+        }
+    }
+
     public void setTransparent(boolean transparent) {
         this.transparent = transparent;
     }
@@ -71,6 +103,24 @@ public class AreaGraphicsContext {
             gc.setFill(color.deriveColor(0, 1, 1, 0.5));
         } else {
             gc.setFill(color);
+        }
+    }
+
+    public enum StreetVisuals {
+        STREET(Color.GRAY, 5, null),
+        STREET2LANE(Color.GRAY, 10, null),
+        STREET_LINE(Color.WHITE, 0.2, null),
+        STREET_LINE_DASHED(Color.WHITE, 0.2, 10.0),
+        STREET_BORDER(Color.BLACK, 0.2, null);
+
+        public final Color stroke;
+        public final double width;
+        public final Double dashed;
+
+        StreetVisuals(Color stroke, double width, Double dashed) {
+            this.stroke = stroke;
+            this.width = width;
+            this.dashed = dashed;
         }
     }
 }

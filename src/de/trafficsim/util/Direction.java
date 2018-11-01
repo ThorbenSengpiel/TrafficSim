@@ -4,9 +4,9 @@ import de.trafficsim.util.geometry.Position;
 
 public enum Direction {
     NORTH(new Position(0, -1),90),
-    EAST(new Position(1, 0),180),
+    EAST(new Position(1, 0),0),
     SOUTH(new Position(0, 1),270),
-    WEST(new Position(-1, 0),0),
+    WEST(new Position(-1, 0),180),
     ZERO(new Position(0,0),0);
 
     public final Position vector;
@@ -66,5 +66,9 @@ public enum Direction {
 
     public boolean isVertical() {
         return this == NORTH || this == SOUTH;
+    }
+
+    public boolean isRightOf(Direction dir) {
+        return this == NORTH && dir == EAST || this == EAST && dir == SOUTH || this == SOUTH && dir == WEST || this == WEST && dir == NORTH;
     }
 }

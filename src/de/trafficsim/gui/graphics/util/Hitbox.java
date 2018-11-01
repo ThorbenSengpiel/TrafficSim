@@ -33,7 +33,11 @@ public class Hitbox {
     public Rectangle calcBoundingBox() {
 
         //Position min = new Position(Double.);
-        return shapes.get(0).getBoundingBox();
+        Rectangle boundingBox = shapes.get(0).getBoundingBox();
+        for (int i = 1; i < shapes.size(); i++) {
+            boundingBox = boundingBox.getBoundingRect(shapes.get(i).getBoundingBox());
+        }
+        return boundingBox;
     }
 
     public void draw(AreaGraphicsContext agc, Position offset) {

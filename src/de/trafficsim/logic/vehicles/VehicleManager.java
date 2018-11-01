@@ -12,27 +12,42 @@ public class VehicleManager {
     private static VehicleManager instance;
 
 
-    List<Vehicle> vehicleList = new ArrayList<>();
+    private List<Vehicle> vehicleList = new ArrayList<>();
+
+
 
 
     public void initialize() {
-        addVehicle(new Vehicle(100, StreetNetworkManager.getInstance().getStreetList().get(1).getTracks().get(0)));
-        addVehicle(new Vehicle(200, StreetNetworkManager.getInstance().getStreetList().get(0).getTracks().get(0)));
+        addVehicle(new Vehicle(50, StreetNetworkManager.getInstance().getStreetList().get(1).getTracks().get(0)));
+        addVehicle(new Vehicle(50, StreetNetworkManager.getInstance().getStreetList().get(0).getTracks().get(0)));
         addVehicle(new Vehicle(20, StreetNetworkManager.getInstance().getStreetList().get(StreetNetworkManager.getInstance().getStreetList().size()-1).getTracks().get(0)));
-        for (int i = 0; i < 100; i++) {
-            addVehicle(new Vehicle(10+ Math.random() * 50, StreetNetworkManager.getInstance().getStreetList().get((int) (StreetNetworkManager.getInstance().getStreetList().size() * Math.random())).getTracks().get(0)));
+        for (int i = 0; i < 50; i++) {
+            addVehicle(new Vehicle(5+ Math.random() * 50, StreetNetworkManager.getInstance().getStreetList().get((int) (StreetNetworkManager.getInstance().getStreetList().size() * Math.random())).getTracks().get(0)));
         }
     }
 
     public void update(double delta) {
+        List<Vehicle> inactive = new ArrayList<>();
         for (Vehicle vehicle : vehicleList) {
             vehicle.move(delta);
+            if (!vehicle.isActive()) {
+                inactive.add(vehicle);
+            }
         }
+        for (Vehicle vehicle : inactive) {
+            removeVehicle(vehicle);
+        }
+
     }
 
     public void addVehicle(Vehicle vehicle){
         vehicleList.add(vehicle);
         GuiController.getInstance().addVehicle(vehicle);
+    }
+
+    public void removeVehicle(Vehicle vehicle) {
+        vehicleList.remove(vehicle);
+        GuiController.getInstance().removeVehicle(vehicle);
     }
 
     public static VehicleManager getInstance() {

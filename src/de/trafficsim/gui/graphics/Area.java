@@ -7,10 +7,14 @@ import de.trafficsim.util.Util;
 import de.trafficsim.util.geometry.Position;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,6 +74,11 @@ public class Area extends Canvas {
                 scale = 0.001;
             }
         });
+        try {
+            img = new Image(new FileInputStream(new File("car.png")));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -127,25 +136,40 @@ public class Area extends Canvas {
         agc.setTransparent(false);
         drawStreets();
         drawVehicles();
-        drawTracks();
+        if (showTracks) {
+            drawTracks();
+        }
         if (showBoundingBox) {
             drawdrawBoundingBoxes();
         }
         if (showHitBox) {
             drawdrawHitBoxes();
         }
-        drawOverlay();
+        drawOverlay(delta);
     }
+
+    static Image img;
 
     private void drawVehicles() {
         for (Vehicle vehicle : vehicleList) {
-            agc.setFill(Color.color(0.8, 0.2, 0.2));
+            //agc.setFill(Color.color(0.8, 0.2, 0.2));
+            //agc.setFill(Color.color((vehicle.color & 0b1)>0?1:0, (vehicle.color & 0b10)>0?1:0, (vehicle.color & 0b100)>0?1:0).deriveColor(0, 0.8, 0.8, 1));
+            agc.setFill(Color.hsb(vehicle.color*360, 1, 1, 1));
             Position position = agc.areaToCanvas(vehicle.getPosition());
-            double size = agc.scaleToCanvas(3);
+            double size = agc.scaleToCanvas(4);
             agc.gc.translate(position.x, position.y);
             double rot = vehicle.getDirection();
             agc.gc.rotate(rot);
-            agc.gc.fillRect(-size, -(size/2), size*2, size);
+
+            //agc.gc.drawImage(img, -size, -(size/2), size*2, size);
+
+            agc.gc.fillRoundRect(-size, -(size/2), size*2, size, size / 2, size / 2);
+            //agc.gc.fillRect(-size, -(size/2), size*2, size);
+            /*agc.setStroke(Color.MAGENTA);
+            agc.setFill(Color.WHITE);
+            agc.gc.fillRect(size-(size / 5), -(size/2), size / 5, size / 5 );
+            agc.gc.setLineWidth(agc.scaleToCanvas(1));
+            agc.gc.strokeLine(0, 0, agc.scaleToCanvas(10), 0);*/
             agc.gc.rotate(-rot);
             agc.gc.translate(-position.x, -position.y);
         }
@@ -214,11 +238,13 @@ public class Area extends Canvas {
         }
     }
 
-    private void drawOverlay() {
+    private void drawOverlay(double delta) {
         agc.gc.setFill(Color.BLACK);
         agc.gc.setTextAlign(TextAlignment.LEFT);
         agc.gc.fillText(agc.screen.from.toString(), 10, 10);
         agc.gc.fillText(agc.screen.to.toString(), 10, 30);
+        agc.gc.fillText((1/delta)+"fps", 10, 50);
+
 
         agc.gc.setStroke(Color.BLACK);
         agc.gc.setLineWidth(3);

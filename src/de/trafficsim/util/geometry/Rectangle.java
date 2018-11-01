@@ -38,6 +38,16 @@ public class Rectangle extends Shape {
         return false;
     }
 
+    public Rectangle getBoundingRect(Rectangle r) {
+        double fX = from.x > r.from.x ? r.from.x : from.x;
+        double fY = from.y > r.from.y ? r.from.y : from.y;
+
+        double tX = to.x > r.to.x ? to.x : r.to.x;
+        double tY = to.y > r.to.y ? to.y : r.to.y;
+
+        return new Rectangle(new Position(fX, fY), new Position(tX, tY));
+    }
+
     @Override
     public void render(AreaGraphicsContext agc, Position offset) {
         Position f = agc.areaToCanvas(from.add(offset));

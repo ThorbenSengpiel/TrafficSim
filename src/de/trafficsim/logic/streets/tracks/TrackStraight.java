@@ -17,7 +17,7 @@ public class TrackStraight extends Track {
     }
 
     @Override
-    public void renderTrack(AreaGraphicsContext agc, Position f, Position t) {
+    public void renderTrack(AreaGraphicsContext agc, Position f, Position t, Position offset) {
         agc.gc.strokeLine(f.x, f.y, t.x, t.y);
         Position middle = new Position((f.x + t.x) / 2, (f.y + t.y) / 2);
         switch (inDir) {
@@ -53,6 +53,6 @@ public class TrackStraight extends Track {
 
     @Override
     public double getDirectionOnPos(double currentPosInTrack) {
-        return inDir.angle;
+        return -inDir.angle;
     }
 }
