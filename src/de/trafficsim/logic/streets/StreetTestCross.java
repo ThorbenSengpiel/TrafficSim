@@ -21,15 +21,15 @@ public class StreetTestCross extends Street {
     public StreetTestCross(Position position) {
         super(position, StreetType.TEST_CROSS);
 
-        inWest = addTrack(new TrackStraight(new Position(-25, 2.5), new Position(-12.5, 2.5), this));
-        outWest = addTrack(new TrackStraight(new Position(-12.5, -2.5), new Position(-25, -2.5), this));
-        inEast = addTrack(new TrackStraight(new Position(25, -2.5), new Position(12.5, -2.5), this));
-        outEast = addTrack(new TrackStraight(new Position(12.5, 2.5), new Position(25, 2.5), this));
+        inWest = addInTrack(new TrackStraight(new Position(-25, 2.5), new Position(-12.5, 2.5), this));
+        outWest = addOutTrack(new TrackStraight(new Position(-12.5, -2.5), new Position(-25, -2.5), this));
+        inEast = addInTrack(new TrackStraight(new Position(25, -2.5), new Position(12.5, -2.5), this));
+        outEast = addOutTrack(new TrackStraight(new Position(12.5, 2.5), new Position(25, 2.5), this));
 
-        inNorth = addTrack(new TrackStraight(new Position(-2.5, -25), new Position(-2.5, -12.5), this));
-        outNorth = addTrack(new TrackStraight(new Position(2.5, -12.5), new Position(2.5, -25), this));
-        inSouth = addTrack(new TrackStraight(new Position(2.5, 25), new Position(2.5, 12.5), this));
-        outSouth = addTrack(new TrackStraight(new Position(-2.5, 12.5), new Position(-2.5, 25), this));
+        inNorth = addInTrack(new TrackStraight(new Position(-2.5, -25), new Position(-2.5, -12.5), this));
+        outNorth = addOutTrack(new TrackStraight(new Position(2.5, -12.5), new Position(2.5, -25), this));
+        inSouth = addInTrack(new TrackStraight(new Position(2.5, 25), new Position(2.5, 12.5), this));
+        outSouth = addOutTrack(new TrackStraight(new Position(-2.5, 12.5), new Position(-2.5, 25), this));
 
         addTrackBetween(inWest, outNorth);
         addTrackBetween(inWest, outEast);

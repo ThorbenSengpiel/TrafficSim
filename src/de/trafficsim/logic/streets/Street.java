@@ -14,12 +14,18 @@ public abstract class Street {
 
     private List<Track> tracks;
 
+    private List<Track> inTracks;
+
+    private List<Track> outTracks;
     public final StreetType type;
 
     public Street(Position position, StreetType type) {
         this.position = position;
         this.type = type;
         tracks = new ArrayList<>();
+        inTracks = new ArrayList<>();
+        outTracks = new ArrayList<>();
+
     }
 
     public Position getPosition() {
@@ -32,6 +38,22 @@ public abstract class Street {
 
     public List<Track> getTracks() {
         return tracks;
+    }
+
+    protected Track addInOutTrack(Track track) {
+        inTracks.add(track);
+        outTracks.add(track);
+        return addTrack(track);
+    }
+
+    protected Track addInTrack(Track track) {
+        inTracks.add(track);
+        return addTrack(track);
+    }
+
+    protected Track addOutTrack(Track track) {
+        outTracks.add(track);
+        return addTrack(track);
     }
 
     protected Track addTrack(Track track) {
@@ -56,5 +78,22 @@ public abstract class Street {
         return addTrack(track);
     }
 
+    public void disconnect() {
+        for (Track track : inTracks) {
+            track.disconnectAllIngoing();
+        }
+        for (Track track : outTracks) {
+            track.disconnectAllOutgoing();
+        }
+    }
+
     public abstract StreetView createView();
+
+    public List<Track> getInTracks() {
+        return inTracks;
+    }
+
+    public List<Track> getOutTracks() {
+        return outTracks;
+    }
 }

@@ -2,6 +2,7 @@ package de.trafficsim.gui.graphics;
 
 import de.trafficsim.gui.views.StreetView;
 import de.trafficsim.logic.streets.Street;
+import de.trafficsim.logic.streets.tracks.Track;
 import de.trafficsim.logic.vehicles.Vehicle;
 import de.trafficsim.util.Util;
 import de.trafficsim.util.geometry.Position;
@@ -44,7 +45,7 @@ public class Area extends Canvas {
     public Area() {
         super(200, 200);
         this.center = new Position(0, 0);
-        this.scale = 1/* m/Pix */;
+        this.scale = 1/* m/Pixel */;
 
         GraphicsContext gc = getGraphicsContext2D();
         gc.setFill(Color.LIGHTGRAY);
@@ -74,11 +75,6 @@ public class Area extends Canvas {
                 scale = 0.001;
             }
         });
-        try {
-            img = new Image(new FileInputStream(new File("car.png")));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
 
@@ -97,6 +93,7 @@ public class Area extends Canvas {
         if (hit != null) {
             dragStartCenter = hit.getStreet().getPosition();
             dragged = hit;
+            hit.getStreet().disconnect();
         } else {
             dragStartCenter = center;
         }
@@ -108,7 +105,33 @@ public class Area extends Canvas {
         dragStartCenter = null;
         if (dragged != null) {
             dragged.getStreet().setPosition(dragged.getStreet().getPosition().snapToGrid(GRID_SPACING));
+            dragDropConnect(dragged);
             dragged = null;
+        }
+    }
+
+    private void dragDropConnect(StreetView dragged) {
+        for (StreetView streetView : streetViewList) {
+            if (streetView.getStreet() != dragged.getStreet()) {
+                for (Track inTrack : streetView.getStreet().getInTracks()) {
+                    Position from = inTrack.getFrom().add(streetView.getStreet().getPosition());
+                    for (Track outTrack : dragged.getStreet().getOutTracks()) {
+                        Position to = outTrack.getTo().add(dragged.getStreet().getPosition());
+                        if (from.equals(to)) {
+                            outTrack.connectOutToInOf(inTrack);
+                        }
+                    }
+                }
+                for (Track outTrack : streetView.getStreet().getOutTracks()) {
+                    Position to = outTrack.getTo().add(streetView.getStreet().getPosition());
+                    for (Track inTrack : dragged.getStreet().getInTracks()) {
+                        Position from = inTrack.getFrom().add(dragged.getStreet().getPosition());
+                        if (from.equals(to)) {
+                            outTrack.connectOutToInOf(inTrack);
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -147,8 +170,6 @@ public class Area extends Canvas {
         }
         drawOverlay(delta);
     }
-
-    static Image img;
 
     private void drawVehicles() {
         for (Vehicle vehicle : vehicleList) {

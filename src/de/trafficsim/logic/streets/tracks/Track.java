@@ -20,6 +20,7 @@ public abstract class Track {
     protected Position from;
 
     protected Position to;
+
     protected List<Vehicle> vehiclesOnTrack = new ArrayList<>();
 
     protected List<Track> inTrackList = new ArrayList<>();
@@ -36,6 +37,23 @@ public abstract class Track {
     public void connectOutToInOf(Track track) {
         track.inTrackList.add(this);
         outTrackList.add(track);
+    }
+
+    public void disconnectOutFromInOf(Track track) {
+        track.inTrackList.remove(this);
+        outTrackList.remove(track);
+    }
+
+    public void disconnectAllOutgoing() {
+        for (int i = outTrackList.size()-1; i >= 0 ; i--) {
+            disconnectOutFromInOf(outTrackList.get(i));
+        }
+    }
+
+    public void disconnectAllIngoing() {
+        for (int i = inTrackList.size()-1; i >= 0 ; i--) {
+            inTrackList.get(i).disconnectOutFromInOf(this);
+        }
     }
 
 

@@ -15,7 +15,7 @@ public class StreetStraight extends Street {
 
     public StreetStraight(Position from, Position to) {
         super(new Position((from.x + to.x)/2, (from.y + to.y)/2), StreetType.STRAIGHT);
-        addTrack(new TrackStraight(from.sub(position), to.sub(position),this));
+        addInOutTrack(new TrackStraight(from.sub(position), to.sub(position),this));
         this.from = from;
         this.to = to;
     }
