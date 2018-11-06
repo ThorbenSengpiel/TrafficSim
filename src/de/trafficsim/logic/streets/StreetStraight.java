@@ -32,4 +32,9 @@ public class StreetStraight extends Street {
     public StreetView createView() {
         return new StreetStraightView(this);
     }
+
+    @Override
+    public Street createRotated() {
+        return this;
+    }
 }

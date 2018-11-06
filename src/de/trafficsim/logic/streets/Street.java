@@ -4,6 +4,9 @@ import de.trafficsim.gui.views.StreetView;
 import de.trafficsim.logic.streets.tracks.Track;
 import de.trafficsim.logic.streets.tracks.TrackCurve;
 import de.trafficsim.logic.streets.tracks.TrackStraight;
+import de.trafficsim.logic.vehicles.Vehicle;
+import de.trafficsim.logic.vehicles.VehicleManager;
+import de.trafficsim.util.Direction;
 import de.trafficsim.util.geometry.Position;
 
 import java.util.ArrayList;
@@ -15,17 +18,28 @@ public abstract class Street {
     private List<Track> tracks;
 
     private List<Track> inTracks;
-
     private List<Track> outTracks;
+
     public final StreetType type;
 
-    public Street(Position position, StreetType type) {
+    protected final Direction rotation;
+
+    public Street(Position position, StreetType type, Direction rotation) {
+        this.rotation = rotation;
         this.position = position;
         this.type = type;
         tracks = new ArrayList<>();
         inTracks = new ArrayList<>();
         outTracks = new ArrayList<>();
 
+    }
+
+    public Street(Position position, StreetType type) {
+        this(position, type, Direction.NORTH);
+    }
+
+    protected Position createPosition(double x, double y) {
+        return new Position(x, y).rotate(rotation);
     }
 
     public Position getPosition() {
@@ -95,5 +109,22 @@ public abstract class Street {
 
     public List<Track> getOutTracks() {
         return outTracks;
+    }
+
+    public void removeAllVehicles() {
+        List<Vehicle> toRemove = new ArrayList<>();
+        for (Track track : getTracks()) {
+            toRemove.addAll(track.getVehiclesOnTrack());
+        }
+        VehicleManager vehicleManager = VehicleManager.getInstance();
+        for (Vehicle vehicle : toRemove) {
+            vehicleManager.removeVehicle(vehicle);
+        }
+    }
+
+    public abstract Street createRotated();
+
+    public Direction getRotation() {
+        return rotation;
     }
 }

@@ -1,12 +1,12 @@
 package de.trafficsim.logic.network;
 
 import de.trafficsim.gui.GuiController;
-import de.trafficsim.logic.streets.Street;
-import de.trafficsim.logic.streets.StreetRoundAbout;
-import de.trafficsim.logic.streets.StreetStraight;
-import de.trafficsim.logic.streets.StreetTestCross;
+import de.trafficsim.logic.streets.*;
 import de.trafficsim.logic.streets.tracks.Track;
+import de.trafficsim.logic.vehicles.VehicleManager;
+import de.trafficsim.util.Direction;
 import de.trafficsim.util.geometry.Position;
+import javafx.geometry.Pos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,13 +16,17 @@ public class StreetNetworkManager {
     private static StreetNetworkManager instance;
 
     private List<Street> streetList = new ArrayList<>();
-
+    private List<StreetSpawn> streetSpawnList = new ArrayList<>();
 
     public void update(double delta) {
 
     }
 
     public void initialize(){
+        Street p0 = new StreetParkingDeck(new Position(100, 50), Direction.NORTH);
+        Street p1 = new StreetParkingDeck(new Position(100, 0), Direction.NORTH);
+        Street p2 = new StreetParkingDeck(new Position(100, -50), Direction.NORTH);
+        addStreet(p0, p1, p2);
         Street s = new StreetStraight(new Position(-100,-150),new Position(100,-150));
 
         Street s0 = new StreetStraight(new Position(-100,-100),new Position(100,-100));
@@ -31,10 +35,10 @@ public class StreetNetworkManager {
         Street s3 = new StreetStraight(new Position(-100,100),new Position(-100,-100));
 
 
-        s0.getTracks().get(0).connectOutToInOf(s1.getTracks().get(0));
+        /*s0.getTracks().get(0).connectOutToInOf(s1.getTracks().get(0));
         s1.getTracks().get(0).connectOutToInOf(s2.getTracks().get(0));
         s2.getTracks().get(0).connectOutToInOf(s3.getTracks().get(0));
-        s3.getTracks().get(0).connectOutToInOf(s0.getTracks().get(0));
+        s3.getTracks().get(0).connectOutToInOf(s0.getTracks().get(0));*/
 
 
         addStreet(new StreetRoundAbout(new Position(0, -150), true));
@@ -50,14 +54,19 @@ public class StreetNetworkManager {
             }
         }
 
-        for (int x = 0; x <= 2; x++) {
-            for (int y = 0; y <= 2; y++) {
+        /*for (int x = 0; x < 2; x++) {
+            for (int y = 0; y < 2; y++) {
                 streets[x][y].outEast.connectOutToInOf(streets[(x+1)%3][y].inWest);
                 streets[(x+1)%3][y].outWest.connectOutToInOf(streets[x][y].inEast);
 
                 streets[x][y].outSouth.connectOutToInOf(streets[x][(y+1)%3].inNorth);
                 streets[x][(y+1)%3].outNorth.connectOutToInOf(streets[x][y].inSouth);
             }
+        }*/
+
+        for (Street street : streetList) {
+            street.disconnect();
+            connectStreet(street);
         }
 
         int cnt = 0;
@@ -72,13 +81,29 @@ public class StreetNetworkManager {
     public void addStreet(Street... streets){
         for (Street street : streets) {
             streetList.add(street);
+            if (street instanceof StreetSpawn) {
+                streetSpawnList.add((StreetSpawn) street);
+            }
             GuiController.getInstance().addStreet(street);
         }
     }
 
     public void addStreet(Street street){
         streetList.add(street);
+        if (street instanceof StreetSpawn) {
+            streetSpawnList.add((StreetSpawn) street);
+        }
         GuiController.getInstance().addStreet(street);
+    }
+
+    public void removeStreet(Street street) {
+        street.disconnect();
+        street.removeAllVehicles();
+        streetList.remove(street);
+        if (street instanceof StreetSpawn) {
+            streetSpawnList.remove(street);
+        }
+        GuiController.getInstance().removeStreet(street);
     }
 
     public static StreetNetworkManager getInstance() {
@@ -88,7 +113,36 @@ public class StreetNetworkManager {
         return instance;
     }
 
+    public StreetSpawn getRandomSpawn() {
+        return streetSpawnList.get((int) (streetSpawnList.size() * Math.random()));
+    }
+
     public List<Street> getStreetList() {
         return streetList;
+    }
+
+    public void connectStreet(Street streetConnect) {
+        for (Street street : streetList) {
+            if (street != streetConnect) {
+                for (Track inTrack : street.getInTracks()) {
+                    Position from = inTrack.getFrom().add(street.getPosition());
+                    for (Track outTrack : streetConnect.getOutTracks()) {
+                        Position to = outTrack.getTo().add(streetConnect.getPosition());
+                        if (from.equals(to)) {
+                            outTrack.connectOutToInOf(inTrack);
+                        }
+                    }
+                }
+                for (Track outTrack : street.getOutTracks()) {
+                    Position to = outTrack.getTo().add(street.getPosition());
+                    for (Track inTrack : streetConnect.getInTracks()) {
+                        Position from = inTrack.getFrom().add(streetConnect.getPosition());
+                        if (from.equals(to)) {
+                            outTrack.connectOutToInOf(inTrack);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

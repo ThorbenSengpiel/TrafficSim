@@ -24,8 +24,27 @@ public abstract class StreetView {
     public void draw(AreaGraphicsContext agc) {
         draw(agc, street.getPosition());
     }
+    public void drawOverVehicle(AreaGraphicsContext agc) {
+        drawOverVehicle(agc, street.getPosition());
+    }
     public abstract void draw(AreaGraphicsContext agc, Position center);
+    public abstract void drawOverVehicle(AreaGraphicsContext agc, Position center);
 
+    protected Position getPosition(Position offset, Position p) {
+        return p.add(offset);
+    }
+
+    protected Position getPosition(Position offset, double x, double y) {
+        return new Position(x + offset.x, y + offset.y);
+    }
+
+    protected Position getPositionOnCanvas(Position offset, AreaGraphicsContext agc, Position p) {
+        return agc.areaToCanvas(p.add(offset));
+    }
+
+    protected Position getPositionOnCanvas(Position offset, AreaGraphicsContext agc, double x, double y) {
+        return agc.areaToCanvas(new Position(x + offset.x, y + offset.y));
+    }
 
     public void drawPreview(AreaGraphicsContext agc) {
         draw(agc, street.getPosition().snapToGrid(Area.GRID_SPACING));

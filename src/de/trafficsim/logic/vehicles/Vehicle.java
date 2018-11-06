@@ -9,10 +9,11 @@ public class Vehicle {
 
     protected double velocity = 1.0;
     protected double currentPosInTrack = 0;
+
     protected Track currentTrack;
+
     protected List<Track> path;
     private boolean active = true;
-
     public double color = 0;
 
     public Vehicle(double velocity, Track track){
@@ -38,14 +39,19 @@ public class Vehicle {
             currentPosInTrack = newPositionInCurrentTrack;
         }
     }
+
     public boolean isActive() {
         return active;
     }
-
     public Position getPosition(){
         return currentTrack.getPosOnArea(currentPosInTrack);
     }
+
     public double getDirection(){
         return currentTrack.getDirectionOnPos(currentPosInTrack);
+    }
+
+    public Track getCurrentTrack() {
+        return currentTrack;
     }
 }

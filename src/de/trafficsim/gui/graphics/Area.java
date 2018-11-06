@@ -1,21 +1,19 @@
 package de.trafficsim.gui.graphics;
 
 import de.trafficsim.gui.views.StreetView;
+import de.trafficsim.logic.network.StreetNetworkManager;
 import de.trafficsim.logic.streets.Street;
-import de.trafficsim.logic.streets.tracks.Track;
 import de.trafficsim.logic.vehicles.Vehicle;
 import de.trafficsim.util.Util;
 import de.trafficsim.util.geometry.Position;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,6 +75,18 @@ public class Area extends Canvas {
         });
     }
 
+    public void keyPressed(KeyEvent e) {
+        if (dragged != null) {
+            if (e.getCode() == KeyCode.R) {
+                Street street = dragged.getStreet();
+                StreetNetworkManager.getInstance().removeStreet(street);
+                Street rotated = street.createRotated();
+                StreetNetworkManager.getInstance().addStreet(rotated);
+                dragged = getView(rotated);
+            }
+        }
+    }
+
 
     private void mousePressed(MouseEvent e) {
         Position pos = agc.canvasToArea(new Position(e.getX(), e.getY()));
@@ -94,6 +104,7 @@ public class Area extends Canvas {
             dragStartCenter = hit.getStreet().getPosition();
             dragged = hit;
             hit.getStreet().disconnect();
+            hit.getStreet().removeAllVehicles();
         } else {
             dragStartCenter = center;
         }
@@ -111,28 +122,7 @@ public class Area extends Canvas {
     }
 
     private void dragDropConnect(StreetView dragged) {
-        for (StreetView streetView : streetViewList) {
-            if (streetView.getStreet() != dragged.getStreet()) {
-                for (Track inTrack : streetView.getStreet().getInTracks()) {
-                    Position from = inTrack.getFrom().add(streetView.getStreet().getPosition());
-                    for (Track outTrack : dragged.getStreet().getOutTracks()) {
-                        Position to = outTrack.getTo().add(dragged.getStreet().getPosition());
-                        if (from.equals(to)) {
-                            outTrack.connectOutToInOf(inTrack);
-                        }
-                    }
-                }
-                for (Track outTrack : streetView.getStreet().getOutTracks()) {
-                    Position to = outTrack.getTo().add(streetView.getStreet().getPosition());
-                    for (Track inTrack : dragged.getStreet().getInTracks()) {
-                        Position from = inTrack.getFrom().add(dragged.getStreet().getPosition());
-                        if (from.equals(to)) {
-                            outTrack.connectOutToInOf(inTrack);
-                        }
-                    }
-                }
-            }
-        }
+        StreetNetworkManager.getInstance().connectStreet(dragged.getStreet());
     }
 
     private void mouseDrag(MouseEvent e) {
@@ -153,20 +143,28 @@ public class Area extends Canvas {
     public void draw(double delta) {
         agc = new AreaGraphicsContext(getGraphicsContext2D(), center, scale, getWidth(), getHeight());
 
+        ArrayList<StreetView> visibleStreetViews = new ArrayList<>();
+        for (StreetView view : streetViewList) {
+            if (view.isVisible(agc)) {
+                visibleStreetViews.add(view);
+            }
+        }
+
         drawArea();
         agc.setTransparent(true);
         drawPreviewElement();
         agc.setTransparent(false);
-        drawStreets();
+        drawStreets(visibleStreetViews);
         drawVehicles();
+        drawStreetsOverVehicles(visibleStreetViews);
         if (showTracks) {
-            drawTracks();
+            drawTracks(visibleStreetViews);
         }
         if (showBoundingBox) {
-            drawdrawBoundingBoxes();
+            drawdrawBoundingBoxes(visibleStreetViews);
         }
         if (showHitBox) {
-            drawdrawHitBoxes();
+            drawdrawHitBoxes(visibleStreetViews);
         }
         drawOverlay(delta);
     }
@@ -221,41 +219,39 @@ public class Area extends Canvas {
         }
     }
 
-    private void drawStreets() {
-        for (StreetView view : streetViewList) {
-            if (view.isVisible(agc)) {
-                view.draw(agc);
-            }
+    private void drawStreets(List<StreetView> streetViews) {
+        for (StreetView view : streetViews) {
+            view.draw(agc);
         }
     }
 
-    private void drawTracks() {
-        for (StreetView view : streetViewList) {
-            if (view.isVisible(agc)) {
-                view.drawTracks(agc);
-            }
+    private void drawStreetsOverVehicles(List<StreetView> streetViews) {
+        for (StreetView view : streetViews) {
+            view.drawOverVehicle(agc);
         }
     }
 
-    private void drawdrawBoundingBoxes() {
+    private void drawTracks(List<StreetView> streetViews) {
+        for (StreetView view : streetViews) {
+            view.drawTracks(agc);
+        }
+    }
+
+    private void drawdrawBoundingBoxes(List<StreetView> streetViews) {
         agc.gc.setFill(Color.TRANSPARENT);
         agc.gc.setLineWidth(2);
         agc.gc.setStroke(Color.LIME);
-        for (StreetView view : streetViewList) {
-            if (view.isVisible(agc)) {
-                view.drawBoundingBox(agc);
-            }
+        for (StreetView view : streetViews) {
+            view.drawBoundingBox(agc);
         }
     }
 
-    private void drawdrawHitBoxes() {
+    private void drawdrawHitBoxes(List<StreetView> streetViews) {
         agc.gc.setFill(Color.TRANSPARENT);
         agc.gc.setLineWidth(2);
         agc.gc.setStroke(Color.RED);
-        for (StreetView view : streetViewList) {
-            if (view.isVisible(agc)) {
-                view.drawHitBox(agc);
-            }
+        for (StreetView view : streetViews) {
+            view.drawHitBox(agc);
         }
     }
 
@@ -303,6 +299,15 @@ public class Area extends Canvas {
                 break;
             }
         }
+    }
+
+    private StreetView getView(Street street) {
+        for (StreetView streetView : streetViewList) {
+            if (streetView.getStreet() == street) {
+                return streetView;
+            }
+        }
+        return null;
     }
 
     public void addVehicle(Vehicle vehicle) {

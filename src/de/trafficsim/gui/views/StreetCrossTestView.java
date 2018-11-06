@@ -15,15 +15,15 @@ public class StreetCrossTestView extends StreetView {
 
     @Override
     public void draw(AreaGraphicsContext agc, Position center) {
-        Position n = agc.areaToCanvas(new Position(0, -12.5).add(center));
-        Position e = agc.areaToCanvas(new Position(12.5, 0).add(center));
-        Position s = agc.areaToCanvas(new Position(0, 12.5).add(center));
-        Position w = agc.areaToCanvas(new Position(-12.5, 0).add(center));
+        Position n = getPositionOnCanvas(center, agc, 0, -12.5);
+        Position e = getPositionOnCanvas(center, agc, 12.5, 0);
+        Position s = getPositionOnCanvas(center, agc, 0, 12.5);
+        Position w = getPositionOnCanvas(center, agc, -12.5, 0);
 
-        agc.draw2Lane(new Position(12.4, 0).add(center), new Position(25, 0).add(center));
-        agc.draw2Lane(new Position(-12.4, 0).add(center), new Position(-25, 0).add(center));
-        agc.draw2Lane(new Position(0, 12.4).add(center), new Position(0, 25).add(center));
-        agc.draw2Lane(new Position(0, -12.4).add(center), new Position(0, -25).add(center));
+        agc.draw2Lane(getPosition(center, 12.4, 0),  getPosition(center, 25, 0));
+        agc.draw2Lane(getPosition(center, -12.4, 0), getPosition(center, -25, 0));
+        agc.draw2Lane(getPosition(center, 0, 12.4),  getPosition(center, 0, 25));
+        agc.draw2Lane(getPosition(center, 0, 12.4),  getPosition(center, 0, -25));
 
         agc.setFill(Color.GRAY);
         double r = agc.scaleToCanvas(5);
@@ -50,6 +50,11 @@ public class StreetCrossTestView extends StreetView {
         agc.gc.strokeArc(ne.x-r, ne.y-r, r*2, r*2, 90, 90, ArcType.OPEN);
         agc.gc.strokeArc(se.x-r, se.y-r, r*2, r*2, 180, 90, ArcType.OPEN);
         agc.gc.strokeArc(sw.x-r, sw.y-r, r*2, r*2, 270, 90, ArcType.OPEN);
+
+    }
+
+    @Override
+    public void drawOverVehicle(AreaGraphicsContext agc, Position center) {
 
     }
 }

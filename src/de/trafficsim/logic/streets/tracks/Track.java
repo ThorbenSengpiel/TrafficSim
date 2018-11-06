@@ -100,11 +100,11 @@ public abstract class Track {
      * @param offset
      */
     protected abstract void renderTrack(AreaGraphicsContext agc, Position f, Position t, Position offset);
+
     public abstract Position getPosOnArea(double pos);
     public double getLength() {
         return length;
     }
-
     public Position getFrom() {
         return from;
     }
@@ -137,5 +137,9 @@ public abstract class Track {
 
     public Direction getInDir() {
         return inDir;
+    }
+
+    public List<Vehicle> getVehiclesOnTrack() {
+        return vehiclesOnTrack;
     }
 }

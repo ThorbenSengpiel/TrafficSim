@@ -58,4 +58,9 @@ public class StreetTestCross extends Street {
     public StreetView createView() {
         return new StreetCrossTestView(this);
     }
+
+    @Override
+    public Street createRotated() {
+        return this;
+    }
 }

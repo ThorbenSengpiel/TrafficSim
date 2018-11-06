@@ -45,4 +45,9 @@ public class StreetRoundAbout extends Street {
     public StreetView createView() {
         return new StreetRoundAboutView(this);
     }
+
+    @Override
+    public Street createRotated() {
+        return this;
+    }
 }

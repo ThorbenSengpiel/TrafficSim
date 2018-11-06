@@ -41,5 +41,10 @@ public class StreetRoundAboutView extends StreetView {
         agc.gc.strokeOval(c.x-r, c.y-r, 2*r, 2*r);
         agc.gc.setLineDashes(null);
     }
+
+    @Override
+    public void drawOverVehicle(AreaGraphicsContext agc, Position center) {
+
+    }
 }
 

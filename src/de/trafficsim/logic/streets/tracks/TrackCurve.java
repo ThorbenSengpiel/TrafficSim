@@ -101,10 +101,10 @@ public class TrackCurve extends Track {
         h = Math.abs(h);
 
         agc.gc.strokeArc(c.x-w, c.y-h, w*2, h*2, angle, 90, ArcType.OPEN);*/
-        if (vehiclesOnTrack.size() > 0) {
+        /*if (vehiclesOnTrack.size() > 0) {
             agc.setStroke(Color.RED);
             agc.gc.strokeLine(f.x, f.y, f.x+inDir.vector.x * 40, f.y+inDir.vector.y * 40);
             agc.gc.strokeLine(t.x, t.y, t.x+outDir.vector.x * 40, t.y+outDir.vector.y * 40);
-        }
+        }*/
     }
 }

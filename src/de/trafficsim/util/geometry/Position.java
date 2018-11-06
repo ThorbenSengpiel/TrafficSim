@@ -1,5 +1,7 @@
 package de.trafficsim.util.geometry;
 
+import de.trafficsim.util.Direction;
+
 import java.util.Objects;
 
 public class Position {
@@ -65,6 +67,22 @@ public class Position {
 
         return new Position((toX - fromX) / 2, (toY - fromY) / 2);
 
+    }
+
+    public Position rotate(Direction dir) {
+        switch (dir) {
+            case NORTH:
+                return this;
+            case EAST:
+                return new Position(-y, x);
+            case SOUTH:
+                return new Position(-x, -y);
+            case WEST:
+                return new Position(y, -x);
+            case ZERO:
+                return Position.ZERO;
+        }
+        return this;
     }
 
     @Override

@@ -71,4 +71,20 @@ public enum Direction {
     public boolean isRightOf(Direction dir) {
         return this == NORTH && dir == EAST || this == EAST && dir == SOUTH || this == SOUTH && dir == WEST || this == WEST && dir == NORTH;
     }
+
+    public Direction rotateClockWise() {
+        switch (this) {
+            case NORTH:
+                return EAST;
+            case EAST:
+                return SOUTH;
+            case SOUTH:
+                return WEST;
+            case WEST:
+                return NORTH;
+            case ZERO:
+                return ZERO;
+        }
+        return ZERO;
+    }
 }

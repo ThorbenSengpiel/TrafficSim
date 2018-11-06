@@ -63,4 +63,9 @@ public class StreetStraightView extends StreetView {
         }
 
     }
+
+    @Override
+    public void drawOverVehicle(AreaGraphicsContext agc, Position center) {
+
+    }
 }

@@ -5,6 +5,7 @@ import de.trafficsim.logic.streets.Street;
 import de.trafficsim.logic.vehicles.Vehicle;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 
 public class GuiController {
@@ -63,5 +64,9 @@ public class GuiController {
             instance = new GuiController();
         }
         return instance;
+    }
+
+    public void keyPressed(KeyEvent event) {
+        area.keyPressed(event);
     }
 }
