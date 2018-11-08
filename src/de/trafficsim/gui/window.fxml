@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.Button?>
 <AnchorPane fx:id="layout" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <BorderPane prefHeight="471.0" prefWidth="517.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -19,6 +20,7 @@
                         <CheckBox fx:id="checkShowTracks" mnemonicParsing="false" text="Tracks" />
                         <CheckBox fx:id="checkShowBoundingBox" mnemonicParsing="false" text="BoundingBox" />
                         <CheckBox fx:id="checkShowHitBox" mnemonicParsing="false" text="HitBox" />
+                         <Button fx:id="addCarButton" mnemonicParsing="false" text="Add Car" />
                      </children>
                   </VBox>
                </children></AnchorPane>
