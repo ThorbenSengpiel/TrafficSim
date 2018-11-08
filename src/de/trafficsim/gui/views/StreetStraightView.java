@@ -35,37 +35,35 @@ public class StreetStraightView extends StreetView {
     }
 
     @Override
-    public void draw(AreaGraphicsContext agc, Position center) {
-        Position c = agc.areaToCanvas(center);
-
+    public void draw(AreaGraphicsContext agc) {
         double l;
         double w;
 
         if (horizontal) {
-            l = agc.scaleToCanvas(length/2);
-            w = agc.scaleToCanvas(width/2);
+            l = length/2;
+            w = width/2;
         } else {
-            w = agc.scaleToCanvas(length/2);
-            l = agc.scaleToCanvas(width/2);
+            w = length/2;
+            l = width/2;
         }
 
         agc.setFill(Color.GRAY);
-        agc.gc.fillRect(c.x-l, c.y-w, 2*l, 2*w);
+        agc.gc.fillRect(-l, -w, 2*l, 2*w);
 
         agc.setStroke(Color.BLACK);
-        agc.gc.setLineWidth(agc.scaleToCanvas(0.2));
+        agc.gc.setLineWidth(0.2);
         if (horizontal) {
-            agc.gc.strokeLine(c.x-l, c.y+w, c.x+l, c.y+w);
-            agc.gc.strokeLine(c.x-l, c.y-w, c.x+l, c.y-w);
+            agc.gc.strokeLine(-l, +w, +l, +w);
+            agc.gc.strokeLine(-l, -w, +l, -w);
         } else {
-            agc.gc.strokeLine(c.x-l, c.y-w, c.x-l, c.y+w);
-            agc.gc.strokeLine(c.x+l, c.y-w, c.x+l, c.y+w);
+            agc.gc.strokeLine(-l, -w, -l, +w);
+            agc.gc.strokeLine(+l, -w, +l, +w);
         }
 
     }
 
     @Override
-    public void drawOverVehicle(AreaGraphicsContext agc, Position center) {
+    public void drawOverVehicle(AreaGraphicsContext agc) {
 
     }
 }

@@ -4,6 +4,7 @@ import de.trafficsim.gui.views.StreetView;
 import de.trafficsim.logic.network.StreetNetworkManager;
 import de.trafficsim.logic.streets.Street;
 import de.trafficsim.logic.vehicles.Vehicle;
+import de.trafficsim.logic.vehicles.VehicleManager;
 import de.trafficsim.util.Util;
 import de.trafficsim.util.geometry.Position;
 import javafx.scene.canvas.Canvas;
@@ -143,6 +144,9 @@ public class Area extends Canvas {
     public void draw(double delta) {
         agc = new AreaGraphicsContext(getGraphicsContext2D(), center, scale, getWidth(), getHeight());
 
+        long t0 = System.nanoTime();
+
+
         ArrayList<StreetView> visibleStreetViews = new ArrayList<>();
         for (StreetView view : streetViewList) {
             if (view.isVisible(agc)) {
@@ -150,13 +154,24 @@ public class Area extends Canvas {
             }
         }
 
+        long t1 = System.nanoTime();
         drawArea();
+        long t2 = System.nanoTime();
+        agc.gc.save();
+        agc.gc.translate(agc.canvasCenter.x, agc.canvasCenter.y);
+        agc.gc.scale(1/agc.scale, 1/agc.scale);
+        agc.gc.translate(-agc.center.x, -agc.center.y);
+
         agc.setTransparent(true);
         drawPreviewElement();
+        long t3 = System.nanoTime();
         agc.setTransparent(false);
         drawStreets(visibleStreetViews);
+        long t4 = System.nanoTime();
         drawVehicles();
+        long t5 = System.nanoTime();
         drawStreetsOverVehicles(visibleStreetViews);
+        long t6 = System.nanoTime();
         if (showTracks) {
             drawTracks(visibleStreetViews);
         }
@@ -166,16 +181,25 @@ public class Area extends Canvas {
         if (showHitBox) {
             drawdrawHitBoxes(visibleStreetViews);
         }
+        agc.gc.restore();
         drawOverlay(delta);
+        long t7 = System.nanoTime();
+
+        //System.out.println("Render: " + t(t7-t0) + ": " + t(t1-t0) + " " + t(t2-t1) + " " + t(t3-t2) + " " + t(t4-t3) + " " + t(t5-t4) + " " + t(t6-t5) + " " + t(t7-t6));
+    }
+
+    private String t(long t) {
+        return (t / 1000)+"";
     }
 
     private void drawVehicles() {
+        //double size = agc.scaleToCanvas(4);
+        double size = 4;
         for (Vehicle vehicle : vehicleList) {
             //agc.setFill(Color.color(0.8, 0.2, 0.2));
             //agc.setFill(Color.color((vehicle.color & 0b1)>0?1:0, (vehicle.color & 0b10)>0?1:0, (vehicle.color & 0b100)>0?1:0).deriveColor(0, 0.8, 0.8, 1));
             agc.setFill(Color.hsb(vehicle.color*360, 1, 1, 1));
-            Position position = agc.areaToCanvas(vehicle.getPosition());
-            double size = agc.scaleToCanvas(4);
+            Position position = vehicle.getPosition();
             agc.gc.translate(position.x, position.y);
             double rot = vehicle.getDirection();
             agc.gc.rotate(rot);
@@ -221,13 +245,13 @@ public class Area extends Canvas {
 
     private void drawStreets(List<StreetView> streetViews) {
         for (StreetView view : streetViews) {
-            view.draw(agc);
+            view.drawI(agc);
         }
     }
 
     private void drawStreetsOverVehicles(List<StreetView> streetViews) {
         for (StreetView view : streetViews) {
-            view.drawOverVehicle(agc);
+            view.drawOverVehicleI(agc);
         }
     }
 
@@ -239,7 +263,7 @@ public class Area extends Canvas {
 
     private void drawdrawBoundingBoxes(List<StreetView> streetViews) {
         agc.gc.setFill(Color.TRANSPARENT);
-        agc.gc.setLineWidth(2);
+        agc.gc.setLineWidth(2*agc.scale);
         agc.gc.setStroke(Color.LIME);
         for (StreetView view : streetViews) {
             view.drawBoundingBox(agc);
@@ -248,11 +272,24 @@ public class Area extends Canvas {
 
     private void drawdrawHitBoxes(List<StreetView> streetViews) {
         agc.gc.setFill(Color.TRANSPARENT);
-        agc.gc.setLineWidth(2);
+        agc.gc.setLineWidth(2*agc.scale);
         agc.gc.setStroke(Color.RED);
         for (StreetView view : streetViews) {
             view.drawHitBox(agc);
         }
+    }
+
+    private double[] fps = new double[60];
+    int current = 0;
+    private double calcFps(double delta) {
+        fps[current] = 1/delta;
+        current++;
+        current %= fps.length;
+        double avg = 0;
+        for (int i = 0; i < fps.length; i++) {
+            avg += fps[i];
+        }
+        return avg / fps.length;
     }
 
     private void drawOverlay(double delta) {
@@ -260,7 +297,9 @@ public class Area extends Canvas {
         agc.gc.setTextAlign(TextAlignment.LEFT);
         agc.gc.fillText(agc.screen.from.toString(), 10, 10);
         agc.gc.fillText(agc.screen.to.toString(), 10, 30);
-        agc.gc.fillText((1/delta)+"fps", 10, 50);
+
+        agc.gc.fillText(Util.DOUBLE_FORMAT_0_0000.format(calcFps(delta))+" fps", 10, 50);
+        agc.gc.fillText(VehicleManager.getInstance().getVehicleList().size()+" cars", 10, 70);
 
 
         agc.gc.setStroke(Color.BLACK);

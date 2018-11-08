@@ -14,19 +14,19 @@ public class StreetCrossTestView extends StreetView {
     }
 
     @Override
-    public void draw(AreaGraphicsContext agc, Position center) {
-        Position n = getPositionOnCanvas(center, agc, 0, -12.5);
-        Position e = getPositionOnCanvas(center, agc, 12.5, 0);
-        Position s = getPositionOnCanvas(center, agc, 0, 12.5);
-        Position w = getPositionOnCanvas(center, agc, -12.5, 0);
+    public void draw(AreaGraphicsContext agc) {
+        Position n = new Position(0, -12.5);
+        Position e = new Position(12.5, 0);
+        Position s = new Position(0, 12.5);
+        Position w = new Position(-12.5, 0);
 
-        agc.draw2Lane(getPosition(center, 12.4, 0),  getPosition(center, 25, 0));
-        agc.draw2Lane(getPosition(center, -12.4, 0), getPosition(center, -25, 0));
-        agc.draw2Lane(getPosition(center, 0, 12.4),  getPosition(center, 0, 25));
-        agc.draw2Lane(getPosition(center, 0, 12.4),  getPosition(center, 0, -25));
+        agc.draw2Lane(new Position(12.2, 0),  new Position(25.1, 0));
+        agc.draw2Lane(new Position(-12.2, 0), new Position(-25.1, 0));
+        agc.draw2Lane(new Position(0, 12.2),  new Position(0, 25.1));
+        agc.draw2Lane(new Position(0, 12.2),  new Position(0, -25.1));
 
         agc.setFill(Color.GRAY);
-        double r = agc.scaleToCanvas(5);
+        double r = 5;
         agc.gc.beginPath();
         agc.gc.moveTo(n.x+r, n.y);
         agc.gc.bezierCurveTo(n.x+r, n.y+r*0.85, e.x-r*0.85, e.y-r, e.x, e.y-r);
@@ -41,20 +41,19 @@ public class StreetCrossTestView extends StreetView {
         agc.gc.fill();
 
         agc.setStroke(AreaGraphicsContext.StreetVisuals.STREET_BORDER);
-        Position ne = agc.areaToCanvas(new Position(12.5, 12.5).add(center));
-        Position se = agc.areaToCanvas(new Position(12.5, -12.5).add(center));
-        Position nw = agc.areaToCanvas(new Position(-12.5, 12.5).add(center));
-        Position sw = agc.areaToCanvas(new Position(-12.5, -12.5).add(center));
-        r = agc.scaleToCanvas(7.5);
+        Position ne = new Position( 12.5,  12.5);
+        Position se = new Position( 12.5, -12.5);
+        Position nw = new Position(-12.5,  12.5);
+        Position sw = new Position(-12.5, -12.5);
+        r = 7.5;
         agc.gc.strokeArc(nw.x-r, nw.y-r, r*2, r*2, 0, 90, ArcType.OPEN);
         agc.gc.strokeArc(ne.x-r, ne.y-r, r*2, r*2, 90, 90, ArcType.OPEN);
         agc.gc.strokeArc(se.x-r, se.y-r, r*2, r*2, 180, 90, ArcType.OPEN);
         agc.gc.strokeArc(sw.x-r, sw.y-r, r*2, r*2, 270, 90, ArcType.OPEN);
-
     }
 
     @Override
-    public void drawOverVehicle(AreaGraphicsContext agc, Position center) {
+    public void drawOverVehicle(AreaGraphicsContext agc) {
 
     }
 }

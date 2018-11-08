@@ -12,11 +12,9 @@ public class Circle extends Shape {
     }
 
     @Override
-    public void render(AreaGraphicsContext agc, Position offset) {
-        Position c = agc.areaToCanvas(center.add(offset));
-        double r = agc.scaleToCanvas(radius);
-        agc.gc.fillOval(c.x-r, c.y-r, 2*r, 2*r);
-        agc.gc.strokeOval(c.x-r, c.y-r, 2*r, 2*r);
+    public void render(AreaGraphicsContext agc) {
+        agc.gc.fillOval(center.x-radius, center.y-radius, 2*radius, 2*radius);
+        agc.gc.strokeOval(center.x-radius, center.y-radius, 2*radius, 2*radius);
     }
 
     @Override

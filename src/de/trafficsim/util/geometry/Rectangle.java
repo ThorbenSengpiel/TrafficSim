@@ -49,11 +49,9 @@ public class Rectangle extends Shape {
     }
 
     @Override
-    public void render(AreaGraphicsContext agc, Position offset) {
-        Position f = agc.areaToCanvas(from.add(offset));
-        Position t = agc.areaToCanvas(to.add(offset));
-        agc.gc.fillRect(f.x, f.y, t.x - f.x, t.y - f.y);
-        agc.gc.strokeRect(f.x, f.y, t.x - f.x, t.y - f.y);
+    public void render(AreaGraphicsContext agc) {
+        agc.gc.fillRect(from.x, from.y, to.x - from.x, to.y - from.y);
+        agc.gc.strokeRect(from.x, from.y, to.x - from.x, to.y - from.y);
     }
 
     @Override

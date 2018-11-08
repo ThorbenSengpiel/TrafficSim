@@ -11,7 +11,7 @@ public class AreaGraphicsContext {
     public final GraphicsContext gc;
     public final Position center;
     public final double scale;
-    private Position canvasCenter;
+    public Position canvasCenter;
     public final Rectangle screen;
 
     private boolean transparent;
@@ -65,32 +65,29 @@ public class AreaGraphicsContext {
 
     public void setStroke(StreetVisuals visuals) {
         setStroke(visuals.stroke);
-        gc.setLineWidth(scaleToCanvas(visuals.width));
+        gc.setLineWidth(visuals.width);
         if (visuals.dashed != null) {
-            gc.setLineDashes(scaleToCanvas(StreetVisuals.STREET_LINE.width * visuals.dashed));
+            gc.setLineDashes(StreetVisuals.STREET_LINE.width * visuals.dashed);
         } else {
             gc.setLineDashes(null);
         }
     }
 
     public void draw2Lane(Position from, Position to) {
-        Position f = areaToCanvas(from);
-        Position t = areaToCanvas(to);
-
-        double w = scaleToCanvas(StreetVisuals.STREET2LANE.width / 2);
+        double w = StreetVisuals.STREET2LANE.width / 2;
 
         setStroke(StreetVisuals.STREET2LANE);
         gc.setLineCap(StrokeLineCap.BUTT);
-        gc.strokeLine(f.x, f.y, t.x, t.y);
+        gc.strokeLine(from.x, from.y, to.x, to.y);
         setStroke(StreetVisuals.STREET_LINE_DASHED);
-        gc.strokeLine(f.x, f.y, t.x, t.y);
+        gc.strokeLine(from.x, from.y, to.x, to.y);
         setStroke(StreetVisuals.STREET_BORDER);
         if (from.y == to.y) {
-            gc.strokeLine(f.x, f.y+w, t.x, t.y+w);
-            gc.strokeLine(f.x, f.y-w, t.x, t.y-w);
+            gc.strokeLine(from.x, from.y+w, to.x, to.y+w);
+            gc.strokeLine(from.x, from.y-w, to.x, to.y-w);
         } else {
-            gc.strokeLine(f.x+w, f.y, t.x+w, t.y);
-            gc.strokeLine(f.x-w, f.y, t.x-w, t.y);
+            gc.strokeLine(from.x+w, from.y, to.x+w, to.y);
+            gc.strokeLine(from.x-w, from.y, to.x-w, to.y);
         }
     }
 

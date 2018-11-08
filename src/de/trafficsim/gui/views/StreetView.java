@@ -21,39 +21,33 @@ public abstract class StreetView {
         boundingBox = hitBox.calcBoundingBox();
     }
 
-    public void draw(AreaGraphicsContext agc) {
-        draw(agc, street.getPosition());
+    public void drawI(AreaGraphicsContext agc) {
+        translate(agc);
+        draw(agc);
+        translateBack(agc);
     }
-    public void drawOverVehicle(AreaGraphicsContext agc) {
-        drawOverVehicle(agc, street.getPosition());
+    public void drawOverVehicleI(AreaGraphicsContext agc) {
+        translate(agc);
+        drawOverVehicle(agc);
+        translateBack(agc);
     }
-    public abstract void draw(AreaGraphicsContext agc, Position center);
-    public abstract void drawOverVehicle(AreaGraphicsContext agc, Position center);
-
-    protected Position getPosition(Position offset, Position p) {
-        return p.add(offset);
-    }
-
-    protected Position getPosition(Position offset, double x, double y) {
-        return new Position(x + offset.x, y + offset.y);
-    }
-
-    protected Position getPositionOnCanvas(Position offset, AreaGraphicsContext agc, Position p) {
-        return agc.areaToCanvas(p.add(offset));
-    }
-
-    protected Position getPositionOnCanvas(Position offset, AreaGraphicsContext agc, double x, double y) {
-        return agc.areaToCanvas(new Position(x + offset.x, y + offset.y));
-    }
+    public abstract void draw(AreaGraphicsContext agc);
+    public abstract void drawOverVehicle(AreaGraphicsContext agc);
 
     public void drawPreview(AreaGraphicsContext agc) {
-        draw(agc, street.getPosition().snapToGrid(Area.GRID_SPACING));
+        Position offset = street.getPosition().snapToGrid(Area.GRID_SPACING);
+        agc.gc.translate(offset.x, offset.y);
+        draw(agc);
+        drawOverVehicle(agc);
+        agc.gc.translate(-offset.x, -offset.y);
     }
 
     public void drawTracks(AreaGraphicsContext agc) {
+        translate(agc);
         for (Track track : street.getTracks()) {
-            track.render(agc, street.getPosition());
+            track.render(agc);
         }
+        translateBack(agc);
     }
 
     public boolean PointHit(Position p) {
@@ -61,11 +55,15 @@ public abstract class StreetView {
     }
 
     public void drawBoundingBox(AreaGraphicsContext agc) {
-        boundingBox.render(agc, street.getPosition());
+        translate(agc);
+        boundingBox.render(agc);
+        translateBack(agc);
     }
 
     public void drawHitBox(AreaGraphicsContext agc) {
-        hitBox.draw(agc, street.getPosition());
+        translate(agc);
+        hitBox.draw(agc);
+        translateBack(agc);
     }
 
     public boolean isVisible(AreaGraphicsContext agc) {
@@ -75,4 +73,13 @@ public abstract class StreetView {
     public Street getStreet() {
         return street;
     }
+
+    private void translate(AreaGraphicsContext agc) {
+        agc.gc.translate(street.getPosition().x, street.getPosition().y);
+    }
+
+    private void translateBack(AreaGraphicsContext agc) {
+        agc.gc.translate(-street.getPosition().x, -street.getPosition().y);
+    }
+
 }

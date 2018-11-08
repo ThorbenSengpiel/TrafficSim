@@ -9,7 +9,7 @@ public abstract class Shape {
         this.center = center;
     }
 
-    public abstract void render(AreaGraphicsContext agc, Position offset);
+    public abstract void render(AreaGraphicsContext agc);
 
     public abstract Rectangle getBoundingBox();
 

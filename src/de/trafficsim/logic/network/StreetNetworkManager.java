@@ -23,35 +23,34 @@ public class StreetNetworkManager {
     }
 
     public void initialize(){
-        Street p0 = new StreetParkingDeck(new Position(100, 50), Direction.NORTH);
+        /*Street p0 = new StreetParkingDeck(new Position(100, 50), Direction.NORTH);
         Street p1 = new StreetParkingDeck(new Position(100, 0), Direction.NORTH);
         Street p2 = new StreetParkingDeck(new Position(100, -50), Direction.NORTH);
         addStreet(p0, p1, p2);
-        Street s = new StreetStraight(new Position(-100,-150),new Position(100,-150));
+        Street s = new StreetStraight(new Position(-100,-150),new Position(100,-150));*/
 
-        Street s0 = new StreetStraight(new Position(-100,-100),new Position(100,-100));
+        /*Street s0 = new StreetStraight(new Position(-100,-100),new Position(100,-100));
         Street s1 = new StreetStraight(new Position(100,-100),new Position(100,100));
         Street s2 = new StreetStraight(new Position(100,100),new Position(-100,100));
         Street s3 = new StreetStraight(new Position(-100,100),new Position(-100,-100));
 
 
-        /*s0.getTracks().get(0).connectOutToInOf(s1.getTracks().get(0));
-        s1.getTracks().get(0).connectOutToInOf(s2.getTracks().get(0));
-        s2.getTracks().get(0).connectOutToInOf(s3.getTracks().get(0));
-        s3.getTracks().get(0).connectOutToInOf(s0.getTracks().get(0));*/
-
 
         addStreet(new StreetRoundAbout(new Position(0, -150), true));
-        addStreet(s, s0, s1, s2, s3);
+        addStreet(s, s0, s1, s2, s3);*/
         //addStreet(new StreetStraight(new Position(-100,-150),new Position(100,-150)));
 
-        StreetTestCross[][] streets = new StreetTestCross[3][3];
 
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
-                streets[x+1][y+1] = new StreetTestCross(new Position(x*50, y*50));
-                addStreet(streets[x+1][y+1]);
+                addStreet(new StreetTestCross(new Position(x*50, y*50)));
             }
+        }
+        for (int i = -1; i <= 1; i++) {
+            addStreet(new StreetParkingDeck(new Position(100, i*50), Direction.NORTH));
+            addStreet(new StreetParkingDeck(new Position(i*50, 100), Direction.EAST));
+            addStreet(new StreetParkingDeck(new Position(-100, i*50), Direction.SOUTH));
+            addStreet(new StreetParkingDeck(new Position(i*50, -100), Direction.WEST));
         }
 
         /*for (int x = 0; x < 2; x++) {
