@@ -166,7 +166,13 @@ public class Area extends Canvas {
         drawStreets(visibleStreetViews);
         drawVehicles();
         drawStreetsOverVehicles(visibleStreetViews);
-        selectPathTracks(vehicleList.get(0));
+
+        for (Vehicle vehicle : vehicleList) {
+            if (vehicle.getPath() != null) {
+                selectPathTracks(vehicleList.get(0));
+                break;
+            }
+        }
         if (showTracks) {
             drawTracks(visibleStreetViews);
         }

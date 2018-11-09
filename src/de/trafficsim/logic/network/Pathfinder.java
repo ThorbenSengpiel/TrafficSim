@@ -54,8 +54,10 @@ public class Pathfinder {
     randomPath.add(startTrack);
     Track currentTrack = startTrack;
     for (int i =0; i<length;i++) {
-      Track nextTrack = currentTrack.getOutTrackList().get(0);
-      //(int) (Math.random() * currentTrack.getOutTrackList().size())
+        if (currentTrack.getOutTrackList().size() <= 0) {
+            break;
+        }
+      Track nextTrack = currentTrack.getOutTrackList().get((int) (Math.random() * currentTrack.getOutTrackList().size()));
       randomPath.add(nextTrack);
       currentTrack = nextTrack;
     }
