@@ -10,7 +10,6 @@ public class Pathfinder {
 
 
     public static List<Track> getPath(Track from, Track to){
-        System.out.println("From :" + from + "To :" + to);
         List<Track> path = new LinkedList<Track>();
         Set<Track> visited = new HashSet<>();
         Map<Track,LinkedList<Track>> paths = new HashMap<>();
@@ -44,7 +43,6 @@ public class Pathfinder {
             }
             currentLayer = nextLayer;
         }
-        System.out.println(Arrays.toString(path.toArray()));
         return path;
     }
   public static List<Track> getRandomPath(Track startTrack, int length){
@@ -59,7 +57,6 @@ public class Pathfinder {
       randomPath.add(nextTrack);
       currentTrack = nextTrack;
     }
-    System.out.println(randomPath);
     return randomPath;
   }
 
