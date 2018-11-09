@@ -166,11 +166,12 @@ public class Area extends Canvas {
         drawStreets(visibleStreetViews);
         drawVehicles();
         drawStreetsOverVehicles(visibleStreetViews);
+        selectPathTracks(vehicleList.get(0));
         if (showTracks) {
             drawTracks(visibleStreetViews);
         }
         if (showBoundingBox) {
-            drawdrawBoundingBoxes(visibleStreetViews);
+            drawBoundingBoxes(visibleStreetViews);
         }
         if (showHitBox) {
             drawdrawHitBoxes(visibleStreetViews);
@@ -250,7 +251,15 @@ public class Area extends Canvas {
 
     }
 
-    private void drawdrawBoundingBoxes(List<StreetView> streetViews) {
+    private void selectPathTracks(Vehicle vehicle) {
+        if (vehicle.getPath() != null) {
+            for (Track track : vehicle.getPath()) {
+                track.select();
+            }
+        }
+    }
+
+    private void drawBoundingBoxes(List<StreetView> streetViews) {
         agc.gc.setFill(Color.TRANSPARENT);
         agc.gc.setLineWidth(2*agc.scale);
         agc.gc.setStroke(Color.LIME);
