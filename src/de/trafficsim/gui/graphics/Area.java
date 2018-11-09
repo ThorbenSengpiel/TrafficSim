@@ -3,6 +3,7 @@ package de.trafficsim.gui.graphics;
 import de.trafficsim.gui.views.StreetView;
 import de.trafficsim.logic.network.StreetNetworkManager;
 import de.trafficsim.logic.streets.Street;
+import de.trafficsim.logic.streets.tracks.Track;
 import de.trafficsim.logic.vehicles.Vehicle;
 import de.trafficsim.logic.vehicles.VehicleManager;
 import de.trafficsim.util.Util;
@@ -144,7 +145,6 @@ public class Area extends Canvas {
     public void draw(double delta) {
         agc = new AreaGraphicsContext(getGraphicsContext2D(), center, scale, getWidth(), getHeight());
 
-        long t0 = System.nanoTime();
 
 
         ArrayList<StreetView> visibleStreetViews = new ArrayList<>();
@@ -154,9 +154,7 @@ public class Area extends Canvas {
             }
         }
 
-        long t1 = System.nanoTime();
         drawArea();
-        long t2 = System.nanoTime();
         agc.gc.save();
         agc.gc.translate(agc.canvasCenter.x, agc.canvasCenter.y);
         agc.gc.scale(1/agc.scale, 1/agc.scale);
@@ -164,14 +162,10 @@ public class Area extends Canvas {
 
         agc.setTransparent(true);
         drawPreviewElement();
-        long t3 = System.nanoTime();
         agc.setTransparent(false);
         drawStreets(visibleStreetViews);
-        long t4 = System.nanoTime();
         drawVehicles();
-        long t5 = System.nanoTime();
         drawStreetsOverVehicles(visibleStreetViews);
-        long t6 = System.nanoTime();
         if (showTracks) {
             drawTracks(visibleStreetViews);
         }
@@ -183,13 +177,7 @@ public class Area extends Canvas {
         }
         agc.gc.restore();
         drawOverlay(delta);
-        long t7 = System.nanoTime();
 
-        //System.out.println("Render: " + t(t7-t0) + ": " + t(t1-t0) + " " + t(t2-t1) + " " + t(t3-t2) + " " + t(t4-t3) + " " + t(t5-t4) + " " + t(t6-t5) + " " + t(t7-t6));
-    }
-
-    private String t(long t) {
-        return (t / 1000)+"";
     }
 
     private void drawVehicles() {
@@ -259,6 +247,7 @@ public class Area extends Canvas {
         for (StreetView view : streetViews) {
             view.drawTracks(agc);
         }
+
     }
 
     private void drawdrawBoundingBoxes(List<StreetView> streetViews) {

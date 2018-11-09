@@ -15,13 +15,17 @@ public class VehicleManager {
     private List<Vehicle> vehicleListNormal = new ArrayList<>();
     private List<Vehicle> vehicleListNeu = new ArrayList<>();
 
-    private double spawnPerSecond = 50;
+    private double spawnPerSecond = 5;
 
     private double spawnCnt = 0;
 
+    private VehicleManager() {
+
+    }
+
     public void initialize() {
         for (int i = 0; i < 50; i++) {
-            addVehicle(new Vehicle(5+ Math.random() * 50, StreetNetworkManager.getInstance().getStreetList().get((int) (StreetNetworkManager.getInstance().getStreetList().size() * Math.random())).getTracks().get(0)));
+            //addVehicle(new Vehicle(5+ Math.random() * 50, StreetNetworkManager.getInstance().getStreetList().get((int) (StreetNetworkManager.getInstance().getStreetList().size() * Math.random())).getTracks().get(0)));
         }
         for (int i = 0; i < 100; i++) {
             Vehicle vehicle = new Vehicle(15, StreetNetworkManager.getInstance().creatRandomPath());
@@ -31,17 +35,13 @@ public class VehicleManager {
     }
 
     public void update(double delta) {
-        long t0 = System.nanoTime();
         List<Vehicle> inactive = new ArrayList<>();
-        System.out.println("neue Vehicle: "+vehicleListNeu.size());
-        System.out.println("alte Vehicle: "+vehicleListNormal.size());
         for (Vehicle vehicle : vehicleListNormal) {
             vehicle.move(delta);
             if (!vehicle.isActive()) {
                 inactive.add(vehicle);
             }
         }
-        long t1 = System.nanoTime();
         for (Vehicle vehicle : vehicleListNeu) {
             vehicle.drivePath(delta);
             if (!vehicle.isActive()) {
@@ -57,13 +57,8 @@ public class VehicleManager {
             spawnVehicle();
         }
         spawnCnt -= (int)spawnCnt;
-        long t2 = System.nanoTime();
-        //System.out.println("Cars update: " + t(t2-t0) + ": " + t(t1-t0) + " " + t(t2-t1));
     }
 
-    private String t(long t) {
-        return (t / 1000)+"";
-    }
 
     public void addVehicle(Vehicle vehicle){
         vehicleListNormal.add(vehicle);
@@ -85,7 +80,7 @@ public class VehicleManager {
 
     public void spawnVehicle() {
         StreetSpawn spawn = StreetNetworkManager.getInstance().getRandomSpawn();
-        addVehicle(new Vehicle(5+ Math.random() * 50, spawn.getTracks()));
+        addVehicle(new Vehicle(25, spawn.getStartTrack()));
     }
 
     public List<Vehicle> getVehicleList() {

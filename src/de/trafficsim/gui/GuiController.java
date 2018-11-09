@@ -35,7 +35,7 @@ public class GuiController {
 
     public void start() {
         area = new Area();
-        vehicleManager = new VehicleManager();
+        vehicleManager = VehicleManager.getInstance();
         paneCanvas.getChildren().add(area);
         area.widthProperty().bind(paneCanvas.widthProperty().subtract(20));
         area.heightProperty().bind(paneCanvas.heightProperty().subtract(20));

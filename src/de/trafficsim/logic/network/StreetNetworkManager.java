@@ -10,6 +10,7 @@ import de.trafficsim.util.geometry.Position;
 import javafx.geometry.Pos;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class StreetNetworkManager {
@@ -18,6 +19,10 @@ public class StreetNetworkManager {
 
     private List<Street> streetList = new ArrayList<>();
     private List<StreetSpawn> streetSpawnList = new ArrayList<>();
+
+    private StreetNetworkManager() {
+
+    }
 
     public void update(double delta) {
 

@@ -62,7 +62,7 @@ public abstract class Track {
      */
     public void render(AreaGraphicsContext agc) {
         agc.gc.setLineWidth(0.1);
-        double a = 0.5;
+        double a = 1;
         double b = (a*2)/3;
         if (inTrackList.size() < 1) {
             agc.gc.setStroke(Color.LIME);
@@ -82,7 +82,7 @@ public abstract class Track {
 
         if (vehiclesOnTrack.size() > 0) {
             agc.gc.setStroke(Color.LIME);
-            agc.gc.strokeOval(from.x - a, from.y - a, a*2, a*2);
+            //agc.gc.strokeOval(from.x - a, from.y - a, a*2, a*2);
         } else {
             agc.gc.setStroke(Color.CYAN.deriveColor(0, 1, 1, 0.2));
         }

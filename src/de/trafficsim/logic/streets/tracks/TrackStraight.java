@@ -20,7 +20,7 @@ public class TrackStraight extends Track {
     public void renderTrack(AreaGraphicsContext agc) {
         agc.gc.strokeLine(from.x, from.y, to.x, to.y);
         Position middle = new Position((from.x + to.x) / 2, (from.y + to.y) / 2);
-        double a = 2.5;
+        double a = 1;
         switch (inDir) {
             case NORTH:
                 agc.gc.strokeLine(middle.x, middle.y-a, middle.x + a, middle.y+a);

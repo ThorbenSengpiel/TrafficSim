@@ -13,9 +13,9 @@ public class Vehicle {
     protected Track currentTrack;
 
     protected List<Track> path;
+
     private boolean active = true;
     public double color = 0;
-
 
     public Vehicle(double velocity, Track track){
         this.velocity = velocity;
@@ -27,7 +27,7 @@ public class Vehicle {
         this.velocity = velocity;
         this.currentTrack = path.get(0);
         this.path = path;
-        this.color = 1;
+        this.color = Math.random();
     }
 
     public void move(double delta) {
@@ -79,5 +79,9 @@ public class Vehicle {
 
     public Track getCurrentTrack() {
         return currentTrack;
+    }
+
+    public List<Track> getPath() {
+        return path;
     }
 }
