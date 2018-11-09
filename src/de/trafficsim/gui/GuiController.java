@@ -57,8 +57,6 @@ public class GuiController {
             Pathfinder.getPath(sp.getStartTrack(),sp.getEndTrack());
         });
         addCarButton.setOnAction(event -> vehicleManager.spawnVehicle());
-        switchMode.setOnAction(event -> vehicleManager.switchMode());
-        goCarGo.setOnAction(event -> vehicleManager.goVehicleGo());
     }
 
 

@@ -8,6 +8,7 @@ import de.trafficsim.util.geometry.Position;
 
 public class StreetTestCross extends Street {
 
+    //todo var's moven
     public Track inWest;
     public Track outWest;
     public Track inEast;
@@ -21,6 +22,7 @@ public class StreetTestCross extends Street {
     public StreetTestCross(Position position) {
         super(position, StreetType.TEST_CROSS);
 
+        //create in- and outgoing tracks
         inWest = addInTrack(new TrackStraight(new Position(-25, 2.5), new Position(-12.5, 2.5), this));
         outWest = addOutTrack(new TrackStraight(new Position(-12.5, -2.5), new Position(-25, -2.5), this));
         inEast = addInTrack(new TrackStraight(new Position(25, -2.5), new Position(12.5, -2.5), this));
@@ -31,6 +33,7 @@ public class StreetTestCross extends Street {
         inSouth = addInTrack(new TrackStraight(new Position(2.5, 25), new Position(2.5, 12.5), this));
         outSouth = addOutTrack(new TrackStraight(new Position(-2.5, 12.5), new Position(-2.5, 25), this));
 
+        //create tracks inbetween in- and outgoing tracks
         addTrackBetween(inWest, outNorth);
         addTrackBetween(inWest, outEast);
         addTrackBetween(inWest, outSouth);

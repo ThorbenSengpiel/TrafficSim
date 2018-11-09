@@ -18,6 +18,7 @@ public class Vehicle {
     protected Track currentTrack;
 
     protected List<Track> path;
+    private int currentTrackNumber;
 
     private boolean active = true;
     public double color = 0;
@@ -66,13 +67,16 @@ public class Vehicle {
     public void move(double delta) {
         if (path != null) {
             double newPositionInCurrentTrack = currentPosInTrack + velocity * delta;
-            if (path.get(0).getLength() < newPositionInCurrentTrack) {
-                if (path.size() > 1) {
-                    double distanceInNewTrack = newPositionInCurrentTrack - path.get(0).getLength();
+            if (currentTrack.getLength() < newPositionInCurrentTrack) {
+                currentTrackNumber++;
+
+                if (currentTrackNumber < path.size() && currentTrack.getOutTrackList().size() > 0) {
+                    Track nextTrack = path.get(currentTrackNumber);
+                    double distanceInNewTrack = newPositionInCurrentTrack - currentTrack.getLength();
                     currentPosInTrack = distanceInNewTrack;
-                    path.get(0).removeVehicle(this);
-                    path.get(1).addVehicle(this);
-                    path.remove(0);
+                    currentTrack.removeVehicle(this);
+                    nextTrack.addVehicle(this);
+                    currentTrack = nextTrack;
                 } else {
                     active = false;
                 }
