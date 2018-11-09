@@ -3,6 +3,7 @@ package de.trafficsim.logic.network;
 import de.trafficsim.gui.GuiController;
 import de.trafficsim.logic.streets.*;
 import de.trafficsim.logic.streets.tracks.Track;
+import de.trafficsim.logic.streets.tracks.TrackStraight;
 import de.trafficsim.logic.vehicles.VehicleManager;
 import de.trafficsim.util.Direction;
 import de.trafficsim.util.geometry.Position;
@@ -144,5 +145,18 @@ public class StreetNetworkManager {
                 }
             }
         }
+    }
+
+    public List<Track> creatRandomPath(){
+        List<Track> path = new ArrayList<Track>();
+        for (int i = 0; i< streetList.get(streetList.size()-1).getTracks().size();i++){
+            path.add(streetList.get(streetList.size()-1).getTracks().get(i));
+        }
+        /*Track currentTrack = new StreetNetworkManager().streetList.get(0).getTracks().get(0);
+        for (int i = 0; i <20;i++){
+            Track nextTrack = currentTrack.getOutTrackList().get((int) (Math.random() * currentTrack.getOutTrackList().size()));
+            path.add(nextTrack);
+        }*/
+        return path;
     }
 }
