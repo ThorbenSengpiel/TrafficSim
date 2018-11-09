@@ -89,6 +89,6 @@ public class VehicleManager {
     }
 
     public List<Vehicle> getVehicleList() {
-        return vehicleList;
+        return vehicleListNeu;
     }
 }
