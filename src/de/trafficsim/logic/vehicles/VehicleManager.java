@@ -17,7 +17,7 @@ public class VehicleManager {
   private double spawnPerSecond = 10;
 
   private double spawnCnt = 0;
-  private boolean running = true;
+  private boolean running = false;
 
   private VehicleManager() {
 

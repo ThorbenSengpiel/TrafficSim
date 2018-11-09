@@ -22,34 +22,21 @@ public class StreetParkingDeckView extends StreetView {
     public StreetParkingDeckView(Street street) {
         super(street, new Hitbox(new Rectangle(Position.ZERO, 25, 25)));
         vertical = street.getRotation().isVertical();
-        if (vertical) {
-            for (int y = 0; y < 8; y++) {
-                if (Math.random() < 0.5) {
-                    cars.add(new Position(15, (y * 6.25) - 21.875));
-                    colors.add(Math.random());
-                }
-                if (Math.random() < 0.5) {
-                    cars.add(new Position(-15, (y * 6.25) - 21.875));
-                    colors.add(Math.random());
-                }
+        for (int y = 0; y < 8; y++) {
+            if (Math.random() < 0.5) {
+                cars.add(new Position(15, (y * 6.25) - 21.875));
+                colors.add(Math.random());
             }
-        } else {
-            for (int x = 0; x < 8; x++) {
-                if (Math.random() < 0.5) {
-                    cars.add(new Position((x * 6.25) - 21.875, 15));
-                    colors.add(Math.random());
-                }
-                if (Math.random() < 0.5) {
-                    cars.add(new Position((x * 6.25) - 21.875, -15));
-                    colors.add(Math.random());
-                }
+            if (Math.random() < 0.5) {
+                cars.add(new Position(-15, (y * 6.25) - 21.875));
+                colors.add(Math.random());
             }
         }
     }
 
     @Override
     public void draw(AreaGraphicsContext agc) {
-        agc.draw2Lane(new Position(-25, 0).rotate(street.getRotation()), Position.ZERO);
+        agc.draw2Lane(new Position(-25, 0), Position.ZERO);
     }
 
     @Override
@@ -57,42 +44,24 @@ public class StreetParkingDeckView extends StreetView {
         agc.setFill(AreaGraphicsContext.StreetVisuals.STREET.stroke);
         double w = 20;
         double h = 25;
-        if (street.getRotation().isHorizontal()) {
-            double t = w;
-            w = h;
-            h = t;
-        }
         agc.gc.fillRect(-w, -h, w*2, h*2);
 
 
         agc.setStroke(AreaGraphicsContext.StreetVisuals.STREET_LINE);
         double dist = 6.25;
         double start = dist*3;
-        if (vertical) {
-            for (int i = 0; i < 7; i++) {
-                agc.gc.strokeLine(+w/2,  + (i*dist)-start, +w,  + (i*dist)-start);
-                agc.gc.strokeLine(-w,  + (i*dist)-start, -w/2,  + (i*dist)-start);
-            }
-        } else {
-            for (int i = 0; i < 7; i++) {
-                agc.gc.strokeLine( + (i*dist)-start, +h/2,  + (i*dist)-start, +h);
-                agc.gc.strokeLine( + (i*dist)-start, -h,  + (i*dist)-start, -h/2);
-            }
+        for (int i = 0; i < 7; i++) {
+            agc.gc.strokeLine(+w/2,  + (i*dist)-start, +w,  + (i*dist)-start);
+            agc.gc.strokeLine(-w,  + (i*dist)-start, -w/2,  + (i*dist)-start);
         }
 
         agc.setStroke(AreaGraphicsContext.StreetVisuals.STREET_BORDER);
         agc.gc.strokeRect(-w, -h, w*2, h*2);
 
-        agc.draw2Lane(new Position(0, 10).rotate(street.getRotation()), new Position(0, -10).rotate(street.getRotation()));
-        if (vertical) {
-            agc.gc.strokeLine(-h/5, -h/2.5, +h/5, -h/2.5);
-            agc.gc.setFill(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE, new Stop(1, Color.gray(0, 0)), new Stop(0, Color.gray(0, 0.3))));
-            agc.gc.fillRect(-h/5, -h/2.5, h/2.5, h/1.25);
-        } else {
-            agc.gc.strokeLine(-w/2.5, -w/5, -w/2.5, +w/5);
-            agc.gc.setFill(new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE, new Stop(1, Color.gray(0, 0)), new Stop(0, Color.gray(0, 0.3))));
-            agc.gc.fillRect(-w/2.5, -w/5, w/1.25, w/2.5);
-        }
+        agc.draw2Lane(new Position(0, 10), new Position(0, -10));
+        agc.gc.strokeLine(-h/5, -h/2.5, +h/5, -h/2.5);
+        agc.gc.setFill(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE, new Stop(1, Color.gray(0, 0)), new Stop(0, Color.gray(0, 0.3))));
+        agc.gc.fillRect(-h/5, -h/2.5, h/2.5, h/1.25);
 
 
         double size = 4;

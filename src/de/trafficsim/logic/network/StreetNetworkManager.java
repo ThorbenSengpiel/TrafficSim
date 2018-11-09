@@ -15,7 +15,7 @@ public class StreetNetworkManager {
 
     private List<Street> streetList = new ArrayList<>();
     private List<StreetSpawn> streetSpawnList = new ArrayList<>();
-    private boolean running = true;
+    private boolean running = false;
 
     private StreetNetworkManager() {
 

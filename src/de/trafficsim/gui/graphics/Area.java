@@ -41,8 +41,11 @@ public class Area extends Canvas {
     private boolean showHitBox = false;
     private boolean showBoundingBox = false;
 
+    private boolean running = false;
 
     private CreateMenu createMenu;
+
+    private Vehicle selectedVehicle = null;
 
     public Area() {
         super(200, 200);
@@ -57,17 +60,13 @@ public class Area extends Canvas {
             System.out.println(event.getX() + " " + event.getY());
         });*/
 
-        setOnMouseDragged(e -> {
-            mouseDrag(e);
-        });
+        setOnMouseDragged(this::mouseDrag);
 
-        setOnMousePressed(e -> {
-            mousePressed(e);
-        });
+        setOnMousePressed(this::mousePressed);
 
-        setOnMouseReleased(e -> {
-            mouseReleased(e);
-        });
+        setOnMouseReleased(this::mouseReleased);
+
+        setOnMouseClicked(this::mouseClicked);
 
         setOnScroll(e -> {
             scale *= 1-(e.getDeltaY() * 0.005);
@@ -86,6 +85,15 @@ public class Area extends Canvas {
         });
     }
 
+    private void mouseClicked(MouseEvent e) {
+        Position pos = agc.canvasToArea(new Position(e.getX(), e.getY()));
+        for (Vehicle vehicle : vehicleList) {
+            if (vehicle.getPosition().distance(pos) <= 4) {
+                selectedVehicle = vehicle;
+            }
+        }
+    }
+
     public void keyPressed(KeyEvent e) {
         if (dragged != null) {
             if (e.getCode() == KeyCode.R) {
@@ -102,10 +110,12 @@ public class Area extends Canvas {
     private void mousePressed(MouseEvent e) {
         Position pos = agc.canvasToArea(new Position(e.getX(), e.getY()));
         StreetView hit = null;
-        for (int i = streetViewList.size()-1; i >= 0; i--) {
-            if (streetViewList.get(i).PointHit(pos)) {
-                hit = streetViewList.get(i);
-                break;
+        if (!running) {
+            for (int i = streetViewList.size()-1; i >= 0; i--) {
+                if (streetViewList.get(i).PointHit(pos)) {
+                    hit = streetViewList.get(i);
+                    break;
+                }
             }
         }
         pos = agc.canvasToAreaNoOffset(new Position(e.getX(), e.getY()));
@@ -175,13 +185,6 @@ public class Area extends Canvas {
         drawStreets(visibleStreetViews);
         drawVehicles();
         drawStreetsOverVehicles(visibleStreetViews);
-
-        for (Vehicle vehicle : vehicleList) {
-            if (vehicle.getPath() != null) {
-                selectPathTracks(vehicleList.get(0));
-                break;
-            }
-        }
         if (showTracks) {
             drawTracks(visibleStreetViews);
         }
@@ -199,6 +202,8 @@ public class Area extends Canvas {
     private void drawVehicles() {
         //double size = agc.scaleToCanvas(4);
         double size = 4;
+        agc.setStroke(Color.WHITE);
+        agc.gc.setLineWidth(3*agc.scale);
         for (Vehicle vehicle : vehicleList) {
             //agc.setFill(Color.color(0.8, 0.2, 0.2));
             //agc.setFill(Color.color((vehicle.color & 0b1)>0?1:0, (vehicle.color & 0b10)>0?1:0, (vehicle.color & 0b100)>0?1:0).deriveColor(0, 0.8, 0.8, 1));
@@ -211,6 +216,9 @@ public class Area extends Canvas {
             //agc.gc.drawImage(img, -size, -(size/2), size*2, size);
 
             agc.gc.fillRoundRect(-size, -(size/2), size*2, size, size / 2, size / 2);
+            if (vehicle == selectedVehicle) {
+                agc.gc.strokeRoundRect(-size, -(size/2), size*2, size, size / 2, size / 2);
+            }
             //agc.gc.fillRect(-size, -(size/2), size*2, size);
             /*agc.setStroke(Color.MAGENTA);
             agc.setFill(Color.WHITE);
@@ -260,18 +268,15 @@ public class Area extends Canvas {
     }
 
     private void drawTracks(List<StreetView> streetViews) {
+        if (selectedVehicle != null) {
+            for (Track track : selectedVehicle.getPath()) {
+                track.select();
+            }
+        }
         for (StreetView view : streetViews) {
             view.drawTracks(agc);
         }
 
-    }
-
-    private void selectPathTracks(Vehicle vehicle) {
-        if (vehicle.getPath() != null) {
-            for (Track track : vehicle.getPath()) {
-                track.select();
-            }
-        }
     }
 
     private void drawBoundingBoxes(List<StreetView> streetViews) {
@@ -369,4 +374,15 @@ public class Area extends Canvas {
     public void removeVehicle(Vehicle vehicle) {
         vehicleList.remove(vehicle);
     }
+
+    public void start() {
+        running = true;
+    }
+    public void stop() {
+        running = false;
+    }
+    public void pause() {
+        running = true;
+    }
+
 }

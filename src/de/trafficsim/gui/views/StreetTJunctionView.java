@@ -3,6 +3,7 @@ package de.trafficsim.gui.views;
 import de.trafficsim.gui.graphics.AreaGraphicsContext;
 import de.trafficsim.gui.graphics.util.Hitbox;
 import de.trafficsim.logic.streets.Street;
+import de.trafficsim.util.Direction;
 import de.trafficsim.util.geometry.Position;
 import de.trafficsim.util.geometry.Rectangle;
 import javafx.scene.paint.Color;
@@ -10,7 +11,24 @@ import javafx.scene.shape.ArcType;
 
 public class StreetTJunctionView extends StreetView {
     public StreetTJunctionView(Street street) {
-        super(street, new Hitbox(new Rectangle(Position.ZERO, 25, 5), new Rectangle(new Position(0, 10), 5, 15)));
+        super(street, createHitbox(street.getRotation()));
+    }
+
+    private static Hitbox createHitbox(Direction rotation) {
+        Rectangle straight;
+        Rectangle lane;
+        if (rotation.isVertical()) {
+            straight = new Rectangle(Position.ZERO, 25, 5);
+        } else {
+            straight = new Rectangle(Position.ZERO, 5, 25);
+        }
+        if (rotation.isVertical()) {
+            lane = new Rectangle(new Position(0, 10).rotate(rotation), 5, 15);
+        } else {
+            lane = new Rectangle(new Position(0, 10).rotate(rotation), 15, 5);
+        }
+
+        return new Hitbox(straight, lane);
     }
 
     @Override

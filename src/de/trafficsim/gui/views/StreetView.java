@@ -23,12 +23,16 @@ public abstract class StreetView {
 
     public void drawI(AreaGraphicsContext agc) {
         translate(agc);
+        agc.gc.rotate(-street.getRotation().angle+90);
         draw(agc);
+        agc.gc.rotate(street.getRotation().angle-90);
         translateBack(agc);
     }
     public void drawOverVehicleI(AreaGraphicsContext agc) {
         translate(agc);
+        agc.gc.rotate(-street.getRotation().angle+90);
         drawOverVehicle(agc);
+        agc.gc.rotate(street.getRotation().angle-90);
         translateBack(agc);
     }
     public abstract void draw(AreaGraphicsContext agc);
@@ -37,8 +41,10 @@ public abstract class StreetView {
     public void drawPreview(AreaGraphicsContext agc) {
         Position offset = street.getPosition().snapToGrid(Area.GRID_SPACING);
         agc.gc.translate(offset.x, offset.y);
+        agc.gc.rotate(-street.getRotation().angle+90);
         draw(agc);
         drawOverVehicle(agc);
+        agc.gc.rotate(street.getRotation().angle-90);
         agc.gc.translate(-offset.x, -offset.y);
     }
 

@@ -96,16 +96,19 @@ public class GuiController {
   public void startModules() {
     StreetNetworkManager.getInstance().start();
     VehicleManager.getInstance().start();
+    area.start();
   }
 
   public void stopModules() {
     StreetNetworkManager.getInstance().stop();
     VehicleManager.getInstance().stop();
+    area.stop();
   }
 
   public void pauseModules() {
     StreetNetworkManager.getInstance().pause();
     VehicleManager.getInstance().pause();
+    area.pause();
   }
 
   public void keyPressed(KeyEvent event) {

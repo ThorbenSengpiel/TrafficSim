@@ -70,7 +70,7 @@ public abstract class Track {
      * Rendert Grundlegene Tackvisualisierung (Connection Punkte)
      */
     public void render(AreaGraphicsContext agc) {
-        agc.gc.setLineWidth(1*agc.scale);
+        agc.gc.setLineWidth(2*agc.scale);
         double a = 1;
         double b = (a*2)/3;
         if (inTrackList.size() < 1) {
@@ -97,7 +97,7 @@ public abstract class Track {
                 agc.gc.setStroke(Color.CYAN.deriveColor(0, 1, 1, 0.2));
             }
         } else {
-            agc.gc.setStroke(Color.RED);
+            agc.gc.setStroke(Color.ORANGERED);
         }
 
         renderTrack(agc);

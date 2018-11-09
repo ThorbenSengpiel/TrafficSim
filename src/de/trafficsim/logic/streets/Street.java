@@ -122,7 +122,9 @@ public abstract class Street {
         }
     }
 
-    public abstract Street createRotated();
+    public Street createRotated() {
+        return this;
+    }
 
     public Direction getRotation() {
         return rotation;
