@@ -8,7 +8,8 @@ public enum StreetType {
     ROUNDABOUT("Roundabout"),
     STRAIGHT("Straight"),
     TEST_CROSS("TestCross"),
-    PARKING_DECK("TestCross");
+    PARKING_DECK("TestCross"),
+    T_JUNCTION("TJunction");
 
     public final String name;
 
