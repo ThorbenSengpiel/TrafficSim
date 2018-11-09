@@ -20,7 +20,9 @@
                         <CheckBox fx:id="checkShowTracks" mnemonicParsing="false" text="Tracks" />
                         <CheckBox fx:id="checkShowBoundingBox" mnemonicParsing="false" text="BoundingBox" />
                         <CheckBox fx:id="checkShowHitBox" mnemonicParsing="false" text="HitBox" />
-                         <Button fx:id="addCarButton" mnemonicParsing="false" text="Add Car" />
+                        <Button fx:id="addCarButton" mnemonicParsing="false" text="Add Car" />
+                        <Button fx:id="goCarGo" mnemonicParsing="false" text="goCarGo" />
+                        <Button fx:id="switchMode" mnemonicParsing="false" text="Start/Stop" />
                      </children>
                   </VBox>
                </children></AnchorPane>

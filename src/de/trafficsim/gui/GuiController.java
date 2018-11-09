@@ -29,6 +29,12 @@ public class GuiController {
     @FXML
     Button addCarButton;
 
+    @FXML
+    Button switchMode;
+
+    @FXML
+    Button goCarGo;
+
 
     private Area area;
     private VehicleManager vehicleManager;
@@ -44,6 +50,8 @@ public class GuiController {
         checkShowBoundingBox.setOnAction(event -> area.setShowBoundingBox(checkShowBoundingBox.isSelected()));
         checkShowHitBox.setOnAction(event -> area.setShowHitBox(checkShowHitBox.isSelected()));
         addCarButton.setOnAction(event -> vehicleManager.spawnVehicle());
+        switchMode.setOnAction(event -> vehicleManager.switchMode());
+        goCarGo.setOnAction(event -> vehicleManager.goVehicleGo());
     }
 
 
