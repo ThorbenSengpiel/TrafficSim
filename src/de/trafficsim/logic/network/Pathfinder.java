@@ -4,8 +4,6 @@ import de.trafficsim.logic.streets.tracks.Track;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.trafficsim.logic.streets.tracks.Track;
-
 import java.util.*;
 
 public class Pathfinder {
