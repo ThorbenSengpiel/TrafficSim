@@ -68,11 +68,7 @@ public class StreetParkingDeckView extends StreetView {
         for (int i = 0; i < cars.size(); i++) {
             agc.setFill(Color.hsb(colors.get(i)*360, 1, 1, 1));
             Position pos = cars.get(i);
-            if (vertical) {
-                agc.gc.fillRoundRect(pos.x-size, pos.y-(size/2), size*2, size, size / 2, size / 2);
-            } else {
-                agc.gc.fillRoundRect(pos.x-(size/2), pos.y-size, size, size*2, size / 2, size / 2);
-            }
+            agc.gc.fillRoundRect(pos.x-size, pos.y-(size/2), size*2, size, size / 2, size / 2);
         }
     }
 }

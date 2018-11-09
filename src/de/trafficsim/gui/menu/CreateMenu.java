@@ -16,14 +16,15 @@ import java.util.HashMap;
 public class CreateMenu extends ContextMenu {
 
     private Area editor;
+    private Position pos;
 
     public CreateMenu(Area editor) {
         this.editor = editor;
         HashMap<MenuCategory, CreateSubMenu> subMenus = new HashMap<>();
 
-        /*MenuItem del = new MenuItem("Delete");
+        MenuItem del = new MenuItem("Remove");
         getItems().add(del);
-        del.setOnAction(event -> editor.removeCurrent());*/
+        del.setOnAction(event -> editor.removeStreetAt(pos));
 
         for (MenuCategory category : MenuCategory.values()) {
             CreateSubMenu subMenu = new CreateSubMenu(category);
@@ -42,8 +43,6 @@ public class CreateMenu extends ContextMenu {
         }
     }
 
-    private Position pos;
-
     public void show(Node anchor, double screenX, double screenY, Position pos) {
         super.show(anchor, screenX, screenY);
         this.pos = pos;
@@ -52,8 +51,6 @@ public class CreateMenu extends ContextMenu {
     private void createNode(StreetType street) {
         try {
             Street s = street.create();
-            StreetNetworkManager.getInstance().connectStreet(s);
-            s.disconnect();
             s.setPosition(pos);
             StreetNetworkManager.getInstance().addStreet(s);
         } catch (IllegalAccessException | InstantiationException e) {

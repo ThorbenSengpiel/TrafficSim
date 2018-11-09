@@ -69,10 +69,6 @@ public class StreetNetworkManager {
             }
         }*/
 
-        for (Street street : streetList) {
-            street.disconnect();
-            connectStreet(street);
-        }
 
         int cnt = 0;
         for (Street street : streetList) {
@@ -85,15 +81,12 @@ public class StreetNetworkManager {
 
     public void addStreet(Street... streets){
         for (Street street : streets) {
-            streetList.add(street);
-            if (street instanceof StreetSpawn) {
-                streetSpawnList.add((StreetSpawn) street);
-            }
-            GuiController.getInstance().addStreet(street);
+            addStreet(street);
         }
     }
 
     public void addStreet(Street street){
+        connectStreet(street);
         streetList.add(street);
         if (street instanceof StreetSpawn) {
             streetSpawnList.add((StreetSpawn) street);
@@ -102,7 +95,7 @@ public class StreetNetworkManager {
     }
 
     public void removeStreet(Street street) {
-        street.disconnect();
+        disconnectStreet(street);
         street.removeAllVehicles();
         streetList.remove(street);
         if (street instanceof StreetSpawn) {
@@ -126,7 +119,7 @@ public class StreetNetworkManager {
         return streetList;
     }
 
-    public void connectStreet(Street streetConnect) {
+    private void connectStreet(Street streetConnect) {
         for (Street street : streetList) {
             if (street != streetConnect) {
                 for (Track inTrack : street.getInTracks()) {
@@ -151,24 +144,70 @@ public class StreetNetworkManager {
         }
     }
 
+    private void disconnectStreet(Street street) {
+        for (Track track : street.getInTracks()) {
+            track.disconnectAllIngoing();
+        }
+        for (Track track : street.getOutTracks()) {
+            track.disconnectAllOutgoing();
+        }
+    }
+
     public List<Track> createRandomPath(){
         return Pathfinder.getRandomPath(streetList.get((int)Math.random()*streetList.size()).getTracks().get(0),3);
     }
 
     public void deleteAllStreets(){
-      this.streetList.clear();
-      this.streetSpawnList.clear();
+        for (int i = streetList.size()-1; i >= 0; i--){
+            removeStreet(streetList.get(i));
+        }
     }
 
-  public void start() {
-      this.running = true;
-  }
+    public void start() {
+    running = true;
+    }
 
-  public void pause(){
-      this.running = false;
-  }
+    public void pause(){
+    running = false;
+    }
 
-  public void stop(){
-      this.running = false;
-  }
+    public void stop(){
+        running = false;
+    }
+
+    public void reset() {
+        deleteAllStreets();
+        running = false;
+    }
+
+    public String export() {
+        StringBuilder sb = new StringBuilder();
+        for (Street street : streetList) {
+            sb.append(street.export());
+        }
+        return sb.toString();
+    }
+
+    public void importFile(List<String> strings) {
+        for (String line : strings) {
+            String[] values = line.split(";");
+            Street street = null;
+            try {
+                street = StreetType.valueOf(values[0]).create();
+            } catch (IllegalAccessException | InstantiationException e) {
+                e.printStackTrace();
+            }
+            street.setPosition(new Position(Double.parseDouble(values[1]), Double.parseDouble(values[2])));
+            //TODO schlechte Lösung aber läuft erstmal
+            switch (Direction.valueOf(values[3])) {
+                case WEST:
+                    street = street.createRotated();
+                case SOUTH:
+                    street = street.createRotated();
+                case EAST:
+                    street = street.createRotated();
+            }
+            addStreet(street);
+        }
+    }
 }

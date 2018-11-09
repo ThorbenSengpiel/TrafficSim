@@ -86,6 +86,7 @@ public class Area extends Canvas {
     }
 
     private void mouseClicked(MouseEvent e) {
+        createMenu.hide();
         Position pos = agc.canvasToArea(new Position(e.getX(), e.getY()));
         for (Vehicle vehicle : vehicleList) {
             if (vehicle.getPosition().distance(pos) <= 4) {
@@ -111,12 +112,7 @@ public class Area extends Canvas {
         Position pos = agc.canvasToArea(new Position(e.getX(), e.getY()));
         StreetView hit = null;
         if (!running) {
-            for (int i = streetViewList.size()-1; i >= 0; i--) {
-                if (streetViewList.get(i).PointHit(pos)) {
-                    hit = streetViewList.get(i);
-                    break;
-                }
-            }
+            hit = getStreetAt(pos);
         }
         pos = agc.canvasToAreaNoOffset(new Position(e.getX(), e.getY()));
         dragStartPos = pos;
@@ -124,11 +120,19 @@ public class Area extends Canvas {
         if (hit != null) {
             dragStartCenter = hit.getStreet().getPosition();
             dragged = hit;
-            hit.getStreet().disconnect();
-            hit.getStreet().removeAllVehicles();
+            StreetNetworkManager.getInstance().removeStreet(hit.getStreet());
         } else {
             dragStartCenter = center;
         }
+    }
+
+    private StreetView getStreetAt(Position pos) {
+        for (int i = streetViewList.size()-1; i >= 0; i--) {
+            if (streetViewList.get(i).PointHit(pos)) {
+                return streetViewList.get(i);
+            }
+        }
+        return null;
     }
 
     private void mouseReleased(MouseEvent e) {
@@ -143,7 +147,7 @@ public class Area extends Canvas {
     }
 
     private void dragDropConnect(StreetView dragged) {
-        StreetNetworkManager.getInstance().connectStreet(dragged.getStreet());
+        StreetNetworkManager.getInstance().addStreet(dragged.getStreet());
     }
 
     private void mouseDrag(MouseEvent e) {
@@ -179,12 +183,11 @@ public class Area extends Canvas {
         agc.gc.scale(1/agc.scale, 1/agc.scale);
         agc.gc.translate(-agc.center.x, -agc.center.y);
 
-        agc.setTransparent(true);
-        drawPreviewElement();
-        agc.setTransparent(false);
+
         drawStreets(visibleStreetViews);
         drawVehicles();
         drawStreetsOverVehicles(visibleStreetViews);
+        drawPreviewElement();
         if (showTracks) {
             drawTracks(visibleStreetViews);
         }
@@ -233,7 +236,12 @@ public class Area extends Canvas {
 
     private void drawPreviewElement() {
         if (dragged != null) {
+            agc.setTransparent(true);
             dragged.drawPreview(agc);
+            agc.setTransparent(false);
+            dragged.drawI(agc);
+            dragged.drawOverVehicleI(agc);
+            dragged.drawTracks(agc);
         }
     }
 
@@ -346,7 +354,11 @@ public class Area extends Canvas {
     }
 
     public void addStreet(Street street) {
-        streetViewList.add(street.createView());
+        if (dragged != null && street == dragged.getStreet()) {
+            streetViewList.add(dragged);
+        } else {
+            streetViewList.add(street.createView());
+        }
     }
 
     public void removeStreet(Street street) {
@@ -373,6 +385,9 @@ public class Area extends Canvas {
 
     public void removeVehicle(Vehicle vehicle) {
         vehicleList.remove(vehicle);
+        if (vehicle == selectedVehicle) {
+            selectedVehicle = null;
+        }
     }
 
     public void start() {
@@ -385,4 +400,14 @@ public class Area extends Canvas {
         running = true;
     }
 
+    public void reset() {
+        stop();
+    }
+
+    public void removeStreetAt(Position pos) {
+        StreetView street = getStreetAt(pos);
+        if (street != null) {
+            StreetNetworkManager.getInstance().removeStreet(street.getStreet());
+        }
+    }
 }

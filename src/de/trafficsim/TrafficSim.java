@@ -57,7 +57,7 @@ public class TrafficSim extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        guiController.start();
+        guiController.start(primaryStage);
     }
 
     private void mainLoop(long now) {
