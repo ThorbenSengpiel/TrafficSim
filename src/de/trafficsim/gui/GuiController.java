@@ -83,8 +83,9 @@ public class GuiController {
                 .setOnAction(event -> area.setShowBoundingBox(checkShowBoundingBox.isSelected()));
         checkShowHitBox.setOnAction(event -> area.setShowHitBox(checkShowHitBox.isSelected()));
         addCarButton.setOnAction(event -> {
-            StreetSpawn sp = StreetNetworkManager.getInstance().getRandomSpawn();
-            Pathfinder.getPath(sp.getStartTrack(), sp.getEndTrack());
+            vehicleManager.addVehicle(new Vehicle(80,Pathfinder
+                    .getPath(StreetNetworkManager.getInstance().getRandomSpawn().getStartTrack(),
+                            StreetNetworkManager.getInstance().getRandomSpawn().getEndTrack())));
         });
         startButton.setOnAction(event -> startModules());
         stopButton.setOnAction(event -> stopModules());
