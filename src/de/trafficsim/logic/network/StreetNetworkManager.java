@@ -19,12 +19,16 @@ public class StreetNetworkManager {
 
     private List<Street> streetList = new ArrayList<>();
     private List<StreetSpawn> streetSpawnList = new ArrayList<>();
+    private boolean running = true;
 
     private StreetNetworkManager() {
 
     }
 
     public void update(double delta) {
+      if (running){
+
+      }
 
     }
 
@@ -154,4 +158,22 @@ public class StreetNetworkManager {
     public List<Track> createRandomPath(){
         return Pathfinder.getRandomPath(streetList.get((int)Math.random()*streetList.size()).getTracks().get(0),3);
     }
+
+    public void deleteAllStreets(){
+      this.streetList.clear();
+      this.streetSpawnList.clear();
+    }
+
+  public void start() {
+      this.running = true;
+  }
+
+  public void pause(){
+      this.running = false;
+  }
+
+  public void stop(){
+      this.running = false;
+      deleteAllStreets();
+  }
 }

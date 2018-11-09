@@ -15,79 +15,100 @@ import javafx.scene.layout.AnchorPane;
 
 public class GuiController {
 
-    private static GuiController instance;
+  private static GuiController instance;
 
-    @FXML
-    AnchorPane paneCanvas;
+  @FXML
+  AnchorPane paneCanvas;
 
-    @FXML
-    CheckBox checkShowTracks;
+  @FXML
+  CheckBox checkShowTracks;
 
-    @FXML
-    CheckBox checkShowBoundingBox;
+  @FXML
+  CheckBox checkShowBoundingBox;
 
-    @FXML
-    CheckBox checkShowHitBox;
+  @FXML
+  CheckBox checkShowHitBox;
 
-    @FXML
-    Button addCarButton;
+  @FXML
+  Button addCarButton;
 
-    @FXML
-    Button switchMode;
+  @FXML
+  Button startButton;
 
-    @FXML
-    Button goCarGo;
+  @FXML
+  Button pauseButton;
+
+  @FXML
+  Button stopButton;
 
 
-    private Area area;
-    private VehicleManager vehicleManager;
+  private Area area;
+  private VehicleManager vehicleManager;
 
-    public void start() {
-        area = new Area();
-        vehicleManager = VehicleManager.getInstance();
-        paneCanvas.getChildren().add(area);
-        area.widthProperty().bind(paneCanvas.widthProperty().subtract(20));
-        area.heightProperty().bind(paneCanvas.heightProperty().subtract(20));
+  public void start() {
+    area = new Area();
+    vehicleManager = VehicleManager.getInstance();
+    paneCanvas.getChildren().add(area);
+    area.widthProperty().bind(paneCanvas.widthProperty().subtract(20));
+    area.heightProperty().bind(paneCanvas.heightProperty().subtract(20));
 
-        checkShowTracks.setOnAction(event -> area.setShowTracks(checkShowTracks.isSelected()));
-        checkShowBoundingBox.setOnAction(event -> area.setShowBoundingBox(checkShowBoundingBox.isSelected()));
-        checkShowHitBox.setOnAction(event -> area.setShowHitBox(checkShowHitBox.isSelected()));
-        addCarButton.setOnAction(event -> {
-            StreetSpawn sp = StreetNetworkManager.getInstance().getRandomSpawn();
-            Pathfinder.getPath(sp.getStartTrack(),sp.getEndTrack());
-        });
-        addCarButton.setOnAction(event -> vehicleManager.spawnVehicle());
+    checkShowTracks.setOnAction(event -> area.setShowTracks(checkShowTracks.isSelected()));
+    checkShowBoundingBox
+        .setOnAction(event -> area.setShowBoundingBox(checkShowBoundingBox.isSelected()));
+    checkShowHitBox.setOnAction(event -> area.setShowHitBox(checkShowHitBox.isSelected()));
+    addCarButton.setOnAction(event -> {
+      StreetSpawn sp = StreetNetworkManager.getInstance().getRandomSpawn();
+      Pathfinder.getPath(sp.getStartTrack(), sp.getEndTrack());
+    });
+    startButton.setOnAction(event -> startModules());
+    stopButton.setOnAction(event -> stopModules());
+    pauseButton.setOnAction(event -> pauseModules());
+  }
+
+
+  public void update(double delta) {
+    area.draw(delta);
+  }
+
+  public void addStreet(Street street) {
+    area.addStreet(street);
+  }
+
+  public void removeStreet(Street street) {
+    area.removeStreet(street);
+  }
+
+  public void addVehicle(Vehicle vehicle) {
+    area.addVehicle(vehicle);
+  }
+
+  public void removeVehicle(Vehicle vehicle) {
+    area.removeVehicle(vehicle);
+  }
+
+  public static GuiController getInstance() {
+    if (instance == null) {
+      instance = new GuiController();
     }
+    return instance;
+  }
 
+  public void startModules() {
+    StreetNetworkManager.getInstance().start();
+    VehicleManager.getInstance().start();
+  }
 
-    public void update(double delta) {
-        area.draw(delta);
-    }
+  public void stopModules() {
+    StreetNetworkManager.getInstance().stop();
+    VehicleManager.getInstance().stop();
+  }
 
-    public void addStreet(Street street) {
-        area.addStreet(street);
-    }
+  public void pauseModules() {
+    StreetNetworkManager.getInstance().pause();
+    VehicleManager.getInstance().pause();
+  }
 
-    public void removeStreet(Street street) {
-        area.removeStreet(street);
-    }
-
-    public void addVehicle(Vehicle vehicle) {
-        area.addVehicle(vehicle);
-    }
-
-    public void removeVehicle(Vehicle vehicle) {
-        area.removeVehicle(vehicle);
-    }
-
-    public static GuiController getInstance() {
-        if (instance == null) {
-            instance = new GuiController();
-        }
-        return instance;
-    }
-
-    public void keyPressed(KeyEvent event) {
-        area.keyPressed(event);
-    }
+  public void keyPressed(KeyEvent event) {
+    area.keyPressed(event);
+  }
 }

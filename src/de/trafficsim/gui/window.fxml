@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<?import javafx.scene.control.Button?>
-<AnchorPane fx:id="layout" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="layout" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <BorderPane prefHeight="471.0" prefWidth="517.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <bottom>
@@ -20,9 +22,7 @@
                         <CheckBox fx:id="checkShowTracks" mnemonicParsing="false" text="Tracks" />
                         <CheckBox fx:id="checkShowBoundingBox" mnemonicParsing="false" text="BoundingBox" />
                         <CheckBox fx:id="checkShowHitBox" mnemonicParsing="false" text="HitBox" />
-                        <Button fx:id="addCarButton" mnemonicParsing="false" text="Add Car" />
-                        <Button fx:id="goCarGo" mnemonicParsing="false" text="goCarGo" />
-                        <Button fx:id="switchMode" mnemonicParsing="false" text="Start/Stop" />
+                        <Button fx:id="addCarButton" mnemonicParsing="false" text="add Car" />
                      </children>
                   </VBox>
                </children></AnchorPane>
@@ -30,6 +30,27 @@
             <center>
                 <AnchorPane fx:id="paneCanvas" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
             </center>
+         <top>
+            <HBox prefHeight="35.0" prefWidth="517.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Button fx:id="startButton" mnemonicParsing="false" text="Start">
+                     <HBox.margin>
+                        <Insets bottom="3.0" left="10.0" top="3.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="pauseButton" mnemonicParsing="false" text="Pause">
+                     <HBox.margin>
+                        <Insets bottom="3.0" left="10.0" top="3.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="stopButton" mnemonicParsing="false" text="Stop">
+                     <HBox.margin>
+                        <Insets bottom="3.0" left="10.0" top="3.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </top>
         </BorderPane>
     </children>
 </AnchorPane>
