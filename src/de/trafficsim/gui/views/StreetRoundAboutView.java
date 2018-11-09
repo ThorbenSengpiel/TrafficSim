@@ -18,32 +18,32 @@ public class StreetRoundAboutView extends StreetView {
     }
 
     @Override
-    public void draw(AreaGraphicsContext agc, Position center) {
-        Position c = agc.areaToCanvas(center);
+    public void draw(AreaGraphicsContext agc) {
+        Position c = Position.ZERO;
 
-        double r = agc.scaleToCanvas(radius);
+        double r = radius;
 
-        double rIn = agc.scaleToCanvas(radius - (streetWidth/2));
-        double rOut = agc.scaleToCanvas(radius + (streetWidth/2));
+        double rIn = radius - (streetWidth/2);
+        double rOut = radius + (streetWidth/2);
 
         agc.setStroke(Color.GRAY);
-        agc.gc.setLineWidth(agc.scaleToCanvas(streetWidth));
+        agc.gc.setLineWidth(streetWidth);
         agc.gc.strokeOval(c.x-r, c.y-r, 2*r, 2*r);
 
         agc.setStroke(Color.BLACK);
-        agc.gc.setLineWidth(agc.scaleToCanvas(lineWidth));
+        agc.gc.setLineWidth(lineWidth);
         agc.gc.strokeOval(c.x-rIn, c.y-rIn, 2*rIn, 2*rIn);
         agc.gc.strokeOval(c.x-rOut, c.y-rOut, 2*rOut, 2*rOut);
 
         agc.setStroke(Color.WHITE);
-        agc.gc.setLineWidth(agc.scaleToCanvas(lineWidth));
-        agc.gc.setLineDashes(agc.scaleToCanvas(lineWidth*3*Math.PI));
+        agc.gc.setLineWidth(lineWidth);
+        agc.gc.setLineDashes(lineWidth*3*Math.PI);
         agc.gc.strokeOval(c.x-r, c.y-r, 2*r, 2*r);
         agc.gc.setLineDashes(null);
     }
 
     @Override
-    public void drawOverVehicle(AreaGraphicsContext agc, Position center) {
+    public void drawOverVehicle(AreaGraphicsContext agc) {
 
     }
 }

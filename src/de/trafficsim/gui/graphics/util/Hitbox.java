@@ -40,12 +40,12 @@ public class Hitbox {
         return boundingBox;
     }
 
-    public void draw(AreaGraphicsContext agc, Position offset) {
+    public void draw(AreaGraphicsContext agc) {
         for (Shape shape : shapes) {
-            shape.render(agc, offset);
+            shape.render(agc);
         }
         for (Shape shape : shapesSub) {
-            shape.render(agc, offset);
+            shape.render(agc);
         }
     }
 

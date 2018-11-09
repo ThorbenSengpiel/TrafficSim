@@ -62,49 +62,8 @@ public class TrackCurve extends Track {
     }
 
     @Override
-    protected void renderTrack(AreaGraphicsContext agc, Position f, Position t, Position offset) {
+    protected void renderTrack(AreaGraphicsContext agc) {
+        agc.gc.strokeArc(center.x - radius, center.y - radius, radius*2, radius*2, isRight ? inDir.angle : inDir.angle-90, 90, ArcType.OPEN);
 
-
-        //agc.gc.strokeLine(f.x, f.y, t.x, t.y);
-
-        Position c = agc.areaToCanvas(center.add(offset));
-        double r = agc.scaleToCanvas(radius);
-
-        agc.gc.strokeArc(c.x - r, c.y - r, r*2, r*2, isRight ? inDir.angle : inDir.angle-90, 90, ArcType.OPEN);
-
-
-        /*int angle;
-
-        double w = t.x-f.x;
-        double h = t.y-f.y;
-
-        Position c = agc.areaToCanvas(center);
-
-        if (w < 0 && h < 0) {
-            angle = 180;
-        } else if (w > 0 && h < 0) {
-            angle = 270;
-        } else if (w > 0 && h > 0) {
-            angle = 0;
-        } else if (w < 0 && h > 0) {
-            angle = 90;
-        } else {
-            angle = 0;
-        }
-
-        if (!curveDirection) {
-            angle += 180;
-            angle %= 360;
-        }
-
-        w = Math.abs(w);
-        h = Math.abs(h);
-
-        agc.gc.strokeArc(c.x-w, c.y-h, w*2, h*2, angle, 90, ArcType.OPEN);*/
-        /*if (vehiclesOnTrack.size() > 0) {
-            agc.setStroke(Color.RED);
-            agc.gc.strokeLine(f.x, f.y, f.x+inDir.vector.x * 40, f.y+inDir.vector.y * 40);
-            agc.gc.strokeLine(t.x, t.y, t.x+outDir.vector.x * 40, t.y+outDir.vector.y * 40);
-        }*/
     }
 }

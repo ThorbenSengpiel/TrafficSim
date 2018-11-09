@@ -59,47 +59,42 @@ public abstract class Track {
 
     /**
      * Rendert Grundlegene Tackvisualisierung (Connection Punkte)
-     * @param agc
-     * @param offset
      */
-    public void render(AreaGraphicsContext agc, Position offset) {
-        Position f = agc.areaToCanvas(from.add(offset));
-        Position t = agc.areaToCanvas(to.add(offset));
-        agc.gc.setLineWidth(1.5);
+    public void render(AreaGraphicsContext agc) {
+        agc.gc.setLineWidth(0.1);
+        double a = 0.5;
+        double b = (a*2)/3;
         if (inTrackList.size() < 1) {
             agc.gc.setStroke(Color.LIME);
-            agc.gc.strokeOval(f.x - 5, f.y - 5, 10, 10);
+            agc.gc.strokeOval(from.x - a, from.y - a, a*2, a*2);
         }
         if (outTrackList.size() < 1) {
             agc.gc.setStroke(Color.RED);
-            agc.gc.strokeOval(t.x - 5, t.y - 5, 10, 10);
+            agc.gc.strokeOval(to.x - a, to.y - a, a*2, a*2);
         }
 
 
         agc.gc.setStroke(Color.YELLOW);
         if (inTrackList.size() > 0) {
-            agc.gc.strokeLine(f.x - 7, f.y - 7, f.x + 7, f.y + 7);
-            agc.gc.strokeLine(f.x - 7, f.y + 7, f.x + 7, f.y - 7);
+            agc.gc.strokeLine(from.x - b, from.y - b, from.x + b, from.y + b);
+            agc.gc.strokeLine(from.x - b, from.y + b, from.x + b, from.y - b);
         }
 
         if (vehiclesOnTrack.size() > 0) {
             agc.gc.setStroke(Color.LIME);
-            agc.gc.strokeOval(f.x - 5, f.y - 5, 10, 10);
+            agc.gc.strokeOval(from.x - a, from.y - a, a*2, a*2);
         } else {
             agc.gc.setStroke(Color.CYAN.deriveColor(0, 1, 1, 0.2));
         }
 
-        renderTrack(agc, f, t, offset);
+        renderTrack(agc);
     }
 
     /**
      * Track Spezifische Visualisierung
      * @param agc
-     * @param f
-     * @param t
-     * @param offset
      */
-    protected abstract void renderTrack(AreaGraphicsContext agc, Position f, Position t, Position offset);
+    protected abstract void renderTrack(AreaGraphicsContext agc);
 
     public abstract Position getPosOnArea(double pos);
     public double getLength() {

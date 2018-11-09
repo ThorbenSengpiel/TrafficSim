@@ -16,7 +16,8 @@ public class Vehicle {
     private boolean active = true;
     public double color = 0;
 
-    public Vehicle(double velocity, Track track) {
+
+    public Vehicle(double velocity, Track track){
         this.velocity = velocity;
         this.currentTrack = track;
         color = Math.random();
