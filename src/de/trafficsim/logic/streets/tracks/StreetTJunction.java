@@ -1,14 +1,14 @@
 package de.trafficsim.logic.streets.tracks;
 
 import de.trafficsim.gui.views.StreetView;
-import de.trafficsim.gui.views.TJunctionView;
+import de.trafficsim.gui.views.StreetTJunctionView;
 import de.trafficsim.logic.streets.Street;
 import de.trafficsim.logic.streets.StreetType;
 import de.trafficsim.util.geometry.Position;
 
 public class StreetTJunction extends Street {
 
-    public StreetTJunction(Position position, StreetType type) {
+    public StreetTJunction(Position position) {
         super(position, StreetType.T_JUNCTION);
 
         Track inLeft;
@@ -39,7 +39,7 @@ public class StreetTJunction extends Street {
 
     @Override
     public StreetView createView() {
-        return new TJunctionView(this);
+        return new StreetTJunctionView(this);
     }
 
     @Override

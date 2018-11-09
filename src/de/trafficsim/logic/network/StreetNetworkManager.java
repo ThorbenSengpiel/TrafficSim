@@ -2,6 +2,7 @@ package de.trafficsim.logic.network;
 
 import de.trafficsim.gui.GuiController;
 import de.trafficsim.logic.streets.*;
+import de.trafficsim.logic.streets.tracks.StreetTJunction;
 import de.trafficsim.logic.streets.tracks.Track;
 import de.trafficsim.logic.streets.tracks.TrackStraight;
 import de.trafficsim.logic.vehicles.VehicleManager;
