@@ -188,9 +188,7 @@ public class Area extends Canvas {
         drawVehicles();
         drawStreetsOverVehicles(visibleStreetViews);
         drawPreviewElement();
-        if (showTracks) {
-            drawTracks(visibleStreetViews);
-        }
+        drawTracks(visibleStreetViews);
         if (showBoundingBox) {
             drawBoundingBoxes(visibleStreetViews);
         }
@@ -241,7 +239,7 @@ public class Area extends Canvas {
             agc.setTransparent(false);
             dragged.drawI(agc);
             dragged.drawOverVehicleI(agc);
-            dragged.drawTracks(agc);
+            dragged.drawTracks(agc, false);
         }
     }
 
@@ -282,7 +280,7 @@ public class Area extends Canvas {
             }
         }
         for (StreetView view : streetViews) {
-            view.drawTracks(agc);
+            view.drawTracks(agc, !showTracks);
         }
 
     }

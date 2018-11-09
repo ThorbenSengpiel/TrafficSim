@@ -111,13 +111,13 @@ public abstract class Track {
     protected abstract void renderTrack(AreaGraphicsContext agc);
 
     public abstract Position getPosOnArea(double pos);
+
     public double getLength() {
         return length;
     }
     public Position getFrom() {
         return from;
     }
-
     public Position getTo() {
         return to;
     }
@@ -166,5 +166,9 @@ public abstract class Track {
         return "Track{" +
                 "id=" + id +
                 '}';
+    }
+
+    public boolean isSelected() {
+        return selected;
     }
 }

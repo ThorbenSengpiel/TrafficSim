@@ -48,10 +48,16 @@ public abstract class StreetView {
         agc.gc.translate(-offset.x, -offset.y);
     }
 
-    public void drawTracks(AreaGraphicsContext agc) {
+    public void drawTracks(AreaGraphicsContext agc, boolean onlySelected) {
         translate(agc);
         for (Track track : street.getTracks()) {
-            track.render(agc);
+            if (onlySelected) {
+                if (track.isSelected()) {
+                    track.render(agc);
+                }
+            } else {
+                track.render(agc);
+            }
         }
         translateBack(agc);
     }
