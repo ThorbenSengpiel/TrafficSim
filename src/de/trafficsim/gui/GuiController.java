@@ -1,8 +1,6 @@
 package de.trafficsim.gui;
 
 import de.trafficsim.gui.graphics.Area;
-import de.trafficsim.logic.network.Pathfinder;
-import de.trafficsim.logic.network.StreetNetworkManager;
 import de.trafficsim.logic.streets.Street;
 import de.trafficsim.logic.streets.StreetSpawn;
 import de.trafficsim.logic.vehicles.Vehicle;
@@ -32,6 +30,12 @@ public class GuiController {
     @FXML
     Button addCarButton;
 
+    @FXML
+    Button switchMode;
+
+    @FXML
+    Button goCarGo;
+
 
     private Area area;
     private VehicleManager vehicleManager;
@@ -50,6 +54,9 @@ public class GuiController {
             StreetSpawn sp = StreetNetworkManager.getInstance().getRandomSpawn();
             Pathfinder.getPath(sp.getStartTrack(),sp.getEndTrack());
         });
+        addCarButton.setOnAction(event -> vehicleManager.spawnVehicle());
+        switchMode.setOnAction(event -> vehicleManager.switchMode());
+        goCarGo.setOnAction(event -> vehicleManager.goVehicleGo());
     }
 
 
