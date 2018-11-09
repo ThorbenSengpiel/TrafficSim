@@ -151,16 +151,7 @@ public class StreetNetworkManager {
         }
     }
 
-    public List<Track> creatRandomPath(){
-        List<Track> path = new ArrayList<Track>();
-        for (int i = 0; i< streetList.get(streetList.size()-1).getTracks().size();i++){
-            path.add(streetList.get(streetList.size()-1).getTracks().get(i));
-        }
-        /*Track currentTrack = new StreetNetworkManager().streetList.get(0).getTracks().get(0);
-        for (int i = 0; i <20;i++){
-            Track nextTrack = currentTrack.getOutTrackList().get((int) (Math.random() * currentTrack.getOutTrackList().size()));
-            path.add(nextTrack);
-        }*/
-        return path;
+    public List<Track> createRandomPath(){
+        return Pathfinder.getRandomPath(streetList.get((int)Math.random()*streetList.size()).getTracks().get(0),3);
     }
 }
