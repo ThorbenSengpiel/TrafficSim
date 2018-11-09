@@ -160,4 +160,11 @@ public abstract class Track {
     public int hashCode() {
         return id;
     }
+
+    @Override
+    public String toString() {
+        return "Track{" +
+                "id=" + id +
+                '}';
+    }
 }
