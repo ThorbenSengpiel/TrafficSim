@@ -1,5 +1,6 @@
 package de.trafficsim.gui.graphics;
 
+import de.trafficsim.gui.menu.CreateMenu;
 import de.trafficsim.gui.views.StreetView;
 import de.trafficsim.logic.network.StreetNetworkManager;
 import de.trafficsim.logic.streets.Street;
@@ -41,6 +42,7 @@ public class Area extends Canvas {
     private boolean showBoundingBox = false;
 
 
+    private CreateMenu createMenu;
 
     public Area() {
         super(200, 200);
@@ -74,6 +76,13 @@ public class Area extends Canvas {
             } else if(scale <= 0.001) {
                 scale = 0.001;
             }
+        });
+
+        createMenu = new CreateMenu(this);
+
+        setOnContextMenuRequested(event -> {
+            Position pos = new Position(event.getX(), event.getY());
+            createMenu.show(this, event.getScreenX(), event.getScreenY(), agc.canvasToArea(pos).snapToGrid(GRID_SPACING));
         });
     }
 

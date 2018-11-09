@@ -2,16 +2,11 @@ package de.trafficsim.logic.network;
 
 import de.trafficsim.gui.GuiController;
 import de.trafficsim.logic.streets.*;
-import de.trafficsim.logic.streets.tracks.StreetTJunction;
 import de.trafficsim.logic.streets.tracks.Track;
-import de.trafficsim.logic.streets.tracks.TrackStraight;
-import de.trafficsim.logic.vehicles.VehicleManager;
 import de.trafficsim.util.Direction;
 import de.trafficsim.util.geometry.Position;
-import javafx.geometry.Pos;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class StreetNetworkManager {
@@ -175,6 +170,5 @@ public class StreetNetworkManager {
 
   public void stop(){
       this.running = false;
-      deleteAllStreets();
   }
 }

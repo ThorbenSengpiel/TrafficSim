@@ -5,6 +5,8 @@ import de.trafficsim.gui.graphics.util.Hitbox;
 import de.trafficsim.logic.streets.Street;
 import de.trafficsim.util.geometry.Position;
 import de.trafficsim.util.geometry.Rectangle;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.ArcType;
 
 public class StreetTJunctionView extends StreetView {
     public StreetTJunctionView(Street street) {
@@ -24,6 +26,26 @@ public class StreetTJunctionView extends StreetView {
 
         //todo Leon...
 
+        agc.setFill(Color.GRAY);
+        double radius = 5;
+        agc.gc.beginPath();
+        agc.gc.moveTo(r.x, r.y+radius);
+        agc.gc.bezierCurveTo(r.x-radius*0.85, r.y+radius, b.x+radius, b.y-radius*0.85, b.x+radius, b.y);
+        agc.gc.lineTo(b.x-radius, b.y);
+        agc.gc.bezierCurveTo(b.x-radius, b.y-radius*0.85, l.x+radius*0.85, l.y+radius, l.x, l.y+radius);
+        agc.gc.lineTo(l.x, l.y-radius);
+        agc.gc.lineTo(r.x, -l.y-radius);
+
+        agc.gc.closePath();
+        agc.gc.fill();
+
+        agc.setStroke(AreaGraphicsContext.StreetVisuals.STREET_BORDER);
+        Position ne = new Position( 12.5,  12.5);
+        Position nw = new Position(-12.5,  12.5);
+        radius = 7.5;
+        agc.gc.strokeArc(nw.x-radius, nw.y-radius, radius*2, radius*2, 0, 90, ArcType.OPEN);
+        agc.gc.strokeArc(ne.x-radius, ne.y-radius, radius*2, radius*2, 90, 90, ArcType.OPEN);
+        agc.gc.strokeLine(l.x, l.y-5, r.x, r.y-5);
     }
 
     @Override

@@ -1,12 +1,18 @@
-package de.trafficsim.logic.streets.tracks;
+package de.trafficsim.logic.streets;
 
 import de.trafficsim.gui.views.StreetView;
 import de.trafficsim.gui.views.StreetTJunctionView;
 import de.trafficsim.logic.streets.Street;
 import de.trafficsim.logic.streets.StreetType;
+import de.trafficsim.logic.streets.tracks.Track;
+import de.trafficsim.logic.streets.tracks.TrackStraight;
 import de.trafficsim.util.geometry.Position;
 
 public class StreetTJunction extends Street {
+
+    public StreetTJunction() {
+        this(Position.ZERO);
+    }
 
     public StreetTJunction(Position position) {
         super(position, StreetType.T_JUNCTION);

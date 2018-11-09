@@ -12,6 +12,11 @@ public class StreetParkingDeck extends StreetSpawn {
     private Track start;
     private Track end;
 
+    public StreetParkingDeck() {
+        this(Position.ZERO, Direction.NORTH);
+    }
+
+
     public StreetParkingDeck(Position position, Direction rotation) {
         super(position, StreetType.PARKING_DECK, rotation);
         start = addOutTrack(new TrackStraight(createPosition(0, -2.5), createPosition(-25, -2.5), this));

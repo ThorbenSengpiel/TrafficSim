@@ -19,6 +19,10 @@ public class StreetTestCross extends Street {
     public Track inSouth;
     public Track outSouth;
 
+    public StreetTestCross() {
+        this(Position.ZERO);
+    }
+
     public StreetTestCross(Position position) {
         super(position, StreetType.TEST_CROSS);
 
