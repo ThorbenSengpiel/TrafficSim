@@ -12,6 +12,11 @@ import java.util.List;
 
 public abstract class Track {
     protected final Street street;
+
+    private static int nextID = 0;
+
+    public final int id;
+
     protected Direction inDir;
     protected Direction outDir;
 
@@ -27,11 +32,15 @@ public abstract class Track {
 
     protected List<Track> outTrackList = new ArrayList<>();
 
+    protected boolean selected;
+
     public Track(Position from, Position to, double length, Street street) {
         this.from = from;
         this.to = to;
         this.length = length;
         this.street = street;
+        id = nextID;
+        nextID++;
     }
 
     public void connectOutToInOf(Track track) {
@@ -61,7 +70,7 @@ public abstract class Track {
      * Rendert Grundlegene Tackvisualisierung (Connection Punkte)
      */
     public void render(AreaGraphicsContext agc) {
-        agc.gc.setLineWidth(0.1);
+        agc.gc.setLineWidth(1*agc.scale);
         double a = 1;
         double b = (a*2)/3;
         if (inTrackList.size() < 1) {
@@ -80,14 +89,19 @@ public abstract class Track {
             agc.gc.strokeLine(from.x - b, from.y + b, from.x + b, from.y - b);
         }
 
-        if (vehiclesOnTrack.size() > 0) {
-            agc.gc.setStroke(Color.LIME);
-            //agc.gc.strokeOval(from.x - a, from.y - a, a*2, a*2);
+        if (!selected) {
+            if (vehiclesOnTrack.size() > 0) {
+                agc.gc.setStroke(Color.LIME);
+                //agc.gc.strokeOval(from.x - a, from.y - a, a*2, a*2);
+            } else {
+                agc.gc.setStroke(Color.CYAN.deriveColor(0, 1, 1, 0.2));
+            }
         } else {
-            agc.gc.setStroke(Color.CYAN.deriveColor(0, 1, 1, 0.2));
+            agc.gc.setStroke(Color.RED);
         }
 
         renderTrack(agc);
+        selected = false;
     }
 
     /**
@@ -136,5 +150,21 @@ public abstract class Track {
 
     public List<Vehicle> getVehiclesOnTrack() {
         return vehiclesOnTrack;
+    }
+
+    public void select() {
+        selected = true;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return "Track{" +
+                "id=" + id +
+                '}';
     }
 }
