@@ -92,15 +92,6 @@ public abstract class Street {
         return addTrack(track);
     }
 
-    public void disconnect() {
-        for (Track track : inTracks) {
-            track.disconnectAllIngoing();
-        }
-        for (Track track : outTracks) {
-            track.disconnectAllOutgoing();
-        }
-    }
-
     public abstract StreetView createView();
 
     public List<Track> getInTracks() {
@@ -122,9 +113,15 @@ public abstract class Street {
         }
     }
 
-    public abstract Street createRotated();
+    public Street createRotated() {
+        return this;
+    }
 
     public Direction getRotation() {
         return rotation;
+    }
+
+    public String export() {
+        return type + ";"+position.x+";"+position.y+";"+rotation+System.lineSeparator();
     }
 }

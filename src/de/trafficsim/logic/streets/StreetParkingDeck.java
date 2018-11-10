@@ -7,10 +7,15 @@ import de.trafficsim.logic.streets.tracks.TrackStraight;
 import de.trafficsim.util.Direction;
 import de.trafficsim.util.geometry.Position;
 
-public class StreetParkingDeck extends StreetSpawn {
+public class StreetParkingDeck extends Street implements StreetSpawn {
 
     private Track start;
     private Track end;
+
+    public StreetParkingDeck() {
+        this(Position.ZERO, Direction.NORTH);
+    }
+
 
     public StreetParkingDeck(Position position, Direction rotation) {
         super(position, StreetType.PARKING_DECK, rotation);

@@ -1,35 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
-
-<?import javafx.scene.control.Button?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <AnchorPane fx:id="layout" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <BorderPane prefHeight="471.0" prefWidth="517.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <BorderPane prefHeight="471.0" prefWidth="517.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <bottom>
 
             </bottom>
             <left>
                 <AnchorPane fx:id="values" prefHeight="430.0" prefWidth="150.0" BorderPane.alignment="CENTER">
-               <children>
-                  <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <CheckBox fx:id="checkShowTracks" mnemonicParsing="false" text="Tracks" />
-                        <CheckBox fx:id="checkShowBoundingBox" mnemonicParsing="false" text="BoundingBox" />
-                        <CheckBox fx:id="checkShowHitBox" mnemonicParsing="false" text="HitBox" />
-                        <Button fx:id="addCarButton" mnemonicParsing="false" text="Add Car" />
-                        <Button fx:id="goCarGo" mnemonicParsing="false" text="goCarGo" />
-                        <Button fx:id="switchMode" mnemonicParsing="false" text="Start/Stop" />
-                     </children>
-                  </VBox>
-               </children></AnchorPane>
+                    <children>
+                        <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0"
+                              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <children>
+                                <CheckBox fx:id="checkShowTracks" mnemonicParsing="false" text="Tracks"/>
+                                <CheckBox fx:id="checkShowBoundingBox" mnemonicParsing="false" text="BoundingBox"/>
+                                <CheckBox fx:id="checkShowHitBox" mnemonicParsing="false" text="HitBox"/>
+                                <Button fx:id="addCarButton" mnemonicParsing="false" text="add Car"/>
+                                <CheckBox fx:id="checkShowFancyGraphics" mnemonicParsing="false" text="Fancy Graphics"/>
+                            </children>
+                        </VBox>
+                    </children>
+                </AnchorPane>
             </left>
             <center>
-                <AnchorPane fx:id="paneCanvas" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+                <AnchorPane fx:id="paneCanvas" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER"/>
             </center>
+            <top>
+                <VBox prefHeight="55.0" prefWidth="517.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <MenuBar BorderPane.alignment="CENTER">
+                            <menus>
+                                <Menu mnemonicParsing="false" text="File">
+                                    <items>
+                                        <MenuItem mnemonicParsing="false" onAction="#createNew" text="New"/>
+                                        <MenuItem mnemonicParsing="false" onAction="#openFile" text="Open"/>
+                                        <MenuItem mnemonicParsing="false" onAction="#saveFile" text="Save"/>
+                                    </items>
+                                </Menu>
+                            </menus>
+                        </MenuBar>
+                        <HBox prefHeight="35.0" prefWidth="517.0" BorderPane.alignment="CENTER">
+                            <children>
+                                <Button fx:id="startButton" mnemonicParsing="false" text="Start">
+                                    <HBox.margin>
+                                        <Insets bottom="3.0" left="10.0" top="3.0"/>
+                                    </HBox.margin>
+                                </Button>
+                                <Button fx:id="pauseButton" mnemonicParsing="false" text="Pause">
+                                    <HBox.margin>
+                                        <Insets bottom="3.0" left="10.0" top="3.0"/>
+                                    </HBox.margin>
+                                </Button>
+                                <Button fx:id="stopButton" mnemonicParsing="false" text="Stop">
+                                    <HBox.margin>
+                                        <Insets bottom="3.0" left="10.0" top="3.0"/>
+                                    </HBox.margin>
+                                </Button>
+                                <VBox prefHeight="200.0" prefWidth="100.0"/>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </top>
+            <right>
+            </right>
         </BorderPane>
     </children>
 </AnchorPane>

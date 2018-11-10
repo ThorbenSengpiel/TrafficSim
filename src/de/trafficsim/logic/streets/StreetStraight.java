@@ -13,6 +13,10 @@ public class StreetStraight extends Street {
     private Position from;
     private Position to;
 
+    public StreetStraight() {
+        this(new Position(-25, 0), new Position(25, 0));
+    }
+
     public StreetStraight(Position from, Position to) {
         super(new Position((from.x + to.x)/2, (from.y + to.y)/2), StreetType.STRAIGHT);
         addInOutTrack(new TrackStraight(from.sub(position), to.sub(position),this));
@@ -33,8 +37,4 @@ public class StreetStraight extends Street {
         return new StreetStraightView(this);
     }
 
-    @Override
-    public Street createRotated() {
-        return this;
-    }
 }

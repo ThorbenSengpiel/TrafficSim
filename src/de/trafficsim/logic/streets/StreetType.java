@@ -1,20 +1,28 @@
 package de.trafficsim.logic.streets;
 
-import de.trafficsim.gui.views.StreetRoundAboutView;
-import de.trafficsim.gui.views.StreetStraightView;
-import de.trafficsim.gui.views.StreetView;
+import de.trafficsim.gui.menu.MenuCategory;
 
 public enum StreetType {
-    ROUNDABOUT("Roundabout"),
-    STRAIGHT("Straight"),
-    TEST_CROSS("TestCross"),
-    PARKING_DECK("TestCross"),
-    T_JUNCTION("TJunction");
+    ROUNDABOUT("Roundabout", MenuCategory.LANES, StreetRoundAbout.class),
+    STRAIGHT("Straight", MenuCategory.LANES, StreetStraight.class),
+    STRAIGHT_2_LANE("Straight 2 Lane", MenuCategory.LANES, StreetStraight2Lane.class),
 
-    public final String name;
+    TEST_CROSS("TestCross", MenuCategory.JUNCTIONS, StreetTestCross.class),
+    T_JUNCTION("T Junction", MenuCategory.JUNCTIONS, StreetTJunction.class),
 
+    PARKING_DECK("TestCross", MenuCategory.SPAWNS, StreetParkingDeck.class);
 
-    StreetType(String name) {
-        this.name = name;
+    public final String uiName;
+    public final Class clazz;
+    public final MenuCategory category;
+
+    StreetType(String uiName, MenuCategory category, Class<? extends Street> clazz) {
+        this.uiName = uiName;
+        this.category = category;
+        this.clazz = clazz;
+    }
+
+    public Street create() throws IllegalAccessException, InstantiationException {
+        return (Street) clazz.newInstance();
     }
 }

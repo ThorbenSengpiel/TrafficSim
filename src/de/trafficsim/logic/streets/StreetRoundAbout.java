@@ -10,6 +10,11 @@ import de.trafficsim.util.geometry.Position;
 import java.lang.reflect.InvocationTargetException;
 
 public class StreetRoundAbout extends Street {
+
+    public StreetRoundAbout() {
+        this(Position.ZERO, true);
+    }
+
     public StreetRoundAbout(Position position, boolean right) {
         super(position, StreetType.ROUNDABOUT);
 
@@ -44,10 +49,5 @@ public class StreetRoundAbout extends Street {
     @Override
     public StreetView createView() {
         return new StreetRoundAboutView(this);
-    }
-
-    @Override
-    public Street createRotated() {
-        return this;
     }
 }
