@@ -1,9 +1,11 @@
 package de.trafficsim.gui.menu;
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.NodeType;
+import de.trafficsim.gui.GuiController;
 import de.trafficsim.gui.graphics.Area;
 import de.trafficsim.logic.network.StreetNetworkManager;
 import de.trafficsim.logic.streets.Street;
+import de.trafficsim.logic.streets.StreetStraight2Lane;
+import de.trafficsim.logic.streets.StreetTwoPositions;
 import de.trafficsim.logic.streets.StreetType;
 import de.trafficsim.util.geometry.Position;
 import javafx.scene.Node;
@@ -48,11 +50,15 @@ public class CreateMenu extends ContextMenu {
         this.pos = pos;
     }
 
-    private void createNode(StreetType street) {
+    private void createStreet(StreetType streetType) {
         try {
-            Street s = street.create();
-            s.setPosition(pos);
-            StreetNetworkManager.getInstance().addStreet(s);
+            Street street = streetType.create();
+            street.setPosition(pos);
+            if (street instanceof StreetTwoPositions) {
+                GuiController.getInstance().newEditableStreet((StreetTwoPositions) street);
+            } else {
+                StreetNetworkManager.getInstance().addStreet(street);
+            }
         } catch (IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
         }
@@ -73,7 +79,7 @@ public class CreateMenu extends ContextMenu {
             super(streetType.uiName);
             this.streetType = streetType;
             setOnAction(event -> {
-                CreateMenu.this.createNode(streetType);
+                CreateMenu.this.createStreet(streetType);
                 // EditorContextMenu.this.hide();
             });
 

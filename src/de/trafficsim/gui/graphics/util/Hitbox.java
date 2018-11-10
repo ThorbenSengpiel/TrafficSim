@@ -1,6 +1,7 @@
 package de.trafficsim.gui.graphics.util;
 
 import de.trafficsim.gui.graphics.AreaGraphicsContext;
+import de.trafficsim.util.Direction;
 import de.trafficsim.util.geometry.Position;
 import de.trafficsim.util.geometry.Rectangle;
 import de.trafficsim.util.geometry.Shape;
@@ -61,5 +62,24 @@ public class Hitbox {
             }
         }
         return false;
+    }
+
+    public static Hitbox createLaneHitbox(Position from, Position to, double laneWidth) {
+        Position f;
+        Position t;
+        if (from.y == to.y) {
+            f = new Position(from.x, from.y - (laneWidth/2));
+            t = new Position(to.x, to.y + (laneWidth/2));
+        } else {
+            f = new Position(from.x - (laneWidth/2), from.y);
+            t = new Position(to.x + (laneWidth/2), to.y);
+        }
+        return new Hitbox(new Rectangle(f, t));
+    }
+
+    public static Hitbox createLaneHitbox(double length, Direction direction, double laneWidth) {
+        Position f = new Position(laneWidth / 2, 0).rotate(direction);
+        Position t = new Position(-laneWidth / 2, length).rotate(direction);
+        return new Hitbox(new Rectangle(f, t));
     }
 }

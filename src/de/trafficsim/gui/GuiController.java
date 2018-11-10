@@ -3,8 +3,7 @@ package de.trafficsim.gui;
 import de.trafficsim.gui.graphics.Area;
 import de.trafficsim.logic.network.Pathfinder;
 import de.trafficsim.logic.network.StreetNetworkManager;
-import de.trafficsim.logic.streets.Street;
-import de.trafficsim.logic.streets.StreetSpawn;
+import de.trafficsim.logic.streets.*;
 import de.trafficsim.logic.vehicles.Vehicle;
 import de.trafficsim.logic.vehicles.VehicleManager;
 import javafx.event.ActionEvent;
@@ -185,5 +184,9 @@ public class GuiController {
 
     public void keyPressed(KeyEvent event) {
         area.keyPressed(event);
+    }
+
+    public void newEditableStreet(StreetTwoPositions street) {
+        area.newEditableStreet(street);
     }
 }

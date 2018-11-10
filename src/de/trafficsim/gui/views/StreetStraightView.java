@@ -16,22 +16,9 @@ public class StreetStraightView extends StreetView {
     private double length;
 
     public StreetStraightView(StreetStraight street) {
-        super(street, new Hitbox(calcHitbox(street.getFrom().sub(street.getPosition()), street.getTo().sub(street.getPosition()))));
+        super(street, Hitbox.createLaneHitbox(street.getFrom().sub(street.getPosition()), street.getTo().sub(street.getPosition()), width));
         horizontal = street.getTo().y == street.getFrom().y;
         length = street.getFrom().distance(street.getTo());
-    }
-
-    private static Shape calcHitbox(Position from, Position to) {
-        Position f;
-        Position t;
-        if (from.y == to.y) {
-            f = new Position(from.x, from.y - (width/2));
-            t = new Position(to.x, to.y + (width/2));
-        } else {
-            f = new Position(from.x - (width/2), from.y);
-            t = new Position(to.x + (width/2), to.y);
-        }
-        return new Rectangle(f, t);
     }
 
     @Override

@@ -4,6 +4,7 @@ import de.trafficsim.gui.menu.CreateMenu;
 import de.trafficsim.gui.views.StreetView;
 import de.trafficsim.logic.network.StreetNetworkManager;
 import de.trafficsim.logic.streets.Street;
+import de.trafficsim.logic.streets.StreetTwoPositions;
 import de.trafficsim.logic.streets.tracks.Track;
 import de.trafficsim.logic.vehicles.Vehicle;
 import de.trafficsim.logic.vehicles.VehicleManager;
@@ -28,6 +29,8 @@ public class Area extends Canvas {
     private double scale;
     public static int GRID_SPACING = 25;
 
+    private boolean editingNew;
+    private StreetTwoPositions editable;
     private StreetView dragged;
     private Position dragCurrentPos;
     private Position dragStartPos;
@@ -62,6 +65,8 @@ public class Area extends Canvas {
 
         setOnMouseDragged(this::mouseDrag);
 
+        setOnMouseMoved(this::mouseMoved);
+
         setOnMousePressed(this::mousePressed);
 
         setOnMouseReleased(this::mouseReleased);
@@ -83,6 +88,19 @@ public class Area extends Canvas {
             Position pos = new Position(event.getX(), event.getY());
             createMenu.show(this, event.getScreenX(), event.getScreenY(), agc.canvasToArea(pos).snapToGrid(GRID_SPACING));
         });
+    }
+
+    private void mouseMoved(MouseEvent e) {
+        if (editingNew) {
+            if (dragStartPos != null) {
+                dragCurrentPos = agc.canvasToAreaNoOffset(new Position(e.getX(), e.getY()));
+                dragCurrentPos = agc.canvasToArea(new Position(e.getX(), e.getY()));
+            }
+            if (editable != null) {
+                editable = editable.createChanged(dragStartCenter.add(dragCurrentPos.sub(dragStartPos)).snapToGrid(GRID_SPACING));
+                dragged = editable.createView();
+            }
+        }
     }
 
     private void mouseClicked(MouseEvent e) {
@@ -111,7 +129,7 @@ public class Area extends Canvas {
     private void mousePressed(MouseEvent e) {
         Position pos = agc.canvasToArea(new Position(e.getX(), e.getY()));
         StreetView hit = null;
-        if (!running) {
+        if (!running && !editingNew) {
             hit = getStreetAt(pos);
         }
         pos = agc.canvasToAreaNoOffset(new Position(e.getX(), e.getY()));
@@ -140,7 +158,12 @@ public class Area extends Canvas {
         dragStartPos = null;
         dragStartCenter = null;
         if (dragged != null) {
-            dragged.getStreet().setPosition(dragged.getStreet().getPosition().snapToGrid(GRID_SPACING));
+            if (editingNew) {
+                editingNew = false;
+                editable = null;
+            } else {
+                dragged.getStreet().setPosition(dragged.getStreet().getPosition().snapToGrid(GRID_SPACING));
+            }
             dragDropConnect(dragged);
             dragged = null;
         }
@@ -193,7 +216,7 @@ public class Area extends Canvas {
             drawBoundingBoxes(visibleStreetViews);
         }
         if (showHitBox) {
-            drawdrawHitBoxes(visibleStreetViews);
+            drawHitBoxes(visibleStreetViews);
         }
         agc.gc.restore();
         drawOverlay(delta);
@@ -294,7 +317,7 @@ public class Area extends Canvas {
         }
     }
 
-    private void drawdrawHitBoxes(List<StreetView> streetViews) {
+    private void drawHitBoxes(List<StreetView> streetViews) {
         agc.gc.setFill(Color.TRANSPARENT);
         agc.gc.setLineWidth(2*agc.scale);
         agc.gc.setStroke(Color.RED);
@@ -407,5 +430,15 @@ public class Area extends Canvas {
         if (street != null) {
             StreetNetworkManager.getInstance().removeStreet(street.getStreet());
         }
+    }
+
+    public void newEditableStreet(StreetTwoPositions street) {
+        Position pos = street.getPosition();
+        editable = street;
+        editingNew = true;
+        dragStartPos = pos;
+        dragCurrentPos = pos;
+        dragStartCenter = pos;
+        dragged = street.createView();
     }
 }

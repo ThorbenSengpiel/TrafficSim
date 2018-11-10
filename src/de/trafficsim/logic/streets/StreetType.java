@@ -5,9 +5,12 @@ import de.trafficsim.gui.menu.MenuCategory;
 public enum StreetType {
     ROUNDABOUT("Roundabout", MenuCategory.LANES, StreetRoundAbout.class),
     STRAIGHT("Straight", MenuCategory.LANES, StreetStraight.class),
-    PARKING_DECK("TestCross", MenuCategory.SPAWNS, StreetParkingDeck.class),
+    STRAIGHT_2_LANE("Straight 2 Lane", MenuCategory.LANES, StreetStraight2Lane.class),
+
     TEST_CROSS("TestCross", MenuCategory.JUNCTIONS, StreetTestCross.class),
-    T_JUNCTION("T Junction", MenuCategory.JUNCTIONS, StreetTJunction.class);
+    T_JUNCTION("T Junction", MenuCategory.JUNCTIONS, StreetTJunction.class),
+
+    PARKING_DECK("TestCross", MenuCategory.SPAWNS, StreetParkingDeck.class);
 
     public final String uiName;
     public final Class clazz;
