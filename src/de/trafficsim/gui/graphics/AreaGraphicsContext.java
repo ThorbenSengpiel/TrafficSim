@@ -3,6 +3,8 @@ package de.trafficsim.gui.graphics;
 import de.trafficsim.util.geometry.Position;
 import de.trafficsim.util.geometry.Rectangle;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Effect;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
 
@@ -15,6 +17,8 @@ public class AreaGraphicsContext {
     public final Rectangle screen;
 
     private boolean transparent;
+
+    private boolean fancyGraphics;
 
     public AreaGraphicsContext(GraphicsContext gc, Position center, double scale, double width, double height) {
         this.gc = gc;
@@ -103,6 +107,12 @@ public class AreaGraphicsContext {
         }
     }
 
+    public void setEffect(Effect effect) {
+        if (fancyGraphics) {
+            gc.setEffect(effect);
+        }
+    }
+
     public enum StreetVisuals {
         STREET(Color.GRAY, 5, null),
         STREET2LANE(Color.GRAY, 10, null),
@@ -111,13 +121,21 @@ public class AreaGraphicsContext {
         STREET_BORDER(Color.BLACK, 0.2, null);
 
         public final Color stroke;
+
         public final double width;
         public final Double dashed;
-
         StreetVisuals(Color stroke, double width, Double dashed) {
             this.stroke = stroke;
             this.width = width;
             this.dashed = dashed;
         }
+
+    }
+    public boolean isFancyGraphics() {
+        return fancyGraphics;
+    }
+
+    public void setFancyGraphics(boolean fancyGraphics) {
+        this.fancyGraphics = fancyGraphics;
     }
 }

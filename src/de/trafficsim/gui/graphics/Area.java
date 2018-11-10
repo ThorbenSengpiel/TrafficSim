@@ -12,6 +12,9 @@ import de.trafficsim.util.Util;
 import de.trafficsim.util.geometry.Position;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Light;
+import javafx.scene.effect.Lighting;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -43,12 +46,15 @@ public class Area extends Canvas {
     private boolean showTracks = false;
     private boolean showHitBox = false;
     private boolean showBoundingBox = false;
+    private boolean showFancyGraphics = false;
 
     private boolean running = false;
 
     private CreateMenu createMenu;
 
     private Vehicle selectedVehicle = null;
+
+    private static DropShadow shadow = new DropShadow(1.4, Color.BLACK);
 
     public Area() {
         super(200, 200);
@@ -191,6 +197,7 @@ public class Area extends Canvas {
     public void draw(double delta) {
         agc = new AreaGraphicsContext(getGraphicsContext2D(), center, scale, getWidth(), getHeight());
 
+        agc.setFancyGraphics(showFancyGraphics);
 
 
         ArrayList<StreetView> visibleStreetViews = new ArrayList<>();
@@ -225,6 +232,7 @@ public class Area extends Canvas {
 
     private void drawVehicles() {
         //double size = agc.scaleToCanvas(4);
+        agc.setEffect(shadow);
         double size = 4;
         agc.setStroke(Color.WHITE);
         agc.gc.setLineWidth(3*agc.scale);
@@ -238,7 +246,6 @@ public class Area extends Canvas {
             agc.gc.rotate(rot);
 
             //agc.gc.drawImage(img, -size, -(size/2), size*2, size);
-
             agc.gc.fillRoundRect(-size, -(size/2), size*2, size, size / 2, size / 2);
             if (vehicle == selectedVehicle) {
                 agc.gc.strokeRoundRect(-size, -(size/2), size*2, size, size / 2, size / 2);
@@ -252,6 +259,7 @@ public class Area extends Canvas {
             agc.gc.rotate(-rot);
             agc.gc.translate(-position.x, -position.y);
         }
+        agc.setEffect(null);
     }
 
 
@@ -440,5 +448,9 @@ public class Area extends Canvas {
         dragCurrentPos = pos;
         dragStartCenter = pos;
         dragged = street.createView();
+    }
+
+    public void setFancyGraphics(boolean selected) {
+        showFancyGraphics = selected;
     }
 }

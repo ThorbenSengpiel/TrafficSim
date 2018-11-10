@@ -50,6 +50,9 @@ public class GuiController {
     @FXML
     Button stopButton;
 
+    @FXML
+    CheckBox checkShowFancyGraphics;
+
 
     private Area area;
     private VehicleManager vehicleManager;
@@ -86,6 +89,7 @@ public class GuiController {
                     .getPath(StreetNetworkManager.getInstance().getRandomSpawn().getStartTrack(),
                             StreetNetworkManager.getInstance().getRandomSpawn().getEndTrack())));
         });
+        checkShowFancyGraphics.setOnAction(event -> area.setFancyGraphics(checkShowFancyGraphics.isSelected()));
         startButton.setOnAction(event -> startModules());
         stopButton.setOnAction(event -> stopModules());
         pauseButton.setOnAction(event -> pauseModules());
