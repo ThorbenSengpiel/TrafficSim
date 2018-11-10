@@ -41,6 +41,9 @@ public class Pathfinder {
                     }
                 }
             }
+            if (nextLayer.isEmpty()){
+                return null;
+            }
             currentLayer = nextLayer;
         }
         return path;
