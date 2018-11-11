@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.transform.Scale;
@@ -67,6 +68,7 @@ public class GuiController {
     Slider spawnSlider;
 
     @FXML
+    TextField spawnTextField;
 
 
     private Area area;
@@ -105,8 +107,13 @@ public class GuiController {
         startButton.setOnAction(event -> startModules());
         stopButton.setOnAction(event -> stopModules());
         pauseButton.setOnAction(event -> pauseModules());
+
+        //setting up the cars/sec widgets
+        spawnSlider.setValue(vehicleManager.getSpawnPerSecond());
+        spawnTextField.setText(spawnSlider.getValue()+"");
         spawnSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             vehicleManager.setSpawnPerSecond(newValue.doubleValue());
+            spawnTextField.setText(vehicleManager.getSpawnPerSecond()+"");
         });
     }
 
