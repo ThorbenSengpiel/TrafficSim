@@ -22,10 +22,6 @@ public class Vehicle {
     private boolean active = true;
     public double color = 0;
 
-    /*public boolean checkCollision(){
-        if (getLookAheadDist() < MIN_DIST);
-    }*/
-
     public Double getLookAheadDist(){
         System.out.println("Lookahead Calc for" + getCurrentTrack() + " Pos =" + getCurrentPosInTrack() + "Length of Track=" + getCurrentTrack().getLength());
         List<Vehicle> vehicles = currentTrack.getVehiclesOnTrack();
@@ -69,8 +65,8 @@ public class Vehicle {
                 if(remaining.isEmpty()){
                     //pop the Element of the Stack and decrement the accumulator because the distance was previously added
                     Track formertrack = stack.pop();
-                    accumulator -= formertrack.getLength();
                     if (!stack.empty()) {
+                        accumulator -= formertrack.getLength();
                         actTrack = stack.peek();
                         System.out.println("<-Backtracking to " + actTrack + "Accumulator now =" + accumulator + "->");
                     } else{
