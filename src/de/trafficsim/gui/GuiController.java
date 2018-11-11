@@ -6,6 +6,7 @@ import de.trafficsim.logic.streets.Street;
 import de.trafficsim.logic.streets.StreetTwoPositions;
 import de.trafficsim.logic.vehicles.Vehicle;
 import de.trafficsim.logic.vehicles.VehicleManager;
+import de.trafficsim.util.Util;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -110,11 +111,22 @@ public class GuiController {
 
         //setting up the cars/sec widgets
         spawnSlider.setValue(vehicleManager.getSpawnPerSecond());
-        spawnTextField.setText(spawnSlider.getValue()+"");
+        spawnTextField.setText(Util.DOUBLE_FORMAT_0_00.format(spawnSlider.getValue()));
+        //change slider value
         spawnSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             vehicleManager.setSpawnPerSecond(newValue.doubleValue());
-            spawnTextField.setText(vehicleManager.getSpawnPerSecond()+"");
+            spawnTextField.setText(Util.DOUBLE_FORMAT_0_00.format(vehicleManager.getSpawnPerSecond()));
         });
+        //change textField value
+        spawnTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                double value = Double.parseDouble(newValue);
+                vehicleManager.setSpawnPerSecond(value);
+                spawnSlider.setValue(value);
+            }catch (NumberFormatException e){
+            }
+        });
+
     }
 
     @FXML
