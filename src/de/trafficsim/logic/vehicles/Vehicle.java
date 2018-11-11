@@ -1,6 +1,7 @@
 package de.trafficsim.logic.vehicles;
 
 import de.trafficsim.logic.streets.tracks.Track;
+import de.trafficsim.util.Util;
 import de.trafficsim.util.geometry.Position;
 
 import java.sql.SQLOutput;
@@ -211,5 +212,10 @@ public class Vehicle {
 
     public List<Track> getPath() {
         return path;
+    }
+
+    @Override
+    public String toString() {
+        return "T:" + currentTrack.id + "P: " + Util.DOUBLE_FORMAT_0_00.format(currentPosInTrack) + " V:" + Util.DOUBLE_FORMAT_0_00.format(velocity);
     }
 }

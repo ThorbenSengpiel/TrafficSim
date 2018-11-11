@@ -65,7 +65,7 @@ public class Position {
             toY = p.y;
         }
 
-        return new Position((toX - fromX) / 2, (toY - fromY) / 2);
+        return new Position((toX + fromX) / 2, (toY + fromY) / 2);
 
     }
 

@@ -348,7 +348,7 @@ public class Area extends Canvas {
 
     private void drawOverlay(double delta) {
 
-        agc.gc.setFont(new Font(agc.gc.getFont().getFamily(), 20));
+        agc.gc.setFont(new Font(agc.gc.getFont().getFamily(), 15));
         agc.gc.setFill(Color.BLACK);
         agc.gc.setTextAlign(TextAlignment.LEFT);
         agc.gc.fillText(agc.screen.from.toString(), 10, 10);
@@ -368,13 +368,25 @@ public class Area extends Canvas {
         agc.gc.setTextAlign(TextAlignment.CENTER);
         agc.gc.fillText(Util.DOUBLE_FORMAT_0_0000.format(agc.scaleToArea(100)) + "m", getWidth() - 75, getHeight() - 35);
 
-
+        agc.gc.setFont(new Font(agc.gc.getFont().getFamily(), 25));
         if (showTrackInfo) {
             for (StreetView streetView : streetViewList) {
                 for (Track track : streetView.getStreet().getTracks()) {
-                    Position pos = agc.areaToCanvas(streetView.getStreet().getPosition().add(track.getTo()));
-                    agc.gc.fillText(track + "", pos.x, pos.y);
+                    if (track.isFree()) {
+                        agc.setFill(Color.BLACK);
+                    } else {
+                        agc.setFill(Color.DARKGREEN);
+                    }
+                    Position pos = agc.areaToCanvas(streetView.getStreet().getPosition().add(track.getFrom().getCenterBetween(track.getTo())));
+                    agc.gc.fillText(track + "", pos.x, pos.y+10);
                 }
+            }
+        }
+        agc.setFill(Color.WHITE);
+        if (showVehicleInfo) {
+            for (Vehicle vehicle : vehicleList) {
+                Position pos = agc.areaToCanvas(vehicle.getPosition());
+                agc.gc.fillText(vehicle + "", pos.x, pos.y+10);
             }
         }
 

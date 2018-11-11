@@ -165,6 +165,7 @@ public abstract class Track {
     public String toString() {
         return "Track{" +
                 "id=" + id +
+                ",V: " +vehiclesOnTrack.size() +
                 '}';
     }
 
