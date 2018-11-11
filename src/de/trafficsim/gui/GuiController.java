@@ -54,6 +54,11 @@ public class GuiController {
     CheckBox checkShowFancyGraphics;
 
 
+    @FXML
+    CheckBox checkShowVehicleInfo;
+    @FXML
+    CheckBox checkShowTrackInfo;
+
     private Area area;
     private VehicleManager vehicleManager;
     private StreetNetworkManager streetNetworkManager;
@@ -81,12 +86,11 @@ public class GuiController {
         area.heightProperty().bind(paneCanvas.heightProperty().subtract(20));
 
         checkShowTracks.setOnAction(event -> area.setShowTracks(checkShowTracks.isSelected()));
-        checkShowBoundingBox
-                .setOnAction(event -> area.setShowBoundingBox(checkShowBoundingBox.isSelected()));
+        checkShowVehicleInfo.setOnAction(event -> area.setShowVehicleInfo(checkShowVehicleInfo.isSelected()));
+        checkShowTrackInfo.setOnAction(event -> area.setShowTrackInfo(checkShowTrackInfo.isSelected()));
+        checkShowBoundingBox.setOnAction(event -> area.setShowBoundingBox(checkShowBoundingBox.isSelected()));
         checkShowHitBox.setOnAction(event -> area.setShowHitBox(checkShowHitBox.isSelected()));
-        addCarButton.setOnAction(event -> {
-            vehicleManager.spawnVehicle();
-        });
+        addCarButton.setOnAction(event -> vehicleManager.spawnVehicle());
         checkShowFancyGraphics.setOnAction(event -> area.setFancyGraphics(checkShowFancyGraphics.isSelected()));
         startButton.setOnAction(event -> startModules());
         stopButton.setOnAction(event -> stopModules());

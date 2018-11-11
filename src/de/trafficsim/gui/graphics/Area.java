@@ -13,12 +13,11 @@ import de.trafficsim.util.geometry.Position;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Light;
-import javafx.scene.effect.Lighting;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
 import java.util.ArrayList;
@@ -348,6 +347,8 @@ public class Area extends Canvas {
     }
 
     private void drawOverlay(double delta) {
+
+        agc.gc.setFont(new Font(agc.gc.getFont().getFamily(), 20));
         agc.gc.setFill(Color.BLACK);
         agc.gc.setTextAlign(TextAlignment.LEFT);
         agc.gc.fillText(agc.screen.from.toString(), 10, 10);
@@ -360,12 +361,22 @@ public class Area extends Canvas {
         agc.gc.setStroke(Color.BLACK);
         agc.gc.setLineWidth(3);
 
+
         agc.gc.strokeLine(getWidth() - 25, getHeight() - 25, getWidth() - 25, getHeight() - 45);
         agc.gc.strokeLine(getWidth() - 125, getHeight() - 25, getWidth() - 125, getHeight() - 45);
         agc.gc.strokeLine(getWidth() - 125, getHeight() - 25, getWidth() - 25, getHeight() - 25);
         agc.gc.setTextAlign(TextAlignment.CENTER);
         agc.gc.fillText(Util.DOUBLE_FORMAT_0_0000.format(agc.scaleToArea(100)) + "m", getWidth() - 75, getHeight() - 35);
 
+
+        if (showTrackInfo) {
+            for (StreetView streetView : streetViewList) {
+                for (Track track : streetView.getStreet().getTracks()) {
+                    Position pos = agc.areaToCanvas(streetView.getStreet().getPosition().add(track.getTo()));
+                    agc.gc.fillText(track + "", pos.x, pos.y);
+                }
+            }
+        }
 
     }
 
@@ -452,5 +463,17 @@ public class Area extends Canvas {
 
     public void setFancyGraphics(boolean selected) {
         showFancyGraphics = selected;
+    }
+
+    private boolean showTrackInfo;
+
+    public void setShowTrackInfo(boolean selected) {
+        showTrackInfo = selected;
+    }
+
+    private boolean showVehicleInfo;
+
+    public void setShowVehicleInfo(boolean selected) {
+        showVehicleInfo = selected;
     }
 }

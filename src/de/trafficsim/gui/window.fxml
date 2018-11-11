@@ -17,6 +17,8 @@
                               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                             <children>
                                 <CheckBox fx:id="checkShowTracks" mnemonicParsing="false" text="Tracks"/>
+                                <CheckBox fx:id="checkShowVehicleInfo" mnemonicParsing="false" text="Vehicle Info"/>
+                                <CheckBox fx:id="checkShowTrackInfo" mnemonicParsing="false" text="Track Info"/>
                                 <CheckBox fx:id="checkShowBoundingBox" mnemonicParsing="false" text="BoundingBox"/>
                                 <CheckBox fx:id="checkShowHitBox" mnemonicParsing="false" text="HitBox"/>
                                 <Button fx:id="addCarButton" mnemonicParsing="false" text="add Car"/>
