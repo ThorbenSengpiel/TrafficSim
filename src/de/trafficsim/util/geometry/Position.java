@@ -1,6 +1,8 @@
 package de.trafficsim.util.geometry;
 
 import de.trafficsim.util.Direction;
+import de.trafficsim.util.Util;
+import javafx.geometry.Pos;
 
 import java.util.Objects;
 
@@ -83,6 +85,16 @@ public class Position {
                 return Position.ZERO;
         }
         return this;
+    }
+
+    public Position interpolate(Position p, double value) {
+        double xDist = p.x-x;
+        double yDist = p.y-y;
+        return new Position(x + xDist*value, y + yDist*value);
+    }
+
+    public double angleTo(Position p) {
+        return Math.atan2(x - p.x, p.y - y)+Math.PI/2;
     }
 
     @Override

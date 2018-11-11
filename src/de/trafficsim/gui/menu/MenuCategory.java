@@ -4,7 +4,8 @@ public enum MenuCategory {
 
     LANES("Lanes", null),
     JUNCTIONS("Junctions", null),
-    SPAWNS("Spawns", null);
+    SPAWNS("Spawns", null),
+    TEST("Test", null);
 
     public final String uiName;
     public final MenuCategory parentCategory;
