@@ -80,7 +80,7 @@
                               <Insets left="10.0" />
                            </HBox.margin>
                         </Slider>
-                        <TextField fx:id="spawnTextField" editable="false" prefHeight="31.0" prefWidth="54.0">
+                        <TextField fx:id="spawnTextField" prefHeight="31.0" prefWidth="54.0">
                            <HBox.margin>
                               <Insets left="10.0" top="7.0" />
                            </HBox.margin>
