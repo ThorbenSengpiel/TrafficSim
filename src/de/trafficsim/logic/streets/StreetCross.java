@@ -1,12 +1,12 @@
 package de.trafficsim.logic.streets;
 
-import de.trafficsim.gui.views.StreetCrossTestView;
+import de.trafficsim.gui.views.StreetCrossView;
 import de.trafficsim.gui.views.StreetView;
 import de.trafficsim.logic.streets.tracks.Track;
 import de.trafficsim.logic.streets.tracks.TrackStraight;
 import de.trafficsim.util.geometry.Position;
 
-public class StreetTestCross extends Street {
+public class StreetCross extends Street {
 
     //todo var's moven
     public Track inWest;
@@ -19,12 +19,12 @@ public class StreetTestCross extends Street {
     public Track inSouth;
     public Track outSouth;
 
-    public StreetTestCross() {
+    public StreetCross() {
         this(Position.ZERO);
     }
 
-    public StreetTestCross(Position position) {
-        super(position, StreetType.TEST_CROSS);
+    public StreetCross(Position position) {
+        super(position, StreetType.CROSS);
 
         //create in- and outgoing tracks
         inWest = addInTrack(new TrackStraight(new Position(-25, 2.5), new Position(-12.5, 2.5), this));
@@ -63,6 +63,6 @@ public class StreetTestCross extends Street {
 
     @Override
     public StreetView createView() {
-        return new StreetCrossTestView(this);
+        return new StreetCrossView(this);
     }
 }
