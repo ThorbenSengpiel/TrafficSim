@@ -102,4 +102,8 @@ public class VehicleManager {
     public void reset() {
         stop();
     }
+
+    public void setSpawnPerSecond(double spawnPerSecond) {
+        this.spawnPerSecond = spawnPerSecond;
+    }
 }

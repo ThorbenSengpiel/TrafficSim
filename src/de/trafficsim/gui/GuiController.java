@@ -6,12 +6,16 @@ import de.trafficsim.logic.streets.Street;
 import de.trafficsim.logic.streets.StreetTwoPositions;
 import de.trafficsim.logic.vehicles.Vehicle;
 import de.trafficsim.logic.vehicles.VehicleManager;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Slider;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -53,11 +57,17 @@ public class GuiController {
     @FXML
     CheckBox checkShowFancyGraphics;
 
-
     @FXML
     CheckBox checkShowVehicleInfo;
+
     @FXML
     CheckBox checkShowTrackInfo;
+
+    @FXML
+    Slider spawnSlider;
+
+    @FXML
+
 
     private Area area;
     private VehicleManager vehicleManager;
@@ -95,6 +105,9 @@ public class GuiController {
         startButton.setOnAction(event -> startModules());
         stopButton.setOnAction(event -> stopModules());
         pauseButton.setOnAction(event -> pauseModules());
+        spawnSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            vehicleManager.setSpawnPerSecond(newValue.doubleValue());
+        });
     }
 
     @FXML
