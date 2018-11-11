@@ -3,6 +3,7 @@ package de.trafficsim.logic.vehicles;
 import de.trafficsim.gui.GuiController;
 import de.trafficsim.logic.network.Pathfinder;
 import de.trafficsim.logic.network.StreetNetworkManager;
+import de.trafficsim.logic.streets.tracks.Track;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,9 +70,10 @@ public class VehicleManager {
     public void spawnVehicle() {
         /*StreetSpawn spawn = StreetNetworkManager.getInstance().getRandomSpawn();
         addVehicle(new Vehicle(50, Pathfinder.getRandomPath(spawn.getStartTrack(), 20)));*/
-        addVehicle(new Vehicle(50, Pathfinder
-                .getPath(StreetNetworkManager.getInstance().getRandomSpawn().getStartTrack(),
-                        StreetNetworkManager.getInstance().getRandomSpawn().getEndTrack())));
+        Track spawn = StreetNetworkManager.getInstance().getRandomSpawn();
+        if (spawn != null) {
+            addVehicle(new Vehicle(50, Pathfinder.getPath(spawn, StreetNetworkManager.getInstance().getRandomEnd())));
+        }
     }
 
     public List<Vehicle> getVehicleList() {

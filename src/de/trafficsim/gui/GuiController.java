@@ -1,9 +1,9 @@
 package de.trafficsim.gui;
 
 import de.trafficsim.gui.graphics.Area;
-import de.trafficsim.logic.network.Pathfinder;
 import de.trafficsim.logic.network.StreetNetworkManager;
-import de.trafficsim.logic.streets.*;
+import de.trafficsim.logic.streets.Street;
+import de.trafficsim.logic.streets.StreetTwoPositions;
 import de.trafficsim.logic.vehicles.Vehicle;
 import de.trafficsim.logic.vehicles.VehicleManager;
 import javafx.event.ActionEvent;
@@ -60,16 +60,16 @@ public class GuiController {
 
     private Stage primaryStage;
 
+    private GuiController() {
+
+    }
+
     public static GuiController getInstance() {
         if (instance == null) {
             instance = new GuiController();
         }
         return instance;
     }
-    private GuiController() {
-
-    }
-
 
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -85,9 +85,7 @@ public class GuiController {
                 .setOnAction(event -> area.setShowBoundingBox(checkShowBoundingBox.isSelected()));
         checkShowHitBox.setOnAction(event -> area.setShowHitBox(checkShowHitBox.isSelected()));
         addCarButton.setOnAction(event -> {
-            vehicleManager.addVehicle(new Vehicle(80,Pathfinder
-                    .getPath(StreetNetworkManager.getInstance().getRandomSpawn().getStartTrack(),
-                            StreetNetworkManager.getInstance().getRandomSpawn().getEndTrack())));
+            vehicleManager.spawnVehicle();
         });
         checkShowFancyGraphics.setOnAction(event -> area.setFancyGraphics(checkShowFancyGraphics.isSelected()));
         startButton.setOnAction(event -> startModules());

@@ -171,4 +171,8 @@ public abstract class Track {
     public boolean isSelected() {
         return selected;
     }
+
+    public boolean isFree() {
+        return vehiclesOnTrack.size() < 1;
+    }
 }

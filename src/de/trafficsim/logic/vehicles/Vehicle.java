@@ -131,13 +131,13 @@ public class Vehicle {
 
     public Vehicle(double velocity, Track track){
         this.velocity = velocity;
-        this.currentTrack = track;
+        switchTrack(track);
         color = Math.random();
     }
 
     public Vehicle(double velocity, List<Track> path){
         this.velocity = velocity;
-        this.currentTrack = path.get(0);
+        switchTrack(path.get(0));
         this.path = path;
         this.color = Math.random();
     }
@@ -155,9 +155,7 @@ public class Vehicle {
                         Track nextTrack = path.get(currentTrackNumber);
                         double distanceInNewTrack = newPositionInCurrentTrack - currentTrack.getLength();
                         currentPosInTrack = distanceInNewTrack;
-                        currentTrack.removeVehicle(this);
-                        nextTrack.addVehicle(this);
-                        currentTrack = nextTrack;
+                        switchTrack(nextTrack);
                     } else {
                         active = false;
                     }
@@ -173,9 +171,7 @@ public class Vehicle {
                     Track nextTrack = currentTrack.getOutTrackList().get((int) (Math.random() * currentTrack.getOutTrackList().size()));
                     double distanceInNewTrack = newPositionInCurrentTrack - currentTrack.getLength();
                     currentPosInTrack = distanceInNewTrack;
-                    currentTrack.removeVehicle(this);
-                    nextTrack.addVehicle(this);
-                    currentTrack = nextTrack;
+                    switchTrack(nextTrack);
                 } else {
                     active = false;
                 }
@@ -184,6 +180,15 @@ public class Vehicle {
             }
         }
     }
+
+    private void switchTrack(Track newTrack) {
+        if (currentTrack != null) {
+            currentTrack.removeVehicle(this);
+        }
+        newTrack.addVehicle(this);
+        currentTrack = newTrack;
+    }
+
     public boolean isActive() {
         return active;
     }

@@ -10,7 +10,7 @@ public enum StreetType {
     TEST_CROSS("TestCross", MenuCategory.JUNCTIONS, StreetTestCross.class),
     T_JUNCTION("T Junction", MenuCategory.JUNCTIONS, StreetTJunction.class),
 
-    PARKING_DECK("TestCross", MenuCategory.SPAWNS, StreetParkingDeck.class);
+    PARKING_DECK("Parking Deck", MenuCategory.SPAWNS, StreetParkingDeck.class);
 
     public final String uiName;
     public final Class clazz;

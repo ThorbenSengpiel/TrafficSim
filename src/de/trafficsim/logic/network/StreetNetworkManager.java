@@ -111,8 +111,22 @@ public class StreetNetworkManager {
         return instance;
     }
 
-    public StreetSpawn getRandomSpawn() {
-        return streetSpawnList.get((int) (streetSpawnList.size() * Math.random()));
+    public Track getRandomSpawn() {
+        List<StreetSpawn> spawns = new ArrayList<>();
+        spawns.addAll(streetSpawnList);
+        int cnt = spawns.size();
+        for (int i = 0; i < cnt; i++) {
+            StreetSpawn spawn = spawns.get((int) (spawns.size() * Math.random()));
+            spawns.remove(spawn);
+            if (spawn.getStartTrack().isFree()) {
+                return spawn.getStartTrack();
+            }
+        }
+        return null;
+    }
+
+    public Track getRandomEnd() {
+        return streetSpawnList.get((int) (streetSpawnList.size() * Math.random())).getEndTrack();
     }
 
     public List<Street> getStreetList() {
@@ -151,10 +165,6 @@ public class StreetNetworkManager {
         for (Track track : street.getOutTracks()) {
             track.disconnectAllOutgoing();
         }
-    }
-
-    public List<Track> createRandomPath(){
-        return Pathfinder.getRandomPath(streetList.get((int)Math.random()*streetList.size()).getTracks().get(0),3);
     }
 
     public void deleteAllStreets(){
