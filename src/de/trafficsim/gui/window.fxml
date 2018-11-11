@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="layout" prefHeight="471.0" prefWidth="707.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="layout" prefHeight="471.0" prefWidth="862.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <BorderPane prefHeight="471.0" prefWidth="517.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <bottom>
@@ -73,7 +73,7 @@
                                 </Button>
                         <Label text="Cars/Sec:">
                            <HBox.margin>
-                              <Insets left="10.0" top="12.0" />
+                              <Insets left="20.0" top="12.0" />
                            </HBox.margin></Label>
                         <Slider fx:id="spawnSlider" majorTickUnit="10.0" max="50.0" minorTickCount="1" prefHeight="18.0" prefWidth="175.0" showTickLabels="true" showTickMarks="true">
                            <HBox.margin>
@@ -85,6 +85,21 @@
                               <Insets left="10.0" top="7.0" />
                            </HBox.margin>
                         </TextField>
+                        <Label text="Speed:">
+                           <HBox.margin>
+                              <Insets left="20.0" top="12.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Slider fx:id="speedSlider" blockIncrement="1.0" majorTickUnit="1.0" max="4.0" min="-4.0" minorTickCount="0" prefHeight="45.0" prefWidth="175.0" showTickMarks="true" snapToTicks="true">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Slider>
+                        <Label fx:id="speedLabel" text="1x">
+                           <HBox.margin>
+                              <Insets left="10.0" top="12.0" />
+                           </HBox.margin>
+                        </Label>
                             </children>
                         </HBox>
                     </children>

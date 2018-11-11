@@ -11,10 +11,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.transform.Scale;
@@ -71,7 +68,13 @@ public class GuiController {
     @FXML
     TextField spawnTextField;
 
+    @FXML
+    Slider speedSlider;
 
+    @FXML
+    Label speedLabel;
+
+    private float speedFactor;
     private Area area;
     private VehicleManager vehicleManager;
     private StreetNetworkManager streetNetworkManager;
@@ -109,7 +112,7 @@ public class GuiController {
         stopButton.setOnAction(event -> stopModules());
         pauseButton.setOnAction(event -> pauseModules());
 
-        //setting up the cars/sec widgets
+        //set up the cars/sec widgets
         spawnSlider.setValue(vehicleManager.getSpawnPerSecond());
         spawnTextField.setText(Util.DOUBLE_FORMAT_0_00.format(spawnSlider.getValue()));
         //change slider value
@@ -125,6 +128,12 @@ public class GuiController {
                 spawnSlider.setValue(value);
             }catch (NumberFormatException e){
             }
+        });
+
+        //set up speed widgets
+        speedSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            speedFactor = (float) Math.pow(2, newValue.doubleValue());
+            speedLabel.setText(speedFactor+"x");
         });
 
     }
@@ -226,5 +235,13 @@ public class GuiController {
 
     public void newEditableStreet(StreetTwoPositions street) {
         area.newEditableStreet(street);
+    }
+
+    public float getSpeedFactor() {
+        return speedFactor;
+    }
+
+    public void setSpeedFactor(float speedFactor) {
+        this.speedFactor = speedFactor;
     }
 }
