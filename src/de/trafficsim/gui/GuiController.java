@@ -132,7 +132,7 @@ public class GuiController {
 
         //set up speed widgets
         speedSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            speedFactor = (float) Math.pow(2, newValue.doubleValue());
+            speedFactor = (float) Math.pow(2, Math.round(newValue.doubleValue()));
             speedLabel.setText(speedFactor+"x");
         });
 
