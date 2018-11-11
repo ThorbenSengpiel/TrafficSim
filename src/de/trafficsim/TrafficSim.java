@@ -65,10 +65,10 @@ public class TrafficSim extends Application {
             lastNow = now;
         } else {
             double delta = ((now-lastNow) / 1000) / 1000000.0;
-            delta = guiController.getSpeedFactor()*delta;
+            double scaledDelta = guiController.getSpeedFactor()*delta;
             lastNow = now;
-            streetNetworkManager.update(delta);
-            vehicleManager.update(delta);
+            streetNetworkManager.update(scaledDelta);
+            vehicleManager.update(scaledDelta);
             guiController.update(delta);
         }
     }
