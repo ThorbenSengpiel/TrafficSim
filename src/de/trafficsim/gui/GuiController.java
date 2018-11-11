@@ -129,7 +129,6 @@ public class GuiController {
             }catch (NumberFormatException e){
             }
         });
-
         //set up speed widgets
         speedSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             speedFactor = (float) Math.pow(2, Math.round(newValue.doubleValue()));
