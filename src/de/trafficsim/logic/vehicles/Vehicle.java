@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Vehicle {
-    protected double MIN_DIST = 40;
+    protected double MIN_DIST = 20;
     protected int LOOKAHEAD_LIMIT = 1;
 
     protected double velocity = 1.0;
@@ -52,7 +52,8 @@ public class Vehicle {
                 List<Track> remaining = actTrack.getOutTrackList().stream().filter(e -> !visited.contains(e)).collect(Collectors.toList());
                 //If there is no Element in the List. The Last Track was Part of a Spawn or didn't yield to another Track which
                 //hasn't been checked
-                /* Hell Lot of Debug
+                // Hell Lot of Debug
+                /*
                 System.out.println("----------------");
                 System.out.println("Outside");
                 System.out.println("Actual Track =" +actTrack + " Length =" + actTrack.getLength());
@@ -80,8 +81,8 @@ public class Vehicle {
                     visited.add(actTrack);
                     stack.push(actTrack);
 
-                    accumulator += actTrack.getLength();
-                    /*Another Hell Lot of Debug
+                    //Another Hell Lot of Debug
+                    /*
                     System.out.println("-------------");
                     System.out.println("ActTrackInside =" + actTrack + " Length =" + actTrack.getLength());
                     System.out.println("Stack =" + Arrays.toString(stack.toArray()));
@@ -111,13 +112,13 @@ public class Vehicle {
                             actTrack = stack.peek();
                             vehFound = false;
                         }
+                        accumulator += actTrack.getLength();
 
                     } else {
                         //Accumulator Exceed
                         System.out.println("Dist exceed. Don't Check this one");
                         Track formerTrack = stack.pop();
                         System.out.println("Popped " + formerTrack);
-                        accumulator -= formerTrack.getLength();
                         actTrack = stack.peek();
 
                     }
