@@ -3,11 +3,12 @@ package de.trafficsim.logic.vehicles;
 import de.trafficsim.logic.streets.tracks.Track;
 import de.trafficsim.util.geometry.Position;
 
+import java.sql.SQLOutput;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class Vehicle {
-    protected double MIN_DIST = 100;
+    protected double MIN_DIST = 40;
     protected int LOOKAHEAD_LIMIT = 1;
 
     protected double velocity = 1.0;
@@ -26,12 +27,14 @@ public class Vehicle {
     }*/
 
     public Double getLookAheadDist(){
+        System.out.println("Lookahead Calc for" + getCurrentTrack() + " Pos =" + getCurrentPosInTrack() + "Length of Track=" + getCurrentTrack().getLength());
         List<Vehicle> vehicles = currentTrack.getVehiclesOnTrack();
         Double minDist = Double.POSITIVE_INFINITY;
         boolean vehFound = false;
         for (Vehicle vehicle : vehicles) {
             if (vehicle != this){
                 double delta = vehicle.getCurrentPosInTrack() - currentPosInTrack;
+                System.out.println("Delta =" + delta + "Min Dist =" + minDist);
                 if(delta > 0){
                     minDist = (minDist > delta ? delta : minDist);
                     vehFound = true;
@@ -48,31 +51,52 @@ public class Vehicle {
             List<Track> visited = new ArrayList<>();
             visited.add(actTrack);
             while(!stack.empty()){
-                System.out.println("Actual Track=" + actTrack);
                 //List of all Tracks that weren't already checked and so would have been put into the Hashmap
                 List<Track> remaining = actTrack.getOutTrackList().stream().filter(e -> !visited.contains(e)).collect(Collectors.toList());
-                System.out.println("Remaining = " + Arrays.toString(remaining.toArray()));
                 //If there is no Element in the List. The Last Track was Part of a Spawn or didn't yield to another Track which
                 //hasn't been checked
+                /* Hell Lot of Debug
+                System.out.println("----------------");
+                System.out.println("Outside");
+                System.out.println("Actual Track =" +actTrack + " Length =" + actTrack.getLength());
+                System.out.println("Visited =" + Arrays.toString(visited.toArray()));
+                System.out.println("Stack =" + Arrays.toString(stack.toArray()));
+                System.out.println("Remaining = " + Arrays.toString(remaining.toArray()));
+                System.out.println("Accumulator =" +accumulator);
+                System.out.println("MinDist =" + minDist);
+                System.out.println("----------------");
+                */
                 if(remaining.isEmpty()){
                     //pop the Element of the Stack and decrement the accumulator because the distance was previously added
                     Track formertrack = stack.pop();
-                    accumulator -= accumulator;
-                    System.out.println("Backtracking to " + formertrack);
-                } else {
-                    // if this is not the first Track the full length of the last Track has to be added
-                    if (actTrack != getCurrentTrack()){
-                        accumulator += actTrack.getLength();
+                    accumulator -= formertrack.getLength();
+                    if (!stack.empty()) {
+                        actTrack = stack.peek();
+                        System.out.println("<-Backtracking to " + actTrack + "Accumulator now =" + accumulator + "->");
+                    } else{
+                        accumulator -= getCurrentTrack().getLength() - currentPosInTrack;
+                        System.out.println("<-Backtracking to Root Accumulator now =" + accumulator + "->");
                     }
+                } else {
+                    //Dive one Track deeper into the hierarchy
+                    actTrack = remaining.get(0);
+                    visited.add(actTrack);
+                    stack.push(actTrack);
+
+                    accumulator += actTrack.getLength();
+                    /*Another Hell Lot of Debug
+                    System.out.println("-------------");
+                    System.out.println("ActTrackInside =" + actTrack + " Length =" + actTrack.getLength());
+                    System.out.println("Stack =" + Arrays.toString(stack.toArray()));
+                    System.out.println("Visited =" + Arrays.toString(visited.toArray()));
                     System.out.println("Accumulator =" + accumulator);
+                    System.out.println("-------------");
+                    */
+
                     //is the distance to this track still less than the Minimal Distance? If not
                     //there is no need to check this track
                     if (accumulator < MIN_DIST){
-                        //Dive one Track deeper into the hierarchy
-                        actTrack = remaining.get(0);
-                        visited.add(actTrack);
-                        System.out.println("Visited =" + Arrays.toString(visited.toArray()));
-                        stack.push(actTrack);
+                        System.out.println("<-- Checking Track " + actTrack + "--->");
                         for (Vehicle vehicle : actTrack.getVehiclesOnTrack()) {
                             double distOfVehicleInTrack = vehicle.getCurrentPosInTrack();
                             if (distOfVehicleInTrack + accumulator < minDist){
@@ -81,15 +105,24 @@ public class Vehicle {
                             //Found something. No need to dive deeper into the tree
                             vehFound = true;
                         }
-                        System.out.println("Stack =" + Arrays.toString(stack.toArray()));
                         if (vehFound){
                             //Immediately pop this node of the stack. Thereby prevent deeper diving into Tree
                             // because the actual Node already was added to visited and therefore wont be visited;
-                            stack.pop();
+                            System.out.println("Vehicle Found on " + actTrack);
+                            Track formerTrack = stack.pop();
+                            accumulator -= formerTrack.getLength();
+                            actTrack = stack.peek();
+                            vehFound = false;
                         }
 
                     } else {
-                        stack.pop();
+                        //Accumulator Exceed
+                        System.out.println("Dist exceed. Don't Check this one");
+                        Track formerTrack = stack.pop();
+                        System.out.println("Popped " + formerTrack);
+                        accumulator -= formerTrack.getLength();
+                        actTrack = stack.peek();
+
                     }
 
 
@@ -117,7 +150,7 @@ public class Vehicle {
         if (path != null) {
             double dist = getLookAheadDist();
             System.out.println("Dist =" + dist);
-            if(velocity*delta + 10 < dist){
+            if(velocity * delta + MIN_DIST < dist){
                 double newPositionInCurrentTrack = currentPosInTrack + velocity * delta;
                 if (currentTrack.getLength() < newPositionInCurrentTrack) {
                     currentTrackNumber++;
