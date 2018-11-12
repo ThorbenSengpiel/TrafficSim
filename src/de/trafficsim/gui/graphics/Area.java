@@ -351,8 +351,6 @@ public class Area extends Canvas {
         agc.gc.setFont(new Font(agc.gc.getFont().getFamily(), 15));
         agc.gc.setFill(Color.BLACK);
         agc.gc.setTextAlign(TextAlignment.LEFT);
-        agc.gc.fillText(agc.screen.from.toString(), 10, 10);
-        agc.gc.fillText(agc.screen.to.toString(), 10, 30);
 
         agc.gc.fillText(Util.DOUBLE_FORMAT_0_0000.format(calcFps(delta))+" fps", 10, 50);
         agc.gc.fillText(VehicleManager.getInstance().getVehicleList().size()+" cars", 10, 70);
