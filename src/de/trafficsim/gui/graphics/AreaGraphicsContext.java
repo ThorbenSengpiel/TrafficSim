@@ -1,11 +1,13 @@
 package de.trafficsim.gui.graphics;
 
+import de.trafficsim.util.Direction;
 import de.trafficsim.util.geometry.Position;
 import de.trafficsim.util.geometry.Rectangle;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Effect;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.ArcType;
 import javafx.scene.shape.StrokeLineCap;
 
 public class AreaGraphicsContext {
@@ -93,6 +95,13 @@ public class AreaGraphicsContext {
             gc.strokeLine(from.x+w, from.y, to.x+w, to.y);
             gc.strokeLine(from.x-w, from.y, to.x-w, to.y);
         }
+    }
+
+    public void draw2LaneCurve(Position from, Position to, Direction inDir) {
+        double radius = Math.abs(from.x - to.x);
+        setStroke(StreetVisuals.STREET2LANE);
+        gc.setLineCap(StrokeLineCap.BUTT);
+        gc.strokeArc(center.x - radius, center.y - radius, radius*2, radius*2, inDir.angle , 90, ArcType.OPEN);
     }
 
     public void setTransparent(boolean transparent) {
