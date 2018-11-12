@@ -2,6 +2,7 @@ package de.trafficsim.logic.streets;
 
 import de.trafficsim.gui.views.StreetView;
 import de.trafficsim.logic.streets.tracks.Track;
+import de.trafficsim.logic.streets.tracks.TrackBezier;
 import de.trafficsim.logic.streets.tracks.TrackCurve;
 import de.trafficsim.logic.streets.tracks.TrackStraight;
 import de.trafficsim.logic.vehicles.Vehicle;
@@ -89,6 +90,36 @@ public abstract class Street {
             track = new TrackStraight(from.getTo(), to.getFrom(), this);
         }
         from.connectOutToInOf(track); track.connectOutToInOf(to);
+        return addTrack(track);
+    }
+
+    protected Track addTrackToPos(Track from, Position to, Direction outDir) {
+        Track track;
+        if (from.getOutDir().isHorizontal() ^ outDir.isHorizontal()) {
+            track = new TrackCurve(from.getTo(), to, from.getOutDir(), this);
+        } else {
+            track = new TrackStraight(from.getTo(), to, this);
+        }
+        from.connectOutToInOf(track);
+        return addTrack(track);
+    }
+
+    protected Track addBezierTrackBetween(Track from, Track to, double weight) {
+        Track track = new TrackBezier(from.getTo(), from.getOutDir(), to.getFrom(), to.getInDir(), weight, this);
+        from.connectOutToInOf(track); track.connectOutToInOf(to);
+        return addTrack(track);
+    }
+
+    protected Track addBezierTrackToPos(Track from, Position to, Direction outDir, double weight) {
+        Track track = new TrackBezier(from.getTo(), from.getOutDir(), to, outDir, weight, this);
+        from.connectOutToInOf(track);
+        return addTrack(track);
+    }
+
+    protected Track addTrackStraight(Track from, double length) {
+        System.out.println(from.getTo() + " " +  from.getOutDir() + " " + from.getOutDir().vector.scale(length));
+        Track track = new TrackStraight(from.getTo(), from.getTo().add(from.getOutDir().vector.scale(length)), this);
+        from.connectOutToInOf(track);
         return addTrack(track);
     }
 

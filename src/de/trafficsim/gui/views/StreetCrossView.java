@@ -8,8 +8,8 @@ import de.trafficsim.util.geometry.Rectangle;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 
-public class StreetCrossTestView extends StreetView {
-    public StreetCrossTestView(Street street) {
+public class StreetCrossView extends StreetView {
+    public StreetCrossView(Street street) {
         super(street, new Hitbox(new Rectangle(Position.ZERO, 5, 25), new Rectangle(Position.ZERO, 25, 5)));
     }
 

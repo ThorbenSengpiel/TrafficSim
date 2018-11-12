@@ -49,7 +49,7 @@ public class StreetNetworkManager {
 
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
-                addStreet(new StreetTestCross(new Position(x*50, y*50)));
+                addStreet(new StreetCross(new Position(x*50, y*50)));
             }
         }
         for (int i = -1; i <= 1; i++) {

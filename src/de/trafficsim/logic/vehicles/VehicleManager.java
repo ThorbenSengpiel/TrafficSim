@@ -72,7 +72,7 @@ public class VehicleManager {
         addVehicle(new Vehicle(50, Pathfinder.getRandomPath(spawn.getStartTrack(), 20)));*/
         Track spawn = StreetNetworkManager.getInstance().getRandomSpawn();
         if (spawn != null) {
-            addVehicle(new Vehicle(50, Pathfinder.getPath(spawn, StreetNetworkManager.getInstance().getRandomEnd())));
+            addVehicle(new Vehicle(20, Pathfinder.getPath(spawn, StreetNetworkManager.getInstance().getRandomEnd())));
         }
     }
 
@@ -101,5 +101,13 @@ public class VehicleManager {
 
     public void reset() {
         stop();
+    }
+
+    public void setSpawnPerSecond(double spawnPerSecond) {
+        this.spawnPerSecond = spawnPerSecond;
+    }
+
+    public double getSpawnPerSecond() {
+        return spawnPerSecond;
     }
 }

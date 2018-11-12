@@ -6,10 +6,10 @@ import de.trafficsim.logic.streets.Street;
 import de.trafficsim.logic.streets.StreetTwoPositions;
 import de.trafficsim.logic.vehicles.Vehicle;
 import de.trafficsim.logic.vehicles.VehicleManager;
+import de.trafficsim.util.Util;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
@@ -53,12 +53,25 @@ public class GuiController {
     @FXML
     CheckBox checkShowFancyGraphics;
 
-
     @FXML
     CheckBox checkShowVehicleInfo;
+
     @FXML
     CheckBox checkShowTrackInfo;
 
+    @FXML
+    Slider spawnSlider;
+
+    @FXML
+    TextField spawnTextField;
+
+    @FXML
+    Slider speedSlider;
+
+    @FXML
+    Label speedLabel;
+
+    private double speedFactor = 1;
     private Area area;
     private VehicleManager vehicleManager;
     private StreetNetworkManager streetNetworkManager;
@@ -95,6 +108,30 @@ public class GuiController {
         startButton.setOnAction(event -> startModules());
         stopButton.setOnAction(event -> stopModules());
         pauseButton.setOnAction(event -> pauseModules());
+
+        //set up the cars/sec widgets
+        spawnSlider.setValue(vehicleManager.getSpawnPerSecond());
+        spawnTextField.setText(Util.DOUBLE_FORMAT_0_00.format(spawnSlider.getValue()));
+        //change slider value
+        spawnSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            vehicleManager.setSpawnPerSecond(newValue.doubleValue());
+            spawnTextField.setText(Util.DOUBLE_FORMAT_0_00.format(vehicleManager.getSpawnPerSecond()));
+        });
+        //change textField value
+        spawnTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                double value = Double.parseDouble(newValue);
+                vehicleManager.setSpawnPerSecond(value);
+                spawnSlider.setValue(value);
+            }catch (NumberFormatException e){
+            }
+        });
+        //set up speed widgets
+        speedSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            speedFactor = (float) Math.pow(2, Math.round(newValue.doubleValue()));
+            speedLabel.setText(speedFactor+"x");
+        });
+
     }
 
     @FXML
@@ -195,4 +232,9 @@ public class GuiController {
     public void newEditableStreet(StreetTwoPositions street) {
         area.newEditableStreet(street);
     }
+
+    public double getSpeedFactor() {
+        return speedFactor;
+    }
+
 }

@@ -12,7 +12,7 @@ public class TrackStraight extends Track {
         inDir = Direction.generateDirectionStraight(from,to);
         outDir = inDir;
         if (from.x != to.x && from.y != to.y) {
-            throw new RuntimeException("TrackStraight can only be straight");
+            throw new RuntimeException("TrackStraight can only be straight (From:" + from + " To:" + to + ")");
         }
     }
 
