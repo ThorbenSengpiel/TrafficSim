@@ -101,7 +101,7 @@ public class AreaGraphicsContext {
         double radius = Math.abs(from.x - to.x);
         setStroke(StreetVisuals.STREET2LANE);
         gc.setLineCap(StrokeLineCap.BUTT);
-        gc.strokeArc(center.x - radius, center.y - radius, radius*2, radius*2, inDir.angle , 90, ArcType.OPEN);
+        gc.strokeArc(-radius, -radius, radius*2, radius*2, inDir.angle , 90, ArcType.OPEN);
     }
 
     public void setTransparent(boolean transparent) {

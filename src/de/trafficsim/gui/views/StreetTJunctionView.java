@@ -42,8 +42,6 @@ public class StreetTJunctionView extends StreetView {
         agc.draw2Lane(new Position(-12.2, 0), new Position(-25.1, 0));  //right
         agc.draw2Lane(new Position(0, 12.2),  new Position(0, 25.1));   //bottom
 
-        //todo Leon...
-
         agc.setFill(Color.GRAY);
         double radius = 5;
         agc.gc.beginPath();
