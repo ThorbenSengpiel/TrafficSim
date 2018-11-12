@@ -7,14 +7,11 @@ import de.trafficsim.logic.streets.StreetTwoPositions;
 import de.trafficsim.logic.vehicles.Vehicle;
 import de.trafficsim.logic.vehicles.VehicleManager;
 import de.trafficsim.util.Util;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -74,7 +71,7 @@ public class GuiController {
     @FXML
     Label speedLabel;
 
-    private float speedFactor;
+    private double speedFactor = 1;
     private Area area;
     private VehicleManager vehicleManager;
     private StreetNetworkManager streetNetworkManager;
@@ -236,11 +233,8 @@ public class GuiController {
         area.newEditableStreet(street);
     }
 
-    public float getSpeedFactor() {
+    public double getSpeedFactor() {
         return speedFactor;
     }
 
-    public void setSpeedFactor(float speedFactor) {
-        this.speedFactor = speedFactor;
-    }
 }

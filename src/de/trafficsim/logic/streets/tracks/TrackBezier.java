@@ -12,7 +12,7 @@ public class TrackBezier extends Track {
     private Position c1;
 
     public TrackBezier(Position from, Direction inDir, Position to, Direction outDir, double weight, Street street) {
-        this(from, from.add(inDir.vector.scale(weight)), to.add(outDir.vector.scale(weight)), to, street);
+        this(from, from.add(inDir.vector.scale(weight)), to.add(outDir.rotateClockWise().rotateClockWise().vector.scale(weight)), to, street);
         this.inDir = inDir;
         this.outDir = outDir;
     }
@@ -40,7 +40,7 @@ public class TrackBezier extends Track {
         agc.gc.moveTo(from.x, from.y);
         agc.gc.bezierCurveTo(c0.x, c0.y, c1.x, c1.y, to.x, to.y);
         agc.gc.stroke();
-        agc.setStroke(Color.FUCHSIA);
+        agc.setStroke(Color.FUCHSIA.deriveColor(0, 1, 1, 0.3));
         agc.gc.strokeLine(from.x, from.y, c0.x, c0.y);
         agc.gc.strokeLine(to.x, to.y, c1.x, c1.y);
     }
@@ -48,7 +48,7 @@ public class TrackBezier extends Track {
     @Override
     public Position getPosOnArea(double pos) {
         double value = pos/length;
-        return calcPos(value, from, c0, c1, to);
+        return calcPos(value, from, c0, c1, to).add(street.getPosition());
     }
 
     @Override
