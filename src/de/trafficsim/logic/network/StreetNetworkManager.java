@@ -22,9 +22,11 @@ public class StreetNetworkManager {
     }
 
     public void update(double delta) {
-      if (running){
-
-      }
+        if (running){
+            for (Street street : streetList) {
+                street.update(delta);
+            }
+        }
 
     }
 
@@ -200,6 +202,7 @@ public class StreetNetworkManager {
 
     public void importFile(List<String> strings) {
         for (String line : strings) {
+            System.out.println(line);
             String[] values = line.split(";");
             Street street = null;
             try {

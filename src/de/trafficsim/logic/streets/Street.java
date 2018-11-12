@@ -1,6 +1,7 @@
 package de.trafficsim.logic.streets;
 
 import de.trafficsim.gui.views.StreetView;
+import de.trafficsim.logic.streets.signs.Sign;
 import de.trafficsim.logic.streets.tracks.Track;
 import de.trafficsim.logic.streets.tracks.TrackBezier;
 import de.trafficsim.logic.streets.tracks.TrackCurve;
@@ -24,6 +25,8 @@ public abstract class Street {
     public final StreetType type;
 
     protected final Direction rotation;
+
+    protected List<Sign> signList = new ArrayList<>();
 
     public Street(Position position, StreetType type, Direction rotation) {
         this.rotation = rotation;
@@ -117,7 +120,6 @@ public abstract class Street {
     }
 
     protected Track addTrackStraight(Track from, double length) {
-        System.out.println(from.getTo() + " " +  from.getOutDir() + " " + from.getOutDir().vector.scale(length));
         Track track = new TrackStraight(from.getTo(), from.getTo().add(from.getOutDir().vector.scale(length)), this);
         from.connectOutToInOf(track);
         return addTrack(track);
@@ -154,5 +156,13 @@ public abstract class Street {
 
     public String export() {
         return type + ";"+position.x+";"+position.y+";"+rotation+System.lineSeparator();
+    }
+
+    public void update(double delta) {
+
+    }
+
+    public List<Sign> getSignList() {
+        return signList;
     }
 }

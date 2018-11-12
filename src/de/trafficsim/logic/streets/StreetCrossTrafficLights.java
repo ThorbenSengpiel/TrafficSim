@@ -1,18 +1,23 @@
 package de.trafficsim.logic.streets;
 
+import com.sun.org.apache.regexp.internal.RE;
 import de.trafficsim.gui.graphics.util.Hitbox;
 import de.trafficsim.gui.views.StreetTestView;
 import de.trafficsim.gui.views.StreetView;
+import de.trafficsim.logic.streets.signs.TrafficLight;
 import de.trafficsim.logic.streets.tracks.Track;
 import de.trafficsim.logic.streets.tracks.TrackStraight;
 import de.trafficsim.util.geometry.Position;
 import de.trafficsim.util.geometry.Rectangle;
+import javafx.geometry.Pos;
 
 public class StreetCrossTrafficLights extends Street {
 
     public StreetCrossTrafficLights() {
         this(Position.ZERO);
     }
+
+    TrafficLight trafficLight;
 
     public StreetCrossTrafficLights(Position position) {
         super(position, StreetType.CROSS_TRAFFICLIGHTS);
@@ -80,7 +85,9 @@ public class StreetCrossTrafficLights extends Street {
         addTrackBetween(wR, sO1);
 
 
-
+        trafficLight = new TrafficLight(new Position(25, 5));
+        signList.add(trafficLight);
+        //signList.add(new TrafficLight(new Position(25, -5)));
 
     }
 
@@ -88,4 +95,21 @@ public class StreetCrossTrafficLights extends Street {
     public StreetView createView() {
         return new StreetTestView(this, new Hitbox(new Rectangle(Position.ZERO, 50, 15), new Rectangle(Position.ZERO, 15, 50)));
     }
+
+    double time = 0;
+
+    @Override
+    public void update(double delta) {
+        time += delta;
+        if (time % 8 < 2) {
+            trafficLight.setState(TrafficLight.State.RED);
+        } else if (time % 8 < 4) {
+            trafficLight.setState(TrafficLight.State.RED_YELLOW);
+        } else if (time % 8 < 6) {
+            trafficLight.setState(TrafficLight.State.GREEN);
+        } else {
+            trafficLight.setState(TrafficLight.State.YELLOW);
+        }
+    }
 }
+
