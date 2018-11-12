@@ -4,6 +4,7 @@ import de.trafficsim.gui.graphics.Area;
 import de.trafficsim.gui.graphics.AreaGraphicsContext;
 import de.trafficsim.gui.graphics.util.Hitbox;
 import de.trafficsim.logic.streets.Street;
+import de.trafficsim.logic.streets.signs.Sign;
 import de.trafficsim.logic.streets.tracks.Track;
 import de.trafficsim.util.geometry.Position;
 import de.trafficsim.util.geometry.Rectangle;
@@ -32,6 +33,9 @@ public abstract class StreetView {
         translate(agc);
         agc.gc.rotate(-street.getRotation().angle+90);
         drawOverVehicle(agc);
+        for (Sign sign : street.getSignList()) {
+            sign.render(agc);
+        }
         agc.gc.rotate(street.getRotation().angle-90);
         translateBack(agc);
     }

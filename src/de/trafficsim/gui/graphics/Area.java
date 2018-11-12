@@ -122,10 +122,10 @@ public class Area extends Canvas {
         if (dragged != null) {
             if (e.getCode() == KeyCode.R) {
                 Street street = dragged.getStreet();
-                StreetNetworkManager.getInstance().removeStreet(street);
+                //StreetNetworkManager.getInstance().removeStreet(street);
                 Street rotated = street.createRotated();
-                StreetNetworkManager.getInstance().addStreet(rotated);
-                dragged = getView(rotated);
+                //StreetNetworkManager.getInstance().addStreet(rotated);
+                dragged = rotated.createView();
             }
         }
     }

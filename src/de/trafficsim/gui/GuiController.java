@@ -27,49 +27,49 @@ public class GuiController {
     private static GuiController instance;
 
     @FXML
-    AnchorPane paneCanvas;
+    private AnchorPane paneCanvas;
 
     @FXML
-    CheckBox checkShowTracks;
+    private CheckBox checkShowTracks;
 
     @FXML
-    CheckBox checkShowBoundingBox;
+    private CheckBox checkShowBoundingBox;
 
     @FXML
-    CheckBox checkShowHitBox;
+    private CheckBox checkShowHitBox;
 
     @FXML
-    Button addCarButton;
+    private Button addCarButton;
 
     @FXML
-    Button startButton;
+    private Button startButton;
 
     @FXML
-    Button pauseButton;
+    private Button pauseButton;
 
     @FXML
-    Button stopButton;
+    private Button stopButton;
 
     @FXML
-    CheckBox checkShowFancyGraphics;
+    private CheckBox checkShowFancyGraphics;
 
     @FXML
-    CheckBox checkShowVehicleInfo;
+    private CheckBox checkShowVehicleInfo;
 
     @FXML
-    CheckBox checkShowTrackInfo;
+    private CheckBox checkShowTrackInfo;
 
     @FXML
-    Slider spawnSlider;
+    private Slider spawnSlider;
 
     @FXML
-    TextField spawnTextField;
+    private TextField spawnTextField;
 
     @FXML
-    Slider speedSlider;
+    private Slider speedSlider;
 
     @FXML
-    Label speedLabel;
+    private Label speedLabel;
 
     private double speedFactor = 1;
     private Area area;
@@ -143,13 +143,11 @@ public class GuiController {
     private void openFile(ActionEvent e) {
         FileChooser fileChooser = new FileChooser();
 
-        //Set extension filter
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Traffic Sim files (*.trafficsim)", "*.trafficsim");
         fileChooser.getExtensionFilters().add(extFilter);
 
         fileChooser.setInitialDirectory(new File("./data/"));
 
-        //Show save file dialog
         try {
             List<String> strings = Files.readAllLines(fileChooser.showOpenDialog(primaryStage).toPath());
             reset();
