@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Vehicle {
-    protected double MIN_DIST = 20;
+    protected double MIN_DIST = 10;
     protected int LOOKAHEAD_LIMIT = 1;
 
     protected double velocity = 1.0;

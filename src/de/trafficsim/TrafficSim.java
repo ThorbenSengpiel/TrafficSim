@@ -52,7 +52,7 @@ public class TrafficSim extends Application {
         loader.setController(guiController);
         Parent root = loader.load();
         primaryStage.setTitle("TrafficSim");
-        Scene scene = new Scene(root, 300, 275);
+        Scene scene = new Scene(root, 800, 975);
         scene.setOnKeyPressed(event -> guiController.keyPressed(event));
         primaryStage.setScene(scene);
         primaryStage.show();
