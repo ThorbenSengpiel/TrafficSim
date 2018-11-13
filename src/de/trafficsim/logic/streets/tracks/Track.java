@@ -34,6 +34,10 @@ public abstract class Track {
 
     protected boolean selected;
 
+    protected boolean stopPoint;
+
+    protected double stopPointPosition;
+    protected boolean stopPointEnabled;
     public Track(Position from, Position to, double length, Street street) {
         this.from = from;
         this.to = to;
@@ -104,6 +108,16 @@ public abstract class Track {
         selected = false;
     }
 
+    public void createStopPoint(double position, boolean enabled) {
+        stopPoint = true;
+        stopPointPosition = position;
+        stopPointEnabled = enabled;
+    }
+
+    public void enableStopPoint(boolean enabled) {
+        stopPointEnabled = enabled;
+    }
+
     /**
      * Track Spezifische Visualisierung
      * @param agc
@@ -115,13 +129,13 @@ public abstract class Track {
     public double getLength() {
         return length;
     }
+
     public Position getFrom() {
         return from;
     }
     public Position getTo() {
         return to;
     }
-
     public List<Track> getInTrackList() {
         return inTrackList;
     }
@@ -175,5 +189,17 @@ public abstract class Track {
 
     public boolean isFree() {
         return vehiclesOnTrack.size() < 1;
+    }
+
+    public boolean hasStopPoint() {
+        return stopPoint;
+    }
+
+    public double getStopPointPosition() {
+        return stopPointPosition;
+    }
+
+    public boolean isStopPointEnabled() {
+        return stopPointEnabled;
     }
 }

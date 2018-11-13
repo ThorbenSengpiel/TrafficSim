@@ -28,6 +28,16 @@ public class Vehicle {
         List<Vehicle> vehicles = currentTrack.getVehiclesOnTrack();
         Double minDist = Double.POSITIVE_INFINITY;
         boolean vehFound = false;
+        if (currentTrack.hasStopPoint()) {
+            if (currentTrack.isStopPointEnabled()) {
+                double delta = currentTrack.getStopPointPosition() - currentPosInTrack;
+                System.out.println("Stop Point Delta =" + delta + "Min Dist =" + minDist);
+                if(delta > 0){
+                    minDist = (minDist > delta ? delta : minDist);
+                    vehFound = true;
+                }
+            }
+        }
         for (Vehicle vehicle : vehicles) {
             if (vehicle != this){
                 double delta = vehicle.getCurrentPosInTrack() - currentPosInTrack;
@@ -102,6 +112,16 @@ public class Vehicle {
                             }
                             //Found something. No need to dive deeper into the tree
                             vehFound = true;
+                        }
+                        if (actTrack.hasStopPoint()) {
+                            if (actTrack.isStopPointEnabled()) {
+                                double distOfStopPointInTrack = actTrack.getStopPointPosition();
+                                if (distOfStopPointInTrack + accumulator < minDist){
+                                    minDist = distOfStopPointInTrack + accumulator;
+                                }
+                                //Found something. No need to dive deeper into the tree
+                                vehFound = true;
+                            }
                         }
                         if (vehFound){
                             //Immediately pop this node of the stack. Thereby prevent deeper diving into Tree

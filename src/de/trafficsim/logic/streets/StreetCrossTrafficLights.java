@@ -4,6 +4,7 @@ import com.sun.org.apache.regexp.internal.RE;
 import de.trafficsim.gui.graphics.util.Hitbox;
 import de.trafficsim.gui.views.StreetTestView;
 import de.trafficsim.gui.views.StreetView;
+import de.trafficsim.logic.network.TrafficLightManager;
 import de.trafficsim.logic.streets.signs.TrafficLight;
 import de.trafficsim.logic.streets.tracks.Track;
 import de.trafficsim.logic.streets.tracks.TrackStraight;
@@ -17,44 +18,51 @@ public class StreetCrossTrafficLights extends Street {
         this(Position.ZERO);
     }
 
-    TrafficLight trafficLight;
+    private TrafficLightManager trafficLightManager;
 
     public StreetCrossTrafficLights(Position position) {
         super(position, StreetType.CROSS_TRAFFICLIGHTS);
 
-        Track inWest = addInTrack(new TrackStraight(new Position(-50, 2.5), new Position(-40, 2.5), this));
-        Track outWest = addOutTrack(new TrackStraight(new Position(-40, -2.5), new Position(-50, -2.5), this));
-        Track inEast = addInTrack(new TrackStraight(new Position(50, -2.5), new Position(40, -2.5), this));
-        Track outEast = addOutTrack(new TrackStraight(new Position(40, 2.5), new Position(50, 2.5), this));
+        Track inWest = addInTrack(new TrackStraight(new Position(-50, 2.5), new Position(-47.5, 2.5), this));
+        Track outWest = addOutTrack(new TrackStraight(new Position(-47.5, -2.5), new Position(-50, -2.5), this));
+        Track inEast = addInTrack(new TrackStraight(new Position(50, -2.5), new Position(47.5, -2.5), this));
+        Track outEast = addOutTrack(new TrackStraight(new Position(47.5, 2.5), new Position(50, 2.5), this));
 
-        Track inNorth = addInTrack(new TrackStraight(new Position(-2.5, -50), new Position(-2.5, -40), this));
-        Track outNorth = addOutTrack(new TrackStraight(new Position(2.5, -40), new Position(2.5, -50), this));
-        Track inSouth = addInTrack(new TrackStraight(new Position(2.5, 50), new Position(2.5, 40), this));
-        Track outSouth = addOutTrack(new TrackStraight(new Position(-2.5, 40), new Position(-2.5, 50), this));
+        Track inNorth = addInTrack(new TrackStraight(new Position(-2.5, -50), new Position(-2.5, -47.5), this));
+        Track outNorth = addOutTrack(new TrackStraight(new Position(2.5, -47.5), new Position(2.5, -50), this));
+        Track inSouth = addInTrack(new TrackStraight(new Position(2.5, 50), new Position(2.5, 47.5), this));
+        Track outSouth = addOutTrack(new TrackStraight(new Position(-2.5, 47.5), new Position(-2.5, 50), this));
 
-        Track wL = addBezierTrackToPos(inWest, new Position(-20, 0), inWest.getOutDir(), 5);
+        Track wL = addBezierTrackToPos(inWest, new Position(-35, 0), inWest.getOutDir(), 5);
         Track wL1 = addTrackToPos(wL, new Position(-10, 0), wL.getOutDir());
-        Track wS = addBezierTrackToPos(inWest, new Position(-20, 5), inWest.getOutDir(), 5);
+        Track wS = addBezierTrackToPos(inWest, new Position(-35, 5), inWest.getOutDir(), 5);
         Track wS1 = addTrackToPos(wS, new Position(-10, 5), wS.getOutDir());
-        Track wR = addBezierTrackToPos(inWest, new Position(-20, 10), inWest.getOutDir(), 5);
+        Track wR = addBezierTrackToPos(inWest, new Position(-35, 10), inWest.getOutDir(), 5);
+        Track wR1 = addTrackToPos(wR, new Position(-20, 10), wR.getOutDir());
 
-        Track eL = addBezierTrackToPos(inEast, new Position(20, 0), inEast.getOutDir(), 5);
+        Track eL = addBezierTrackToPos(inEast, new Position(35, 0), inEast.getOutDir(), 5);
         Track eL1 = addTrackToPos(eL, new Position(10, 0), eL.getOutDir());
-        Track eS = addBezierTrackToPos(inEast, new Position(20, -5), inEast.getOutDir(), 5);
+        Track eS = addBezierTrackToPos(inEast, new Position(35, -5), inEast.getOutDir(), 5);
         Track eS1 = addTrackToPos(eS, new Position(10, -5), eS.getOutDir());
-        Track eR = addBezierTrackToPos(inEast, new Position(20, -10), inEast.getOutDir(), 5);
+        Track eR = addBezierTrackToPos(inEast, new Position(35, -10), inEast.getOutDir(), 5);
+        Track eR1 = addTrackToPos(eR, new Position(20, -10), eR.getOutDir());
 
-        Track nL = addBezierTrackToPos(inNorth, new Position(0, -20), inNorth.getOutDir(), 5);
+
+        Track nL = addBezierTrackToPos(inNorth, new Position(0, -35), inNorth.getOutDir(), 5);
         Track nL1 = addTrackToPos(nL, new Position(0, -10), nL.getOutDir());
-        Track nS = addBezierTrackToPos(inNorth, new Position(-5, -20), inNorth.getOutDir(), 5);
+        Track nS = addBezierTrackToPos(inNorth, new Position(-5, -35), inNorth.getOutDir(), 5);
         Track nS1 = addTrackToPos(nS, new Position(-5, -10), nS.getOutDir());
-        Track nR = addBezierTrackToPos(inNorth, new Position(-10, -20), inNorth.getOutDir(), 5);
+        Track nR = addBezierTrackToPos(inNorth, new Position(-10, -35), inNorth.getOutDir(), 5);
+        Track nR1 = addTrackToPos(nR, new Position(-10, -20), nR.getOutDir());
 
-        Track sL = addBezierTrackToPos(inSouth, new Position(0, 20), inSouth.getOutDir(), 5);
+
+        Track sL = addBezierTrackToPos(inSouth, new Position(0, 35), inSouth.getOutDir(), 5);
         Track sL1 = addTrackToPos(sL, new Position(0, 10), sL.getOutDir());
-        Track sS = addBezierTrackToPos(inSouth, new Position(5, 20), inSouth.getOutDir(), 5);
+        Track sS = addBezierTrackToPos(inSouth, new Position(5, 35), inSouth.getOutDir(), 5);
         Track sS1 = addTrackToPos(sS, new Position(5, 10), sS.getOutDir());
-        Track sR = addBezierTrackToPos(inSouth, new Position(10, 20), inSouth.getOutDir(), 5);
+        Track sR = addBezierTrackToPos(inSouth, new Position(10, 35), inSouth.getOutDir(), 5);
+        Track sR1 = addTrackToPos(sR, new Position(10, 20), sR.getOutDir());
+
 
         Track wS2 = addTrackStraight(wS1, 25);
         Track eS2 = addTrackStraight(eS1, 25);
@@ -62,16 +70,20 @@ public class StreetCrossTrafficLights extends Street {
         Track sS2 = addTrackStraight(sS1, 25);
 
         Track eO = addTrackStraight(wS2, 10);
-        Track eO1 = addBezierTrackBetween(eO, outEast, 5);
+        Track eO1 = addTrackStraight(eO, 10);
+        Track eO2 = addBezierTrackBetween(eO1, outEast, 5);
 
         Track wO = addTrackStraight(eS2, 10);
-        Track wO1 = addBezierTrackBetween(wO, outWest, 5);
+        Track wO1 = addTrackStraight(wO, 10);
+        Track wO2 = addBezierTrackBetween(wO1, outWest, 5);
 
         Track nO = addTrackStraight(sS2, 10);
-        Track nO1 = addBezierTrackBetween(nO, outNorth, 5);
+        Track nO1 = addTrackStraight(nO, 10);
+        Track nO2 = addBezierTrackBetween(nO1, outNorth, 5);
 
         Track sO = addTrackStraight(nS2, 10);
-        Track sO1 = addBezierTrackBetween(sO, outSouth, 5);
+        Track sO1 = addTrackStraight(sO, 10);
+        Track sO2 = addBezierTrackBetween(sO1, outSouth, 5);
 
 
         addTrackBetween(nL1, eO);
@@ -79,14 +91,31 @@ public class StreetCrossTrafficLights extends Street {
         addTrackBetween(sL1, wO);
         addTrackBetween(wL1, nO);
 
-        addTrackBetween(sR, eO1);
-        addTrackBetween(eR, nO1);
-        addTrackBetween(nR, wO1);
-        addTrackBetween(wR, sO1);
+        addTrackBetween(sR1, eO1);
+        addTrackBetween(eR1, nO1);
+        addTrackBetween(nR1, wO1);
+        addTrackBetween(wR1, sO1);
 
+        wL1.createStopPoint(22.5, true);
+        wS1.createStopPoint(22.5, true);
+        eL1.createStopPoint(22.5, true);
+        eS1.createStopPoint(22.5, true);
+        nL1.createStopPoint(22.5, true);
+        nS1.createStopPoint(22.5, true);
+        sL1.createStopPoint(22.5, true);
+        sS1.createStopPoint(22.5, true);
 
-        trafficLight = new TrafficLight(new Position(25, 5));
-        signList.add(trafficLight);
+        TrafficLight trafficLight0 = new TrafficLight(new Position(25, 0), eL1, eS1);
+        TrafficLight trafficLight1 = new TrafficLight(new Position(0, 25), sL1, sS1);
+        TrafficLight trafficLight2 = new TrafficLight(new Position(-25, 0), wL1, wS1);
+        TrafficLight trafficLight3 = new TrafficLight(new Position(0, -25), nL1, nS1);
+
+        trafficLightManager = new TrafficLightManager(8, 2, 2, trafficLight0, trafficLight1, trafficLight2, trafficLight3);
+
+        signList.add(trafficLight0);
+        signList.add(trafficLight1);
+        signList.add(trafficLight2);
+        signList.add(trafficLight3);
         //signList.add(new TrafficLight(new Position(25, -5)));
 
     }
@@ -100,16 +129,7 @@ public class StreetCrossTrafficLights extends Street {
 
     @Override
     public void update(double delta) {
-        time += delta;
-        if (time % 8 < 2) {
-            trafficLight.setState(TrafficLight.State.RED);
-        } else if (time % 8 < 4) {
-            trafficLight.setState(TrafficLight.State.RED_YELLOW);
-        } else if (time % 8 < 6) {
-            trafficLight.setState(TrafficLight.State.GREEN);
-        } else {
-            trafficLight.setState(TrafficLight.State.YELLOW);
-        }
+        trafficLightManager.update(delta);
     }
 }
 

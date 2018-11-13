@@ -4,6 +4,7 @@ import de.trafficsim.gui.graphics.AreaGraphicsContext;
 import de.trafficsim.logic.streets.Street;
 import de.trafficsim.util.Direction;
 import de.trafficsim.util.geometry.Position;
+import javafx.scene.paint.Color;
 
 public class TrackStraight extends Track {
 
@@ -40,6 +41,19 @@ public class TrackStraight extends Track {
                 break;
             default:
                 break;
+        }
+        if (stopPoint) {
+            if (stopPointEnabled) {
+                agc.setStroke(Color.RED);
+            } else {
+                agc.setStroke(Color.LIME);
+            }
+            Position pos = from.add(inDir.vector.scale(stopPointPosition));
+            if (inDir.isHorizontal()) {
+                agc.gc.strokeLine(pos.x, pos.y+2, pos.x, pos.y-2);
+            } else {
+                agc.gc.strokeLine(pos.x+2, pos.y, pos.x-2, pos.y);
+            }
         }
     }
 
