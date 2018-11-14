@@ -127,6 +127,7 @@ public class AreaGraphicsContext {
         STREET2LANE(Color.GRAY, 10, null),
         STREET_LINE(Color.WHITE, 0.2, null),
         STREET_LINE_DASHED(Color.WHITE, 0.2, 10.0),
+        STREET_LINE_DASHED_SMALL(Color.WHITE, 0.1, 5.0),
         STREET_BORDER(Color.BLACK, 0.2, null);
 
         public final Color stroke;

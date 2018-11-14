@@ -2,6 +2,7 @@ package de.trafficsim.logic.streets;
 
 import com.sun.org.apache.regexp.internal.RE;
 import de.trafficsim.gui.graphics.util.Hitbox;
+import de.trafficsim.gui.views.StreetCrossTrafficLightsView;
 import de.trafficsim.gui.views.StreetTestView;
 import de.trafficsim.gui.views.StreetView;
 import de.trafficsim.logic.network.TrafficLightManager;
@@ -122,7 +123,7 @@ public class StreetCrossTrafficLights extends Street {
 
     @Override
     public StreetView createView() {
-        return new StreetTestView(this, new Hitbox(new Rectangle(Position.ZERO, 50, 15), new Rectangle(Position.ZERO, 15, 50)));
+        return new StreetCrossTrafficLightsView(this);
     }
 
     double time = 0;

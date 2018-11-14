@@ -15,7 +15,7 @@ public class VehicleManager {
 
     private List<Vehicle> vehicleList = new ArrayList<>();
 
-    private double spawnPerSecond = 10;
+    private double spawnPerSecond = 1;
 
     private double spawnCnt = 0;
     private boolean running = false;

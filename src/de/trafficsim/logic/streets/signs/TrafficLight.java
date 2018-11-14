@@ -24,7 +24,7 @@ public class TrafficLight extends Sign {
 
     @Override
     public void render(AreaGraphicsContext agc) {
-        agc.setFill(Color.GRAY);
+        agc.setFill(Color.DIMGRAY);
         agc.gc.fillRect(position.x-1.5, position.y - 4.25, 3, 8.5);
         agc.gc.setFill((state == RED || state == RED_YELLOW) ? Color.RED : Color.RED.deriveColor(0, 1, 0.3, 1));
         agc.gc.fillOval(position.x-1, position.y-1-2.5, 2, 2);
