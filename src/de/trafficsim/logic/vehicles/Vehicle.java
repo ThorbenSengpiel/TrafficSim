@@ -15,6 +15,11 @@ public class Vehicle {
     protected double velocity = 1.0;
     protected double currentPosInTrack = 0;
 
+    private final double maxAcceleration = 7; // m/s²
+    private final double maxDeceleration = 20; // m/s²
+
+    private final double maxVelocity = 13.88888888888889; // m/s
+
     protected Track currentTrack;
 
     protected List<Track> path;
@@ -23,7 +28,7 @@ public class Vehicle {
     private boolean active = true;
     public double color = 0;
 
-    public Double getLookAheadDist(){
+    public Double getLookAheadDist(double lookDistance){
         System.out.println("Lookahead Calc for" + getCurrentTrack() + " Pos =" + getCurrentPosInTrack() + "Length of Track=" + getCurrentTrack().getLength());
         List<Vehicle> vehicles = currentTrack.getVehiclesOnTrack();
         Double minDist = Double.POSITIVE_INFINITY;
@@ -103,7 +108,7 @@ public class Vehicle {
 
                     //is the distance to this track still less than the Minimal Distance? If not
                     //there is no need to check this track
-                    if (accumulator < MIN_DIST){
+                    if (accumulator < lookDistance){
                         System.out.println("<-- Checking Track " + actTrack + "--->");
                         for (Vehicle vehicle : actTrack.getVehiclesOnTrack()) {
                             double distOfVehicleInTrack = vehicle.getCurrentPosInTrack();
@@ -164,26 +169,48 @@ public class Vehicle {
         this.color = Math.random();
     }
 
+    private void accelerate(double delta, double value) {
+        velocity += delta * maxAcceleration * value;
+        if (velocity >= maxVelocity) {
+            velocity = maxVelocity;
+        }
+    }
+
+    private void brake(double delta, double value) {
+        velocity -= delta * maxDeceleration * value;
+        if (velocity < 0) {
+            velocity = 0;
+        }
+    }
+
+    private double brakeDistance() {
+        return (velocity * velocity) / (2 * maxDeceleration);
+    }
+
     public void move(double delta) {
         if (path != null) {
-            double dist = getLookAheadDist();
+            double brakeDist = brakeDistance();
+            double dist = getLookAheadDist(MIN_DIST + brakeDist);
             System.out.println("Dist =" + dist);
-            if(velocity * delta + MIN_DIST < dist){
-                double newPositionInCurrentTrack = currentPosInTrack + velocity * delta;
-                if (currentTrack.getLength() < newPositionInCurrentTrack) {
-                    currentTrackNumber++;
+            if (velocity * delta + MIN_DIST + brakeDist < dist) {
+                accelerate(delta, 1);
+            } else {
+                brake(delta, 1);
+            }
+            double newPositionInCurrentTrack = currentPosInTrack + velocity * delta;
+            if (currentTrack.getLength() < newPositionInCurrentTrack) {
+                currentTrackNumber++;
 
-                    if (currentTrackNumber < path.size() && currentTrack.getOutTrackList().size() > 0) {
-                        Track nextTrack = path.get(currentTrackNumber);
-                        double distanceInNewTrack = newPositionInCurrentTrack - currentTrack.getLength();
-                        currentPosInTrack = distanceInNewTrack;
-                        switchTrack(nextTrack);
-                    } else {
-                        active = false;
-                    }
+                if (currentTrackNumber < path.size() && currentTrack.getOutTrackList().size() > 0) {
+                    Track nextTrack = path.get(currentTrackNumber);
+                    double distanceInNewTrack = newPositionInCurrentTrack - currentTrack.getLength();
+                    currentPosInTrack = distanceInNewTrack;
+                    switchTrack(nextTrack);
                 } else {
-                    currentPosInTrack = newPositionInCurrentTrack;
+                    active = false;
                 }
+            } else {
+                currentPosInTrack = newPositionInCurrentTrack;
             }
 
         } else {

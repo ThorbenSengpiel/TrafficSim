@@ -110,7 +110,7 @@ public class StreetCrossTrafficLights extends Street {
         TrafficLight trafficLight2 = new TrafficLight(new Position(-25, 0), wL1, wS1);
         TrafficLight trafficLight3 = new TrafficLight(new Position(0, -25), nL1, nS1);
 
-        trafficLightManager = new TrafficLightManager(8, 2, 2, trafficLight0, trafficLight1, trafficLight2, trafficLight3);
+        trafficLightManager = new TrafficLightManager(16, 2, 2, trafficLight0, trafficLight1, trafficLight2, trafficLight3);
 
         signList.add(trafficLight0);
         signList.add(trafficLight1);
