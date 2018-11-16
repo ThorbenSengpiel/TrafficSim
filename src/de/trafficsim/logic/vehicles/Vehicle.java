@@ -34,6 +34,7 @@ public class Vehicle {
         List<Vehicle> vehicles = currentTrack.getVehiclesOnTrack();
         double minDist = Double.POSITIVE_INFINITY;
         boolean vehFound = false;
+        //Calculate dist to StopPoint on CurrTrack
         if (currentTrack.hasStopPoint()) {
             if (currentTrack.isStopPointEnabled()) {
                 double delta = currentTrack.getStopPointPosition() - currentPosInTrack;
@@ -44,6 +45,7 @@ public class Vehicle {
                 }
             }
         }
+        //Calculate dist to vehicles on Curr Track
         for (Vehicle vehicle : vehicles) {
             if (vehicle != this){
                 double delta = vehicle.getCurrentPosInTrack() - VEHICLE_LENGTH/2 - currentPosInTrack ;
@@ -51,6 +53,7 @@ public class Vehicle {
                 if(delta > -VEHICLE_LENGTH /2 && delta <= 0){
                     minDist = 0;
                     System.out.println("Normally this shouldn't happen");
+                    vehFound = true;
                 }
                 if(delta > 0){
                     minDist = (minDist > delta ? delta : minDist);
@@ -58,6 +61,7 @@ public class Vehicle {
                 }
             }
         }
+        //Look at neighbour Tracks
         if(currentTrackNumber + 1 < path.size()){
             for (Track track : currentTrack.getOutTrackList()) {
                 Track nextTrack = path.get(currentTrackNumber+1);
@@ -66,7 +70,7 @@ public class Vehicle {
                     if (!track.getVehiclesOnTrack().isEmpty()){
                         double minDistInOtherTrack = Double.POSITIVE_INFINITY;
                         for (Vehicle vehicle : track.getVehiclesOnTrack()) {
-                            minDistInOtherTrack = (vehicle.currentPosInTrack < minDistInOtherTrack ? vehicle.currentPosInTrack : minDistInOtherTrack);
+                            minDistInOtherTrack = (vehicle.currentPosInTrack - VEHICLE_LENGTH/2< minDistInOtherTrack ? vehicle.currentPosInTrack : minDistInOtherTrack);
                         }
                         Position posOnPath = nextTrack.getPosOnArea(minDistInOtherTrack);
                         Position posOffPath = track.getPosOnArea(minDistInOtherTrack);
@@ -85,7 +89,7 @@ public class Vehicle {
             for (int i = currentTrackNumber + 1; i < path.size() && accumulator < lookdistance && !vehFound ; i++) {
                 Track actTrack = path.get(i);
                 for (Vehicle vehicle : actTrack.getVehiclesOnTrack()) {
-                    double distOfVehicleInTrack = vehicle.getCurrentPosInTrack() - 4;
+                    double distOfVehicleInTrack = vehicle.getCurrentPosInTrack() - VEHICLE_LENGTH/2;
                     if (distOfVehicleInTrack + accumulator < minDist){
                         minDist = distOfVehicleInTrack + accumulator;
                     }
