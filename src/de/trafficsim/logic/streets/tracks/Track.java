@@ -38,6 +38,9 @@ public abstract class Track {
 
     protected double stopPointPosition;
     protected boolean stopPointEnabled;
+
+
+
     public Track(Position from, Position to, double length, Street street) {
         this.from = from;
         this.to = to;
