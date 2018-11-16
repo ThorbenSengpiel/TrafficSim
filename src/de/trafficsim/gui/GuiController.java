@@ -4,6 +4,7 @@ import de.trafficsim.gui.graphics.Area;
 import de.trafficsim.logic.network.StreetNetworkManager;
 import de.trafficsim.logic.streets.Street;
 import de.trafficsim.logic.streets.StreetTwoPositions;
+import de.trafficsim.logic.vehicles.StaticVehicle;
 import de.trafficsim.logic.vehicles.Vehicle;
 import de.trafficsim.logic.vehicles.VehicleManager;
 import de.trafficsim.util.Util;
@@ -71,6 +72,14 @@ public class GuiController {
     @FXML
     private Label speedLabel;
 
+
+    @FXML
+    private TextField posOnTrack;
+    @FXML
+    private TextField trackID;
+    @FXML
+    private Button spawnStaticCar;
+
     private double speedFactor = 1;
     private Area area;
     private VehicleManager vehicleManager;
@@ -132,6 +141,11 @@ public class GuiController {
             speedLabel.setText(speedFactor+"x");
         });
 
+
+
+        spawnStaticCar.setOnAction(event -> {
+            vehicleManager.addVehicle(new StaticVehicle(Double.parseDouble(posOnTrack.getText()), Integer.parseInt(trackID.getText())));
+        });
     }
 
     @FXML

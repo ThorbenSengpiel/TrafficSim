@@ -32,6 +32,19 @@
                                 <CheckBox fx:id="checkShowHitBox" mnemonicParsing="false" text="HitBox" />
                                 <Button fx:id="addCarButton" mnemonicParsing="false" text="add Car" />
                                 <CheckBox fx:id="checkShowFancyGraphics" mnemonicParsing="false" text="Fancy Graphics" />
+
+
+                                <TextField fx:id="trackID" prefHeight="31.0" prefWidth="54.0">
+                                    <HBox.margin>
+                                        <Insets left="10.0" top="7.0" />
+                                    </HBox.margin>
+                                </TextField>
+                                <TextField fx:id="posOnTrack" prefHeight="31.0" prefWidth="54.0">
+                                    <HBox.margin>
+                                        <Insets left="10.0" top="7.0" />
+                                    </HBox.margin>
+                                </TextField>
+                                <Button fx:id="spawnStaticCar" mnemonicParsing="false" text="add Car" />
                             </children>
                         </VBox>
                     </children>
