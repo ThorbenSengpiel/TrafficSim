@@ -80,10 +80,12 @@ public abstract class Track {
         if (inTrackList.size() < 1) {
             agc.gc.setStroke(Color.LIME);
             agc.gc.strokeOval(from.x - a, from.y - a, a*2, a*2);
+            agc.gc.strokeLine(from.x, from.y, from.x+inDir.vector.x*2, from.y+inDir.vector.y*2);
         }
         if (outTrackList.size() < 1) {
             agc.gc.setStroke(Color.RED);
             agc.gc.strokeOval(to.x - a, to.y - a, a*2, a*2);
+            agc.gc.strokeLine(to.x, to.y, to.x+outDir.vector.x*2, to.y+outDir.vector.y*2);
         }
 
 

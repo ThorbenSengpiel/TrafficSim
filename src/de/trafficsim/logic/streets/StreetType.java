@@ -13,7 +13,6 @@ public enum StreetType {
     PARKING_DECK("Parking Deck", MenuCategory.SPAWNS, StreetParkingDeck.class),
 
     STRAIGHT("Straight", MenuCategory.TEST, StreetStraight.class),
-    TEST_BEZIER("Test Bezier", MenuCategory.TEST, StreetTestBezier.class),
     CROSS_TRAFFICLIGHTS("Trafficlight", MenuCategory.TEST, StreetCrossTrafficLights.class);
 
     public final String uiName;

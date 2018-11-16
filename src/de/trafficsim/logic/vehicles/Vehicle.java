@@ -1,8 +1,10 @@
 package de.trafficsim.logic.vehicles;
 
+import de.trafficsim.gui.graphics.AreaGraphicsContext;
 import de.trafficsim.logic.streets.tracks.Track;
 import de.trafficsim.util.Util;
 import de.trafficsim.util.geometry.Position;
+import javafx.scene.paint.Color;
 
 import java.sql.SQLOutput;
 import java.util.*;
@@ -29,6 +31,8 @@ public class Vehicle {
 
     private boolean active = true;
     public double color = 0;
+
+    public final double size = 4;
 
     public double getLookAheadDist(double lookdistance){
         List<Vehicle> vehicles = currentTrack.getVehiclesOnTrack();
@@ -242,5 +246,21 @@ public class Vehicle {
     @Override
     public String toString() {
         return "T:" + currentTrack.id + "P: " + Util.DOUBLE_FORMAT_0_00.format(currentPosInTrack) + " V:" + Util.DOUBLE_FORMAT_0_00.format(velocity);
+    }
+
+
+
+    public void draw(AreaGraphicsContext agc, boolean selected) {
+        agc.setFill(Color.hsb(color*360, 1, 1, 1));
+        agc.gc.fillRoundRect(-size, -(size/2), size*2, size, size / 2, size / 2);
+        if (selected) {
+            agc.gc.setLineWidth(3*agc.scale);
+            agc.setStroke(Color.WHITE);
+            agc.gc.strokeRoundRect(-size, -(size/2), size*2, size, size / 2, size / 2);
+        }
+        double brakeDist = brakeDistance();
+        agc.gc.setLineWidth(agc.scale);
+        agc.setStroke(Color.FUCHSIA);
+        agc.gc.strokeOval(-brakeDist, -brakeDist, brakeDist*2, brakeDist*2);
     }
 }
