@@ -9,8 +9,8 @@ import javafx.scene.paint.Color;
 
 public class StreetRoundAboutView extends StreetView {
 
-    private static final double radius = 50;
-    private static final double streetWidth = 10;
+    private static final double radius = 11.18033988749895;
+    private static final double streetWidth = 5;
     private static final double lineWidth = 0.2;
 
     public StreetRoundAboutView(StreetRoundAbout street) {
@@ -35,11 +35,6 @@ public class StreetRoundAboutView extends StreetView {
         agc.gc.strokeOval(c.x-rIn, c.y-rIn, 2*rIn, 2*rIn);
         agc.gc.strokeOval(c.x-rOut, c.y-rOut, 2*rOut, 2*rOut);
 
-        agc.setStroke(Color.WHITE);
-        agc.gc.setLineWidth(lineWidth);
-        agc.gc.setLineDashes(lineWidth*3*Math.PI);
-        agc.gc.strokeOval(c.x-r, c.y-r, 2*r, 2*r);
-        agc.gc.setLineDashes(null);
     }
 
     @Override

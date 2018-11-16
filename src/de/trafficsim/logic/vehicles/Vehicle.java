@@ -11,8 +11,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Vehicle {
-    private static final double MIN_DIST_SIDEWAY = 5 ;
-    private static final double VEHICLE_LENGTH = 10 ;
+    private static final double MIN_DIST_SIDEWAY = 8;
+    private static final double VEHICLE_LENGTH = 10;
     protected double MIN_DIST = 6;
     protected int LOOKAHEAD_LIMIT = 1;
 
@@ -70,7 +70,7 @@ public class Vehicle {
                     if (!track.getVehiclesOnTrack().isEmpty()){
                         double minDistInOtherTrack = Double.POSITIVE_INFINITY;
                         for (Vehicle vehicle : track.getVehiclesOnTrack()) {
-                            minDistInOtherTrack = (vehicle.currentPosInTrack < minDistInOtherTrack ? vehicle.currentPosInTrack : minDistInOtherTrack);
+                            minDistInOtherTrack = (vehicle.currentPosInTrack - VEHICLE_LENGTH/2 < minDistInOtherTrack ? vehicle.currentPosInTrack : minDistInOtherTrack);
                         }
                         Position posOnPath = nextTrack.getPosOnArea(minDistInOtherTrack);
                         Position posOffPath = track.getPosOnArea(minDistInOtherTrack);
@@ -82,14 +82,14 @@ public class Vehicle {
                         }
                     }
                 }
-        }
+            }
         }
         if (!vehFound){
             double accumulator = currentTrack.getLength() - currentPosInTrack;
             for (int i = currentTrackNumber + 1; i < path.size() && accumulator < lookdistance && !vehFound ; i++) {
                 Track actTrack = path.get(i);
                 for (Vehicle vehicle : actTrack.getVehiclesOnTrack()) {
-                    double distOfVehicleInTrack = vehicle.getCurrentPosInTrack() - 4;
+                    double distOfVehicleInTrack = vehicle.getCurrentPosInTrack() - VEHICLE_LENGTH/2;
                     if (distOfVehicleInTrack + accumulator < minDist){
                         minDist = distOfVehicleInTrack + accumulator;
                     }
@@ -169,49 +169,32 @@ public class Vehicle {
     }
 
     public void move(double delta) {
-        if (path != null) {
-            double brakeDist = brakeDistance();
-            double dist = getLookAheadDist(MIN_DIST + brakeDist);
-            //System.out.println("Dist =" + dist);
-            if (velocity * delta + MIN_DIST + brakeDist < dist) {
-                accelerate(delta, 1);
-            } else {
-                brake(delta, 1);
-            }
-            double newPositionInCurrentTrack = currentPosInTrack + velocity * delta;
-            if (currentTrack.getLength() < newPositionInCurrentTrack) {
-                currentTrackNumber++;
-
-                if (currentTrackNumber < path.size() && currentTrack.getOutTrackList().size() > 0) {
-                    Track nextTrack = path.get(currentTrackNumber);
-                    double distanceInNewTrack = newPositionInCurrentTrack - currentTrack.getLength();
-                    currentPosInTrack = distanceInNewTrack;
-                    switchTrack(nextTrack);
-                } else {
-                    active = false;
-                }
-            } else {
-                currentPosInTrack = newPositionInCurrentTrack;
-            }
-
+        double brakeDist = brakeDistance();
+        double dist = getLookAheadDist(VEHICLE_LENGTH + brakeDist + 5);
+        //System.out.println("Dist =" + dist);
+        if (velocity * delta + MIN_DIST + brakeDist < dist) {
+            accelerate(delta, 1);
         } else {
-            double newPositionInCurrentTrack = currentPosInTrack + velocity * delta;
-            if (currentTrack.getLength() < newPositionInCurrentTrack) {
-                if (currentTrack.getOutTrackList().size() > 0) {
-                    Track nextTrack = currentTrack.getOutTrackList().get((int) (Math.random() * currentTrack.getOutTrackList().size()));
-                    double distanceInNewTrack = newPositionInCurrentTrack - currentTrack.getLength();
-                    currentPosInTrack = distanceInNewTrack;
-                    switchTrack(nextTrack);
-                } else {
-                    active = false;
-                }
+            brake(delta, 1);
+        }
+        double newPositionInCurrentTrack = currentPosInTrack + velocity * delta;
+        if (currentTrack.getLength() < newPositionInCurrentTrack) {
+            currentTrackNumber++;
+
+            if (currentTrackNumber < path.size() && currentTrack.getOutTrackList().size() > 0) {
+                Track nextTrack = path.get(currentTrackNumber);
+                double distanceInNewTrack = newPositionInCurrentTrack - currentTrack.getLength();
+                currentPosInTrack = distanceInNewTrack;
+                switchTrack(nextTrack);
             } else {
-                currentPosInTrack = newPositionInCurrentTrack;
+                active = false;
             }
+        } else {
+            currentPosInTrack = newPositionInCurrentTrack;
         }
     }
 
-    private void switchTrack(Track newTrack) {
+    protected void switchTrack(Track newTrack) {
         if (currentTrack != null) {
             currentTrack.removeVehicle(this);
         }
@@ -257,10 +240,15 @@ public class Vehicle {
             agc.gc.setLineWidth(3*agc.scale);
             agc.setStroke(Color.WHITE);
             agc.gc.strokeRoundRect(-size, -(size/2), size*2, size, size / 2, size / 2);
+            double lookRadius = VEHICLE_LENGTH + brakeDistance() + 5;
+            agc.gc.setLineWidth(agc.scale*1.5);
+            agc.setStroke(Color.WHITE);
+            agc.gc.strokeOval(-lookRadius, -lookRadius, lookRadius*2, lookRadius*2);
+
+
+            double brakeDist = brakeDistance();
+            agc.setStroke(Color.FUCHSIA);
+            agc.gc.strokeOval(-brakeDist, -brakeDist, brakeDist*2, brakeDist*2);
         }
-        double brakeDist = brakeDistance();
-        agc.gc.setLineWidth(agc.scale);
-        agc.setStroke(Color.FUCHSIA);
-        agc.gc.strokeOval(-brakeDist, -brakeDist, brakeDist*2, brakeDist*2);
     }
 }
