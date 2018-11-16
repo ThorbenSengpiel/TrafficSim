@@ -9,7 +9,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Vehicle {
-    protected double MIN_DIST = 10;
+    private static final double MIN_DIST_SIDEWAY = 5 ;
+    private static final double VEHICLE_LENGTH = 10 ;
+    protected double MIN_DIST = 6;
     protected int LOOKAHEAD_LIMIT = 1;
 
     protected double velocity = 1.0;
@@ -28,10 +30,9 @@ public class Vehicle {
     private boolean active = true;
     public double color = 0;
 
-    public Double getLookAheadDist(double lookDistance){
-        System.out.println("Lookahead Calc for" + getCurrentTrack() + " Pos =" + getCurrentPosInTrack() + "Length of Track=" + getCurrentTrack().getLength());
+    public double getLookAheadDist(double lookdistance){
         List<Vehicle> vehicles = currentTrack.getVehiclesOnTrack();
-        Double minDist = Double.POSITIVE_INFINITY;
+        double minDist = Double.POSITIVE_INFINITY;
         boolean vehFound = false;
         if (currentTrack.hasStopPoint()) {
             if (currentTrack.isStopPointEnabled()) {
@@ -45,114 +46,90 @@ public class Vehicle {
         }
         for (Vehicle vehicle : vehicles) {
             if (vehicle != this){
-                double delta = vehicle.getCurrentPosInTrack() - currentPosInTrack;
+                double delta = vehicle.getCurrentPosInTrack() - VEHICLE_LENGTH/2 - currentPosInTrack ;
                 System.out.println("Delta =" + delta + "Min Dist =" + minDist);
+                if(delta > -VEHICLE_LENGTH /2 && delta <= 0){
+                    minDist = 0;
+                    System.out.println("Normally this shouldn't happen");
+                }
                 if(delta > 0){
                     minDist = (minDist > delta ? delta : minDist);
                     vehFound = true;
                 }
             }
         }
-        // if an vehicle was already found on the last Track there is no need to check the upcoming Tracks
-        // because their distance has to be higher
-        if (!vehFound){
-            Track actTrack = getCurrentTrack();
-            double accumulator = actTrack.getLength() -currentPosInTrack;
-            Stack<Track> stack = new Stack<>();
-            stack.push(actTrack);
-            List<Track> visited = new ArrayList<>();
-            visited.add(actTrack);
-            while(!stack.empty()){
-                //List of all Tracks that weren't already checked and so would have been put into the Hashmap
-                List<Track> remaining = actTrack.getOutTrackList().stream().filter(e -> !visited.contains(e)).collect(Collectors.toList());
-                //If there is no Element in the List. The Last Track was Part of a Spawn or didn't yield to another Track which
-                //hasn't been checked
-                // Hell Lot of Debug
-                /*
-                System.out.println("----------------");
-                System.out.println("Outside");
-                System.out.println("Actual Track =" +actTrack + " Length =" + actTrack.getLength());
-                System.out.println("Visited =" + Arrays.toString(visited.toArray()));
-                System.out.println("Stack =" + Arrays.toString(stack.toArray()));
-                System.out.println("Remaining = " + Arrays.toString(remaining.toArray()));
-                System.out.println("Accumulator =" +accumulator);
-                System.out.println("MinDist =" + minDist);
-                System.out.println("----------------");
-                */
-                if(remaining.isEmpty()){
-                    //pop the Element of the Stack and decrement the accumulator because the distance was previously added
-                    Track formertrack = stack.pop();
-                    if (!stack.empty()) {
-                        accumulator -= formertrack.getLength();
-                        actTrack = stack.peek();
-                        System.out.println("<-Backtracking to " + actTrack + "Accumulator now =" + accumulator + "->");
-                    } else{
-                        accumulator -= getCurrentTrack().getLength() - currentPosInTrack;
-                        System.out.println("<-Backtracking to Root Accumulator now =" + accumulator + "->");
-                    }
-                } else {
-                    //Dive one Track deeper into the hierarchy
-                    actTrack = remaining.get(0);
-                    visited.add(actTrack);
-                    stack.push(actTrack);
-
-                    //Another Hell Lot of Debug
-                    /*
-                    System.out.println("-------------");
-                    System.out.println("ActTrackInside =" + actTrack + " Length =" + actTrack.getLength());
-                    System.out.println("Stack =" + Arrays.toString(stack.toArray()));
-                    System.out.println("Visited =" + Arrays.toString(visited.toArray()));
-                    System.out.println("Accumulator =" + accumulator);
-                    System.out.println("-------------");
-                    */
-
-                    //is the distance to this track still less than the Minimal Distance? If not
-                    //there is no need to check this track
-                    if (accumulator < lookDistance){
-                        System.out.println("<-- Checking Track " + actTrack + "--->");
-                        for (Vehicle vehicle : actTrack.getVehiclesOnTrack()) {
-                            double distOfVehicleInTrack = vehicle.getCurrentPosInTrack();
-                            if (distOfVehicleInTrack + accumulator < minDist){
-                                minDist = distOfVehicleInTrack + accumulator;
-                            }
-                            //Found something. No need to dive deeper into the tree
+        if(currentTrackNumber + 1 < path.size()){
+            for (Track track : currentTrack.getOutTrackList()) {
+                Track nextTrack = path.get(currentTrackNumber+1);
+                if(track != nextTrack){
+                    track.select();
+                    if (!track.getVehiclesOnTrack().isEmpty()){
+                        double minDistInOtherTrack = Double.POSITIVE_INFINITY;
+                        for (Vehicle vehicle : track.getVehiclesOnTrack()) {
+                            minDistInOtherTrack = (vehicle.currentPosInTrack < minDistInOtherTrack ? vehicle.currentPosInTrack : minDistInOtherTrack);
+                        }
+                        Position posOnPath = nextTrack.getPosOnArea(minDistInOtherTrack);
+                        Position posOffPath = track.getPosOnArea(minDistInOtherTrack);
+                        double dist = posOnPath.distance(posOffPath);
+                        System.out.println("Dist Sideways First Track= " +dist +"Vehicles ="+this);
+                        if(dist < MIN_DIST_SIDEWAY){
                             vehFound = true;
+                            minDist = currentTrack.getLength()-currentPosInTrack;
                         }
-                        if (actTrack.hasStopPoint()) {
-                            if (actTrack.isStopPointEnabled()) {
-                                double distOfStopPointInTrack = actTrack.getStopPointPosition();
-                                if (distOfStopPointInTrack + accumulator < minDist){
-                                    minDist = distOfStopPointInTrack + accumulator;
+                    }
+                }
+        }
+        }
+        if (!vehFound){
+            double accumulator = currentTrack.getLength() - currentPosInTrack;
+            for (int i = currentTrackNumber + 1; i < path.size() && accumulator < lookdistance && !vehFound ; i++) {
+                Track actTrack = path.get(i);
+                for (Vehicle vehicle : actTrack.getVehiclesOnTrack()) {
+                    double distOfVehicleInTrack = vehicle.getCurrentPosInTrack() - 4;
+                    if (distOfVehicleInTrack + accumulator < minDist){
+                        minDist = distOfVehicleInTrack + accumulator;
+                    }
+                    //Found something. No need to check following Tracks
+                    vehFound = true;
+                }
+                if (actTrack.hasStopPoint()) {
+                    if (actTrack.isStopPointEnabled()) {
+                        double distOfStopPointInTrack = actTrack.getStopPointPosition();
+                        if (distOfStopPointInTrack + accumulator < minDist){
+                            minDist = distOfStopPointInTrack + accumulator;
+                        }
+                        //Found something. No need to check following Tracks
+                        vehFound = true;
+                    }
+                }
+                if(!vehFound){
+                    if (i+1 < path.size()){
+                        Track OutTrackInPath = path.get(i+1);
+                        for (Track track : actTrack.getOutTrackList()) {
+                            if(track != OutTrackInPath){
+                                track.select();
+                                if (!track.getVehiclesOnTrack().isEmpty()){
+                                    double minDistInOtherTrack = Double.POSITIVE_INFINITY;
+                                    for (Vehicle vehicle : track.getVehiclesOnTrack()) {
+                                        minDistInOtherTrack = (vehicle.currentPosInTrack < minDistInOtherTrack ? vehicle.currentPosInTrack : minDistInOtherTrack);
+                                    }
+                                    Position posOnPath = OutTrackInPath.getPosOnArea(minDistInOtherTrack);
+                                    Position posOffPath = track.getPosOnArea(minDistInOtherTrack);
+                                    double dist = posOnPath.distance(posOffPath);
+                                    System.out.println("Dist Sideways = " +dist +"Vehicles ="+this);
+                                    if(dist < MIN_DIST_SIDEWAY){
+                                        vehFound = true;
+                                        minDist=accumulator+actTrack.getLength();
+                                    }
                                 }
-                                //Found something. No need to dive deeper into the tree
-                                vehFound = true;
                             }
                         }
-                        if (vehFound){
-                            //Immediately pop this node of the stack. Thereby prevent deeper diving into Tree
-                            // because the actual Node already was added to visited and therefore wont be visited;
-                            System.out.println("Vehicle Found on " + actTrack);
-                            Track formerTrack = stack.pop();
-                            accumulator -= formerTrack.getLength();
-                            actTrack = stack.peek();
-                            vehFound = false;
-                        }
-                        accumulator += actTrack.getLength();
-
-                    } else {
-                        //Accumulator Exceed
-                        System.out.println("Dist exceed. Don't Check this one");
-                        Track formerTrack = stack.pop();
-                        System.out.println("Popped " + formerTrack);
-                        actTrack = stack.peek();
-
                     }
-
-
                 }
+                accumulator += actTrack.getLength();
             }
-
         }
+        System.out.println("Min Dist =" + minDist);
         return minDist;
     }
 
@@ -191,7 +168,7 @@ public class Vehicle {
         if (path != null) {
             double brakeDist = brakeDistance();
             double dist = getLookAheadDist(MIN_DIST + brakeDist);
-            System.out.println("Dist =" + dist);
+            //System.out.println("Dist =" + dist);
             if (velocity * delta + MIN_DIST + brakeDist < dist) {
                 accelerate(delta, 1);
             } else {
