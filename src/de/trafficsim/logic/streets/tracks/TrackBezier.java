@@ -12,15 +12,15 @@ public class TrackBezier extends Track {
     private Position c1;
 
     public TrackBezier(Position from, Direction inDir, Position to, Direction outDir, double weight, Street street) {
-        this(from, from.add(inDir.vector.scale(weight)), to.add(outDir.rotateClockWise().rotateClockWise().vector.scale(weight)), to, street);
-        this.inDir = inDir;
-        this.outDir = outDir;
+        this(from, from.add(inDir.vector.scale(weight)), inDir, to.add(outDir.rotateClockWise().rotateClockWise().vector.scale(weight)), to, outDir, street);
     }
 
-    public TrackBezier(Position from, Position c0, Position c1, Position to, Street street) {
-        super(from, to, calcLength(from, c0, c1, to), street);
-        this.c0 = c0;
-        this.c1 = c1;
+    public TrackBezier(Position from, Position cFrom, Direction inDir, Position to, Position cTo, Direction outDir, Street street) {
+        super(from, to, calcLength(from, cFrom, cTo, to), street);
+        this.inDir = inDir;
+        this.outDir = outDir;
+        this.c0 = cFrom;
+        this.c1 = cTo;
     }
 
     private static double calcLength(Position from, Position c0, Position c1, Position to) {
