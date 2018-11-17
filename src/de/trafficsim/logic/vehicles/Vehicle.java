@@ -6,23 +6,22 @@ import de.trafficsim.util.Util;
 import de.trafficsim.util.geometry.Position;
 import javafx.scene.paint.Color;
 
-import java.sql.SQLOutput;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Vehicle {
-    private static final double MIN_DIST_SIDEWAY = 8;
-    private static final double VEHICLE_LENGTH = 10;
-    protected double MIN_DIST = 6;
+    public static final double CAR_SIZE = 3;
+    private static final double MIN_DIST_SIDEWAY = CAR_SIZE*2;
+    private static final double VEHICLE_LENGTH = CAR_SIZE*2+2;
+    protected double MIN_DIST = CAR_SIZE + 2;
     protected int LOOKAHEAD_LIMIT = 1;
 
     protected double velocity = 1.0;
     protected double currentPosInTrack = 0;
 
     private final double maxAcceleration = 7; // m/s²
-    private final double maxDeceleration = 20; // m/s²
+    private final double maxDeceleration = 10; // m/s²
 
-    private final double maxVelocity = 13.88888888888889; // m/s
+    private final double maxVelocity = Util.kmhToMs(50); // m/s
 
     protected Track currentTrack;
 
@@ -32,7 +31,6 @@ public class Vehicle {
     private boolean active = true;
     public double color = 0;
 
-    public final double size = 4;
 
     public double getLookAheadDist(double lookdistance){
         List<Vehicle> vehicles = currentTrack.getVehiclesOnTrack();
@@ -53,10 +51,10 @@ public class Vehicle {
         for (Vehicle vehicle : vehicles) {
             if (vehicle != this){
                 double delta = vehicle.getCurrentPosInTrack() - VEHICLE_LENGTH/2 - currentPosInTrack ;
-                System.out.println("Delta =" + delta + "Min Dist =" + minDist);
+                //System.out.println("Delta =" + delta + "Min Dist =" + minDist);
                 if(delta > -VEHICLE_LENGTH /2 && delta <= 0){
                     minDist = 0;
-                    System.out.println("Normally this shouldn't happen");
+                    //System.out.println("Normally this shouldn't happen");
                 }
                 if(delta > 0){
                     minDist = (minDist > delta ? delta : minDist);
@@ -69,7 +67,7 @@ public class Vehicle {
             for (Track track : currentTrack.getOutTrackList()) {
                 Track nextTrack = path.get(currentTrackNumber+1);
                 if(track != nextTrack){
-                    track.select();
+                    //track.select();
                     if (!track.getVehiclesOnTrack().isEmpty()){
                         double minDistInOtherTrack = Double.POSITIVE_INFINITY;
                         for (Vehicle vehicle : track.getVehiclesOnTrack()) {
@@ -78,7 +76,7 @@ public class Vehicle {
                         Position posOnPath = nextTrack.getPosOnArea(minDistInOtherTrack);
                         Position posOffPath = track.getPosOnArea(minDistInOtherTrack);
                         double dist = posOnPath.distance(posOffPath);
-                        System.out.println("Dist Sideways First Track= " +dist +"Vehicles ="+this);
+                        //System.out.println("Dist Sideways First Track= " +dist +"Vehicles ="+this);
                         if(dist < MIN_DIST_SIDEWAY){
                             vehFound = true;
                             minDist = currentTrack.getLength()-currentPosInTrack;
@@ -114,7 +112,7 @@ public class Vehicle {
                         Track OutTrackInPath = path.get(i+1);
                         for (Track track : actTrack.getOutTrackList()) {
                             if(track != OutTrackInPath){
-                                track.select();
+                                //track.select();
                                 if (!track.getVehiclesOnTrack().isEmpty()){
                                     double minDistInOtherTrack = Double.POSITIVE_INFINITY;
                                     for (Vehicle vehicle : track.getVehiclesOnTrack()) {
@@ -123,7 +121,7 @@ public class Vehicle {
                                     Position posOnPath = OutTrackInPath.getPosOnArea(minDistInOtherTrack);
                                     Position posOffPath = track.getPosOnArea(minDistInOtherTrack);
                                     double dist = posOnPath.distance(posOffPath);
-                                    System.out.println("Dist Sideways = " +dist +"Vehicles ="+this);
+                                    //System.out.println("Dist Sideways = " +dist +"Vehicles ="+this);
                                     if(dist < MIN_DIST_SIDEWAY){
                                         vehFound = true;
                                         minDist=accumulator+actTrack.getLength();
@@ -136,7 +134,7 @@ public class Vehicle {
                 accumulator += actTrack.getLength();
             }
         }
-        System.out.println("Min Dist =" + minDist);
+        //System.out.println("Min Dist =" + minDist);
         return minDist;
     }
 
@@ -238,11 +236,11 @@ public class Vehicle {
 
     public void draw(AreaGraphicsContext agc, boolean selected) {
         agc.setFill(Color.hsb(color*360, 1, 1, 1));
-        agc.gc.fillRoundRect(-size, -(size/2), size*2, size, size / 2, size / 2);
+        agc.gc.fillRoundRect(-CAR_SIZE, -(CAR_SIZE /2), CAR_SIZE *2, CAR_SIZE, CAR_SIZE / 2, CAR_SIZE / 2);
         if (selected) {
             agc.gc.setLineWidth(3*agc.scale);
             agc.setStroke(Color.WHITE);
-            agc.gc.strokeRoundRect(-size, -(size/2), size*2, size, size / 2, size / 2);
+            agc.gc.strokeRoundRect(-CAR_SIZE, -(CAR_SIZE /2), CAR_SIZE *2, CAR_SIZE, CAR_SIZE / 2, CAR_SIZE / 2);
             double lookRadius = VEHICLE_LENGTH + brakeDistance() + 5;
             agc.gc.setLineWidth(agc.scale*1.5);
             agc.setStroke(Color.WHITE);

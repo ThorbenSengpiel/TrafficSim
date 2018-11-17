@@ -97,11 +97,22 @@ public class AreaGraphicsContext {
         }
     }
 
-    public void draw2LaneCurve(Position from, Position to, Direction inDir) {
-        double radius = Math.abs(from.x - to.x);
+    public void draw2LaneCurve(Position center, double radius, Direction inDir) {
         setStroke(StreetVisuals.STREET2LANE);
         gc.setLineCap(StrokeLineCap.BUTT);
-        gc.strokeArc(-radius, -radius, radius*2, radius*2, inDir.angle , 90, ArcType.OPEN);
+        gc.strokeArc(center.x-radius, center.y-radius, radius*2, radius*2, inDir.angle , 90, ArcType.OPEN);
+
+        setStroke(StreetVisuals.STREET_LINE_DASHED);
+        gc.setLineCap(StrokeLineCap.BUTT);
+        gc.strokeArc(center.x-radius, center.y-radius, radius*2, radius*2, inDir.angle , 90, ArcType.OPEN);
+
+        setStroke(StreetVisuals.STREET_BORDER);
+        gc.setLineCap(StrokeLineCap.BUTT);
+        radius -= 5;
+        gc.strokeArc(center.x-radius, center.y-radius, radius*2, radius*2, inDir.angle , 90, ArcType.OPEN);
+        radius += 10;
+        gc.strokeArc(center.x-radius, center.y-radius, radius*2, radius*2, inDir.angle , 90, ArcType.OPEN);
+
     }
 
     public void setTransparent(boolean transparent) {

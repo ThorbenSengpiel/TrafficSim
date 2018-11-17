@@ -97,14 +97,14 @@ public class StreetCrossTrafficLights extends Street {
         addTrackBetween(nR1, wO1);
         addTrackBetween(wR1, sO1);
 
-        wL1.createStopPoint(22.5, true);
-        wS1.createStopPoint(22.5, true);
-        eL1.createStopPoint(22.5, true);
-        eS1.createStopPoint(22.5, true);
-        nL1.createStopPoint(22.5, true);
-        nS1.createStopPoint(22.5, true);
-        sL1.createStopPoint(22.5, true);
-        sS1.createStopPoint(22.5, true);
+        wL1.createStopPoint(21, true);
+        wS1.createStopPoint(21, true);
+        eL1.createStopPoint(21, true);
+        eS1.createStopPoint(21, true);
+        nL1.createStopPoint(21, true);
+        nS1.createStopPoint(21, true);
+        sL1.createStopPoint(21, true);
+        sS1.createStopPoint(21, true);
 
         TrafficLight trafficLight0 = new TrafficLight(new Position(25, 0), eL1, eS1);
         TrafficLight trafficLight1 = new TrafficLight(new Position(0, 25), sL1, sS1);

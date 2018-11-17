@@ -25,4 +25,8 @@ public class Util {
         return v0 + dist*value;
     }
 
+    public static double kmhToMs(double kmh) {
+        return kmh / 3.6;
+    }
+
 }

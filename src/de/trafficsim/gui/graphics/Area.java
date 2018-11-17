@@ -237,7 +237,7 @@ public class Area extends Canvas {
             double rot = vehicle.getDirection();
             agc.gc.rotate(rot);
 
-            //agc.gc.drawImage(img, -size, -(size/2), size*2, size);
+            //agc.gc.drawImage(img, -CAR_SIZE, -(CAR_SIZE/2), CAR_SIZE*2, CAR_SIZE);
             vehicle.draw(agc, vehicle == selectedVehicle);
 
             agc.gc.rotate(-rot);

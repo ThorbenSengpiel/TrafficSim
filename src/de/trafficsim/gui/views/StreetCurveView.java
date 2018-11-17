@@ -49,7 +49,7 @@ public class StreetCurveView extends StreetView {
         agc.draw2Lane(new Position(12.2, 0),  new Position(25.1, 0));   //left
         agc.draw2Lane(new Position(0, 12.2),  new Position(0, 25.1));   //bottom
 
-        agc.draw2LaneCurve(b, l, getStreet().getRotation());
+        agc.draw2LaneCurve(new Position(12.5, 12.5), 12.5, Direction.NORTH);
     }
 
     @Override
