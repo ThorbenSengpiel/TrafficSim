@@ -17,5 +17,14 @@ public abstract class StreetTwoPositions extends Street {
 
 
     public abstract StreetTwoPositions createChanged(Position pos2nd);
+
+    @Override
+    public String export() {
+        Position sndPos = get2ndPos();
+        return super.export()+";"+sndPos.x+";"+sndPos.y;
+    }
+
+    protected abstract Position get2ndPos();
+
 }
 

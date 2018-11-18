@@ -17,8 +17,8 @@ public class StreetStraight2Lane extends StreetTwoPositions {
     public StreetStraight2Lane(Position position, double length, Direction direction) {
         super(position, StreetType.STRAIGHT_2_LANE, direction);
         this.length = length;
-        addInOutTrack(new TrackStraight(new Position(-2.5, 0).rotate(direction), new Position(-2.5, length).rotate(direction), this));
-        addInOutTrack(new TrackStraight(new Position(2.5, length).rotate(direction), new Position(2.5, 0).rotate(direction), this));
+        addInOutTrack(new TrackStraight(new Position(-2.5, 0).rotate(direction), new Position(-2.5, -length).rotate(direction), this));
+        addInOutTrack(new TrackStraight(new Position(2.5, -length).rotate(direction), new Position(2.5, 0).rotate(direction), this));
 
     }
 
@@ -42,13 +42,13 @@ public class StreetStraight2Lane extends StreetTwoPositions {
         Direction direction;
         Position dir = position.sub(pos2nd);
         if (Math.abs(dir.x) > Math.abs(dir.y)) {
-            if (dir.x > 0) {
+            if (dir.x < 0) {
                 direction = Direction.EAST;
             } else {
                 direction = Direction.WEST;
             }
         } else {
-            if (dir.y > 0) {
+            if (dir.y < 0) {
                 direction = Direction.SOUTH;
             } else {
                 direction = Direction.NORTH;
@@ -62,4 +62,10 @@ public class StreetStraight2Lane extends StreetTwoPositions {
         }
         return new StreetStraight2Lane(position, length, direction);
     }
+
+    @Override
+    protected Position get2ndPos() {
+        return position.add(rotation.vector.scale(length));
+    }
+
 }

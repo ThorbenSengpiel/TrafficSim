@@ -5,6 +5,7 @@ import de.trafficsim.gui.graphics.util.Hitbox;
 import de.trafficsim.logic.streets.StreetRoundAbout;
 import de.trafficsim.util.geometry.Circle;
 import de.trafficsim.util.geometry.Position;
+import de.trafficsim.util.geometry.Rectangle;
 import javafx.scene.paint.Color;
 
 public class StreetRoundAboutView extends StreetView {
@@ -14,7 +15,7 @@ public class StreetRoundAboutView extends StreetView {
     private static final double lineWidth = 0.2;
 
     public StreetRoundAboutView(StreetRoundAbout street) {
-        super(street, new Hitbox(new Circle(new Position(), radius+(streetWidth/2))).addSub(new Circle(new Position(), radius-(streetWidth/2))));
+        super(street, new Hitbox(new Rectangle(Position.ZERO, 25, 6), new Rectangle(Position.ZERO, 6, 25), new Circle(new Position(), radius+(streetWidth/2))).addSub(new Circle(new Position(), radius-(streetWidth/2))));
     }
 
     @Override

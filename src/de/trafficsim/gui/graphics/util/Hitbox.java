@@ -79,7 +79,7 @@ public class Hitbox {
 
     public static Hitbox createLaneHitbox(double length, Direction direction, double laneWidth) {
         Position f = new Position(laneWidth / 2, 0).rotate(direction);
-        Position t = new Position(-laneWidth / 2, length).rotate(direction);
+        Position t = new Position(-laneWidth / 2, -length).rotate(direction);
         return new Hitbox(new Rectangle(f, t));
     }
 }

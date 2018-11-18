@@ -19,7 +19,7 @@ public class StreetStraight2LaneView extends StreetView {
 
     @Override
     public void draw(AreaGraphicsContext agc) {
-        agc.draw2Lane(Position.ZERO, new Position(0, length));
+        agc.draw2Lane(Position.ZERO, new Position(0, -length));
     }
 
     @Override

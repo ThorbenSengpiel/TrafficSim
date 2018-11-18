@@ -188,7 +188,7 @@ public class StreetNetworkManager {
     public String export() {
         StringBuilder sb = new StringBuilder();
         for (Street street : streetList) {
-            sb.append(street.export());
+            sb.append(street.export()).append(System.lineSeparator());
         }
         return sb.toString();
     }
@@ -204,15 +204,23 @@ public class StreetNetworkManager {
                 e.printStackTrace();
             }
             street.setPosition(new Position(Double.parseDouble(values[1]), Double.parseDouble(values[2])));
-            //TODO schlechte Lösung aber läuft erstmal
-            switch (Direction.valueOf(values[3])) {
-                case WEST:
-                    street = street.createRotated();
-                case SOUTH:
-                    street = street.createRotated();
-                case EAST:
-                    street = street.createRotated();
+            if (street instanceof StreetTwoPositions) {
+                if (values.length <= 4) {
+                    continue;
+                }
+                street = ((StreetTwoPositions) street).createChanged(new Position(Double.parseDouble(values[4]), Double.parseDouble(values[5])));
+            } else {
+                //TODO schlechte Lösung aber läuft erstmal
+                switch (Direction.valueOf(values[3])) {
+                    case WEST:
+                        street = street.createRotated();
+                    case SOUTH:
+                        street = street.createRotated();
+                    case EAST:
+                        street = street.createRotated();
+                }
             }
+
             addStreet(street);
         }
     }

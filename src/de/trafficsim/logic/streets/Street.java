@@ -155,7 +155,7 @@ public abstract class Street {
     }
 
     public String export() {
-        return type + ";"+position.x+";"+position.y+";"+rotation+System.lineSeparator();
+        return type + ";"+position.x+";"+position.y+";"+rotation;
     }
 
     public void update(double delta) {
