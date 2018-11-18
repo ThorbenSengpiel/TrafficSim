@@ -70,15 +70,6 @@ public class StreetNetworkManager {
                 streets[x][(y+1)%3].outNorth.connectOutToInOf(streets[x][y].inSouth);
             }
         }*/
-
-
-        int cnt = 0;
-        for (Street street : streetList) {
-            for (Track track : street.getTracks()) {
-                cnt++;
-            }
-        }
-        System.out.println("TrackCount = " + cnt);
     }
 
     public void addStreet(Street... streets){
@@ -94,6 +85,7 @@ public class StreetNetworkManager {
             streetSpawnList.add((StreetSpawn) street);
         }
         GuiController.getInstance().addStreet(street);
+        changed = true;
     }
 
     public void removeStreet(Street street) {
@@ -104,6 +96,7 @@ public class StreetNetworkManager {
             streetSpawnList.remove(street);
         }
         GuiController.getInstance().removeStreet(street);
+        changed = true;
     }
 
     public static StreetNetworkManager getInstance() {
@@ -222,5 +215,21 @@ public class StreetNetworkManager {
             }
             addStreet(street);
         }
+    }
+
+    private boolean changed = true;
+    private int trackCount;
+
+    public int getTrackCount() {
+        if (changed) {
+            trackCount = 0;
+            for (Street street : streetList) {
+                for (Track track : street.getTracks()) {
+                    trackCount++;
+                }
+            }
+            changed = false;
+        }
+        return trackCount;
     }
 }

@@ -104,8 +104,6 @@ public class GuiController {
         vehicleManager = VehicleManager.getInstance();
         streetNetworkManager = StreetNetworkManager.getInstance();
         paneCanvas.getChildren().add(area);
-        area.widthProperty().bind(paneCanvas.widthProperty().subtract(20));
-        area.heightProperty().bind(paneCanvas.heightProperty().subtract(20));
 
         checkShowTracks.setOnAction(event -> area.setShowTracks(checkShowTracks.isSelected()));
         checkShowVehicleInfo.setOnAction(event -> area.setShowVehicleInfo(checkShowVehicleInfo.isSelected()));
@@ -162,15 +160,17 @@ public class GuiController {
 
         fileChooser.setInitialDirectory(new File("./data/"));
 
-        try {
-            List<String> strings = Files.readAllLines(fileChooser.showOpenDialog(primaryStage).toPath());
-            reset();
-            streetNetworkManager.importFile(strings);
-        } catch (IOException e1) {
-            e1.printStackTrace();
+        File file = fileChooser.showOpenDialog(primaryStage);
+
+        if (file != null) {
+            try {
+                List<String> strings = Files.readAllLines(file.toPath());
+                reset();
+                streetNetworkManager.importFile(strings);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
-
-
     }
 
     @FXML
@@ -184,12 +184,15 @@ public class GuiController {
         fileChooser.setInitialDirectory(new File("./data/"));
 
         //Show save file dialog
-        try {
-            PrintWriter printWriter = new PrintWriter(fileChooser.showSaveDialog(primaryStage).getPath());
-            printWriter.write(streetNetworkManager.export());
-            printWriter.close();
-        } catch (FileNotFoundException e1) {
-            e1.printStackTrace();
+        File file = fileChooser.showSaveDialog(primaryStage);
+        if (file != null) {
+            try {
+                PrintWriter printWriter = new PrintWriter(file.getPath());
+                printWriter.write(streetNetworkManager.export());
+                printWriter.close();
+            } catch (FileNotFoundException e1) {
+                e1.printStackTrace();
+            }
         }
     }
 
