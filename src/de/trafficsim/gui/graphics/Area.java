@@ -391,6 +391,9 @@ public class Area extends Pane {
                     Position pos = agc.areaToCanvas(streetView.getStreet().getPosition().add(track.getFrom().getCenterBetween(track.getTo())));
                     agc.gc.fillText(track + "", pos.x, pos.y+10);
                 }
+                agc.gc.setFill(Color.RED);
+                Position pos = agc.areaToCanvas(streetView.getStreet().getPosition());
+                agc.gc.fillText(streetView.getStreet() + "", pos.x, pos.y+10);
             }
         }
         agc.setFill(Color.WHITE);

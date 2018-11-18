@@ -112,9 +112,28 @@ public class GuiController {
         checkShowHitBox.setOnAction(event -> area.setShowHitBox(checkShowHitBox.isSelected()));
         addCarButton.setOnAction(event -> vehicleManager.spawnVehicle());
         checkShowFancyGraphics.setOnAction(event -> area.setFancyGraphics(checkShowFancyGraphics.isSelected()));
-        startButton.setOnAction(event -> startModules());
-        stopButton.setOnAction(event -> stopModules());
-        pauseButton.setOnAction(event -> pauseModules());
+
+        stopButton.setDisable(true);
+        pauseButton.setDisable(true);
+
+        startButton.setOnAction(event -> {
+            startButton.setDisable(true);
+            stopButton.setDisable(false);
+            pauseButton.setDisable(false);
+            startModules();
+        });
+        stopButton.setOnAction(event -> {
+            startButton.setDisable(false);
+            stopButton.setDisable(true);
+            pauseButton.setDisable(true);
+            stopModules();
+        });
+        pauseButton.setOnAction(event -> {
+            startButton.setDisable(false);
+            stopButton.setDisable(false);
+            pauseButton.setDisable(true);
+            pauseModules();
+        });
 
         //set up the cars/sec widgets
         spawnSlider.setValue(vehicleManager.getSpawnPerSecond());

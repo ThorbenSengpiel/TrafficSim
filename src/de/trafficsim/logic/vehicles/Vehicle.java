@@ -32,7 +32,7 @@ public class Vehicle {
     public double color = 0;
 
 
-    public double getLookAheadDist(double lookdistance){
+    public double getLookAheadDist(double lookDistance){
         List<Vehicle> vehicles = currentTrack.getVehiclesOnTrack();
         double minDist = Double.POSITIVE_INFINITY;
         boolean vehFound = false;
@@ -40,7 +40,7 @@ public class Vehicle {
         if (currentTrack.hasStopPoint()) {
             if (currentTrack.isStopPointEnabled()) {
                 double delta = currentTrack.getStopPointPosition() - currentPosInTrack;
-                System.out.println("Stop Point Delta =" + delta + "Min Dist =" + minDist);
+                System.out.println("Stop Point Delta = " + delta + " Min Dist = " + minDist);
                 if(delta > 0){
                     minDist = (minDist > delta ? delta : minDist);
                     vehFound = true;
@@ -87,7 +87,7 @@ public class Vehicle {
         }
         if (!vehFound){
             double accumulator = currentTrack.getLength() - currentPosInTrack;
-            for (int i = currentTrackNumber + 1; i < path.size() && accumulator < lookdistance && !vehFound ; i++) {
+            for (int i = currentTrackNumber + 1; i < path.size() && accumulator < lookDistance && !vehFound ; i++) {
                 Track actTrack = path.get(i);
                 for (Vehicle vehicle : actTrack.getVehiclesOnTrack()) {
                     double distOfVehicleInTrack = vehicle.getCurrentPosInTrack() - VEHICLE_LENGTH/2;
@@ -229,7 +229,7 @@ public class Vehicle {
 
     @Override
     public String toString() {
-        return "T:" + currentTrack.id + "P: " + Util.DOUBLE_FORMAT_0_00.format(currentPosInTrack) + " V:" + Util.DOUBLE_FORMAT_0_00.format(velocity);
+        return "T:" + currentTrack.id + " P: " + Util.DOUBLE_FORMAT_0_00.format(currentPosInTrack) + " V:" + Util.DOUBLE_FORMAT_0_00.format(velocity);
     }
 
 

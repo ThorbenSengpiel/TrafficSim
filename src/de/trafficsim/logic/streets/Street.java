@@ -165,4 +165,9 @@ public abstract class Street {
     public List<Sign> getSignList() {
         return signList;
     }
+
+    @Override
+    public String toString() {
+        return type + " " + position + " " + rotation;
+    }
 }

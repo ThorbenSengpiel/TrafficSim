@@ -9,7 +9,7 @@ import de.trafficsim.util.geometry.Position;
 
 public class StreetCurve extends Street {
     public StreetCurve() {
-        this(Position.ZERO, Direction.SOUTH);
+        this(Position.ZERO, Direction.NORTH);
     }
 
     public StreetCurve(Position position, Direction rotation) {
