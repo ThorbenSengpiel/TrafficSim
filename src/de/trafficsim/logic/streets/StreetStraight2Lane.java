@@ -17,8 +17,8 @@ public class StreetStraight2Lane extends StreetTwoPositions {
     public StreetStraight2Lane(Position position, double length, Direction direction) {
         super(position, StreetType.STRAIGHT_2_LANE, direction);
         this.length = length;
-        addInOutTrack(new TrackStraight(new Position(-2.5, 0).rotate(direction), new Position(-2.5, -length).rotate(direction), this));
-        addInOutTrack(new TrackStraight(new Position(2.5, -length).rotate(direction), new Position(2.5, 0).rotate(direction), this));
+        addInOutTrack(new TrackStraight(new Position(-2.5, -length).rotate(direction), new Position(-2.5, 0).rotate(direction), this));
+        addInOutTrack(new TrackStraight(new Position(2.5, 0).rotate(direction), new Position(2.5, -length).rotate(direction), this));
 
     }
 

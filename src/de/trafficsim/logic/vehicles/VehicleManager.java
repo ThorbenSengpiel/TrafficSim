@@ -1,6 +1,7 @@
 package de.trafficsim.logic.vehicles;
 
 import de.trafficsim.gui.GuiController;
+import de.trafficsim.logic.network.Path;
 import de.trafficsim.logic.network.Pathfinder;
 import de.trafficsim.logic.network.StreetNetworkManager;
 import de.trafficsim.logic.streets.tracks.Track;
@@ -71,8 +72,14 @@ public class VehicleManager {
         /*StreetSpawn spawn = StreetNetworkManager.getInstance().getRandomSpawn();
         addVehicle(new Vehicle(50, Pathfinder.getRandomPath(spawn.getStartTrack(), 20)));*/
         Track spawn = StreetNetworkManager.getInstance().getRandomSpawn();
+        Track destination = StreetNetworkManager.getInstance().getRandomEnd();
         if (spawn != null) {
-            addVehicle(new Vehicle(0, Pathfinder.getPath(spawn, StreetNetworkManager.getInstance().getRandomEnd())));
+            Path path = Pathfinder.getPath(spawn, destination);
+            if (path != null) {
+                addVehicle(new Vehicle(0,path));
+            } else {
+                System.out.println("no Path found between " + spawn + " and " + destination);
+            }
         }
     }
 

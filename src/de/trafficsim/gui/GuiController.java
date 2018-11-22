@@ -216,6 +216,9 @@ public class GuiController {
     }
 
     private void reset() {
+        startButton.setDisable(false);
+        stopButton.setDisable(true);
+        pauseButton.setDisable(true);
         streetNetworkManager.reset();
         vehicleManager.reset();
         area.reset();

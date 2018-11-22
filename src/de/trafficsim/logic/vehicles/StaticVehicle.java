@@ -1,6 +1,7 @@
 package de.trafficsim.logic.vehicles;
 
 import de.trafficsim.gui.GuiController;
+import de.trafficsim.logic.network.Path;
 import de.trafficsim.logic.network.StreetNetworkManager;
 import de.trafficsim.logic.streets.Street;
 import de.trafficsim.logic.streets.tracks.Track;
@@ -11,7 +12,7 @@ import java.util.List;
 public class StaticVehicle extends Vehicle {
 
     public StaticVehicle(double position, int trackID) {
-        super(0, getTrack(trackID));
+        super(0, new Path(getTrack(trackID)));
         currentPosInTrack = position;
 
     }

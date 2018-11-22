@@ -195,7 +195,7 @@ public class StreetNetworkManager {
 
     public void importFile(List<String> strings) {
         for (String line : strings) {
-            System.out.println(line);
+            //System.out.println(line);
             String[] values = line.split(";");
             Street street = null;
             try {

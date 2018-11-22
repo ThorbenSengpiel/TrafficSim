@@ -1,6 +1,7 @@
 package de.trafficsim.logic.vehicles;
 
 import de.trafficsim.gui.graphics.AreaGraphicsContext;
+import de.trafficsim.logic.network.Path;
 import de.trafficsim.logic.streets.tracks.Track;
 import de.trafficsim.util.Util;
 import de.trafficsim.util.geometry.Position;
@@ -25,12 +26,18 @@ public class Vehicle {
 
     protected Track currentTrack;
 
-    protected List<Track> path;
+    protected Path path;
     private int currentTrackNumber;
 
     private boolean active = true;
-    public double color = 0;
+    public double color;
 
+    public Vehicle(double velocity, Path path){
+        this.velocity = velocity;
+        switchTrack(path.get(0));
+        this.path = path;
+        this.color = Math.random();
+    }
 
     public double getLookAheadDist(double lookDistance){
         List<Vehicle> vehicles = currentTrack.getVehiclesOnTrack();
@@ -136,19 +143,6 @@ public class Vehicle {
         }
         //System.out.println("Min Dist =" + minDist);
         return minDist;
-    }
-
-    public Vehicle(double velocity, Track track){
-        this.velocity = velocity;
-        switchTrack(track);
-        color = Math.random();
-    }
-
-    public Vehicle(double velocity, List<Track> path){
-        this.velocity = velocity;
-        switchTrack(path.get(0));
-        this.path = path;
-        this.color = Math.random();
     }
 
     private void accelerate(double delta, double value) {

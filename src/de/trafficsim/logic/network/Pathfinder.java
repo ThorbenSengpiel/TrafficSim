@@ -9,7 +9,7 @@ import java.util.*;
 public class Pathfinder {
 
 
-    public static List<Track> getPath(Track from, Track to){
+    public static Path getPath(Track from, Track to){
         List<Track> path = new LinkedList<Track>();
         Set<Track> visited = new HashSet<>();
         Map<Track,LinkedList<Track>> paths = new HashMap<>();
@@ -46,7 +46,7 @@ public class Pathfinder {
             }
             currentLayer = nextLayer;
         }
-        return path;
+        return new Path(path.toArray(new Track[0]));
     }
   public static List<Track> getRandomPath(Track startTrack, int length){
     List<Track> randomPath = new ArrayList<>();
