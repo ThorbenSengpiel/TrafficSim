@@ -3,17 +3,19 @@ package de.trafficsim.logic.vehicles;
 import de.trafficsim.gui.graphics.AreaGraphicsContext;
 import de.trafficsim.logic.network.Path;
 import de.trafficsim.logic.streets.tracks.Track;
+import de.trafficsim.logic.streets.tracks.TrafficPriorityChecker;
 import de.trafficsim.util.Util;
 import de.trafficsim.util.geometry.Position;
 import javafx.scene.paint.Color;
 
 import java.util.*;
 
+import static de.trafficsim.util.Util.CAR_SIZE;
+import static de.trafficsim.util.Util.VEHICLE_LENGTH;
+
 public class Vehicle {
-    public static final double CAR_SIZE = 3;
     private static final double MIN_DIST_SIDEWAY = CAR_SIZE*2;
-    private static final double VEHICLE_LENGTH = CAR_SIZE*2+2;
-    protected double MIN_DIST = CAR_SIZE + 2;
+    public static final double MIN_DIST = CAR_SIZE + 2;
     protected int LOOKAHEAD_LIMIT = 1;
 
     protected double velocity = 1.0;
@@ -27,11 +29,12 @@ public class Vehicle {
     protected Track currentTrack;
 
     protected Path path;
+
     private int currentTrackNumber;
 
     private boolean active = true;
-    public double color;
 
+    public double color;
     public Vehicle(double velocity, Path path){
         this.velocity = velocity;
         switchTrack(path.get(0));
@@ -39,25 +42,36 @@ public class Vehicle {
         this.color = Math.random();
     }
 
-    public double getLookAheadDist(double lookDistance){
+    public double getLookAheadDist(double position, double lookDistance){
         List<Vehicle> vehicles = currentTrack.getVehiclesOnTrack();
         double minDist = Double.POSITIVE_INFINITY;
-        boolean vehFound = false;
+        boolean obstacleFound = false;
         //Calculate dist to StopPoint on CurrTrack
         if (currentTrack.hasStopPoint()) {
             if (currentTrack.isStopPointEnabled()) {
-                double delta = currentTrack.getStopPointPosition() - currentPosInTrack;
+                double delta = currentTrack.getStopPointPosition() - position;
                 System.out.println("Stop Point Delta = " + delta + " Min Dist = " + minDist);
                 if(delta > 0){
                     minDist = (minDist > delta ? delta : minDist);
-                    vehFound = true;
+                    obstacleFound = true;
+                }
+            }
+        }
+        if (currentTrack.hasPriorityStopPoint()) {
+            TrafficPriorityChecker checker = currentTrack.getPriorityStopPoint();
+            if (!checker.checkFree(this)) {
+                double delta = checker.getStopPointPos() - position;
+                System.out.println("Prio Stop Point Delta = " + delta + " Min Dist = " + minDist);
+                if(delta > 0){
+                    minDist = (minDist > delta ? delta : minDist);
+                    obstacleFound = true;
                 }
             }
         }
         //Calculate dist to vehicles on Curr Track
         for (Vehicle vehicle : vehicles) {
             if (vehicle != this){
-                double delta = vehicle.getCurrentPosInTrack() - VEHICLE_LENGTH/2 - currentPosInTrack ;
+                double delta = vehicle.getCurrentPosInTrack() - VEHICLE_LENGTH/2 - position ;
                 //System.out.println("Delta =" + delta + "Min Dist =" + minDist);
                 if(delta > -VEHICLE_LENGTH /2 && delta <= 0){
                     minDist = 0;
@@ -65,7 +79,7 @@ public class Vehicle {
                 }
                 if(delta > 0){
                     minDist = (minDist > delta ? delta : minDist);
-                    vehFound = true;
+                    obstacleFound = true;
                 }
             }
         }
@@ -85,25 +99,30 @@ public class Vehicle {
                         double dist = posOnPath.distance(posOffPath);
                         //System.out.println("Dist Sideways First Track= " +dist +"Vehicles ="+this);
                         if(dist < MIN_DIST_SIDEWAY){
-                            vehFound = true;
-                            minDist = currentTrack.getLength()-currentPosInTrack;
+                            obstacleFound = true;
+                            minDist = currentTrack.getLength()-position;
                         }
                     }
                 }
             }
         }
-        if (!vehFound){
-            double accumulator = currentTrack.getLength() - currentPosInTrack;
-            for (int i = currentTrackNumber + 1; i < path.size() && accumulator < lookDistance && !vehFound ; i++) {
+        if (!obstacleFound){
+            double accumulator = currentTrack.getLength() - position;
+            for (int i = currentTrackNumber + 1; i < path.size() && accumulator < lookDistance && !obstacleFound ; i++) {
                 Track actTrack = path.get(i);
-                for (Vehicle vehicle : actTrack.getVehiclesOnTrack()) {
-                    double distOfVehicleInTrack = vehicle.getCurrentPosInTrack() - VEHICLE_LENGTH/2;
-                    if (distOfVehicleInTrack + accumulator < minDist){
-                        minDist = distOfVehicleInTrack + accumulator;
+
+                if (actTrack.hasPriorityStopPoint()) {
+                    TrafficPriorityChecker checker = actTrack.getPriorityStopPoint();
+                    if (!checker.checkFree(this)) {
+                        double distOfStopPointInTrack = checker.getStopPointPos();
+                        if (distOfStopPointInTrack + accumulator < minDist){
+                            minDist = distOfStopPointInTrack + accumulator;
+                        }
+                        //Found something. No need to check following Tracks
+                        obstacleFound = true;
                     }
-                    //Found something. No need to check following Tracks
-                    vehFound = true;
                 }
+
                 if (actTrack.hasStopPoint()) {
                     if (actTrack.isStopPointEnabled()) {
                         double distOfStopPointInTrack = actTrack.getStopPointPosition();
@@ -111,10 +130,20 @@ public class Vehicle {
                             minDist = distOfStopPointInTrack + accumulator;
                         }
                         //Found something. No need to check following Tracks
-                        vehFound = true;
+                        obstacleFound = true;
                     }
                 }
-                if(!vehFound){
+
+                for (Vehicle vehicle : actTrack.getVehiclesOnTrack()) {
+                    double distOfVehicleInTrack = vehicle.getCurrentPosInTrack() - VEHICLE_LENGTH/2;
+                    if (distOfVehicleInTrack + accumulator < minDist){
+                        minDist = distOfVehicleInTrack + accumulator;
+                    }
+                    //Found something. No need to check following Tracks
+                    obstacleFound = true;
+                }
+
+                if(!obstacleFound){
                     if (i+1 < path.size()){
                         Track OutTrackInPath = path.get(i+1);
                         for (Track track : actTrack.getOutTrackList()) {
@@ -130,7 +159,7 @@ public class Vehicle {
                                     double dist = posOnPath.distance(posOffPath);
                                     //System.out.println("Dist Sideways = " +dist +"Vehicles ="+this);
                                     if(dist < MIN_DIST_SIDEWAY){
-                                        vehFound = true;
+                                        obstacleFound = true;
                                         minDist=accumulator+actTrack.getLength();
                                     }
                                 }
@@ -163,9 +192,28 @@ public class Vehicle {
         return (velocity * velocity) / (2 * maxDeceleration);
     }
 
+    private double accelerationDistance() {
+        return (maxVelocity*maxVelocity - velocity*velocity) / (2 * maxAcceleration);
+    }
+
+    private double accelerationTime() {
+        return (maxVelocity-velocity) / maxAcceleration;
+    }
+
+    private double getTimeForDist(double distance) {
+        double accDist = accelerationDistance();
+        double accTime = accelerationTime();
+        if (distance < accDist ) {
+            return accTime;
+        } else {
+            double remaningDist = distance - accDist;
+            return accTime+(remaningDist/maxVelocity);
+        }
+    }
+
     public void move(double delta) {
         double brakeDist = brakeDistance();
-        double dist = getLookAheadDist(VEHICLE_LENGTH + brakeDist + 5);
+        double dist = getLookAheadDist(currentPosInTrack, VEHICLE_LENGTH + brakeDist + 5);
         //System.out.println("Dist =" + dist);
         if (velocity * delta + MIN_DIST + brakeDist < dist) {
             accelerate(delta, 1);
@@ -245,5 +293,9 @@ public class Vehicle {
             agc.setStroke(Color.FUCHSIA);
             agc.gc.strokeOval(-brakeDist, -brakeDist, brakeDist*2, brakeDist*2);
         }
+    }
+
+    public int getCurrentTrackNumber() {
+        return currentTrackNumber;
     }
 }

@@ -6,6 +6,7 @@ import de.trafficsim.logic.streets.Street;
 import de.trafficsim.logic.streets.StreetType;
 import de.trafficsim.logic.streets.tracks.Track;
 import de.trafficsim.logic.streets.tracks.TrackStraight;
+import de.trafficsim.logic.streets.tracks.TrafficPriorityChecker;
 import de.trafficsim.util.Direction;
 import de.trafficsim.util.geometry.Position;
 
@@ -40,8 +41,9 @@ public class StreetTJunction extends Street {
         addTrackBetween(inRight, outLeft);
         addTrackBetween(inRight, outBottom);
 
-        addTrackBetween(inBottom, outRight);
+        Track track = addTrackBetween(inBottom, outRight);
         addTrackBetween(inBottom, outLeft);
+        track.setPriorityStopPoint(new TrafficPriorityChecker(track, 5));
     }
 
     @Override

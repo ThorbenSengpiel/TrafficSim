@@ -10,6 +10,8 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.trafficsim.util.Util.VEHICLE_LENGTH;
+
 public abstract class Track {
     protected final Street street;
 
@@ -39,6 +41,7 @@ public abstract class Track {
     protected double stopPointPosition;
     protected boolean stopPointEnabled;
 
+    private TrafficPriorityChecker priorityStopPoint;
 
 
     public Track(Position from, Position to, double length, Street street) {
@@ -98,6 +101,16 @@ public abstract class Track {
             agc.gc.strokeLine(from.x - b, from.y + b, from.x + b, from.y - b);
         }
 
+        if (hasPriorityStopPoint()) {
+            boolean free = true;
+            for (Vehicle vehicle : vehiclesOnTrack) {
+                free &= priorityStopPoint.checkFree(vehicle);
+            }
+            agc.gc.setStroke(free ? Color.LIME : Color.ORANGE);
+            Position p = getPosOnArea(priorityStopPoint.getStopPointPos()).sub(street.getPosition());
+            agc.gc.strokeOval(p.x-1, p.y-1, 2, 2);
+        }
+
         if (!selected) {
             if (vehiclesOnTrack.size() > 0) {
                 agc.gc.setStroke(Color.LIME);
@@ -108,6 +121,7 @@ public abstract class Track {
         } else {
             agc.gc.setStroke(Color.ORANGERED);
         }
+
 
         renderTrack(agc);
         selected = false;
@@ -206,5 +220,61 @@ public abstract class Track {
 
     public boolean isStopPointEnabled() {
         return stopPointEnabled;
+    }
+
+    public TrafficPriorityChecker getPriorityStopPoint() {
+        return priorityStopPoint;
+    }
+
+    public void setPriorityStopPoint(TrafficPriorityChecker priorityStopPoint) {
+        this.priorityStopPoint = priorityStopPoint;
+    }
+
+    public boolean hasPriorityStopPoint() {
+        return priorityStopPoint != null;
+    }
+    
+    public double getDistToNextObstacle(Vehicle vehicle) {
+        double from;
+        if (vehicle.getCurrentTrack() == this) {
+            from = vehicle.getCurrentPosInTrack();
+        } else {
+            from = 0;
+        }
+        double minDist = Double.POSITIVE_INFINITY;
+        if (hasStopPoint()) {
+            if (isStopPointEnabled()) {
+                double delta = getStopPointPosition() - from;
+                System.out.println("Stop Point Delta = " + delta + " Min Dist = " + minDist);
+                if(delta > 0){
+                    minDist = (minDist > delta ? delta : minDist);
+                }
+            }
+        }
+        if (hasPriorityStopPoint()) {
+            TrafficPriorityChecker checker = getPriorityStopPoint();
+            if (!checker.checkFree(vehicle)) {
+                double delta = checker.getStopPointPos() - from;
+                System.out.println("Prio Stop Point Delta = " + delta + " Min Dist = " + minDist);
+                if(delta > 0){
+                    minDist = (minDist > delta ? delta : minDist);
+                }
+            }
+        }
+        //Calculate dist to vehicles on Curr Track
+        for (Vehicle vehicleOnTrack : vehiclesOnTrack) {
+            if (vehicleOnTrack != vehicle){
+                double delta = vehicleOnTrack.getCurrentPosInTrack() - VEHICLE_LENGTH/2 - from ;
+                //System.out.println("Delta =" + delta + "Min Dist =" + minDist);
+                if(delta > -VEHICLE_LENGTH /2 && delta <= 0){
+                    minDist = 0;
+                    //System.out.println("Normally this shouldn't happen");
+                }
+                if(delta > 0){
+                    minDist = (minDist > delta ? delta : minDist);
+                }
+            }
+        }
+        return minDist;
     }
 }
