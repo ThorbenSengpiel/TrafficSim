@@ -4,6 +4,7 @@ import de.trafficsim.gui.views.StreetCrossView;
 import de.trafficsim.gui.views.StreetView;
 import de.trafficsim.logic.streets.tracks.Track;
 import de.trafficsim.logic.streets.tracks.TrackStraight;
+import de.trafficsim.logic.streets.tracks.TrafficPriorityChecker;
 import de.trafficsim.util.geometry.Position;
 
 public class StreetCross extends Street {
@@ -38,21 +39,34 @@ public class StreetCross extends Street {
         outSouth = addOutTrack(new TrackStraight(new Position(-2.5, 12.5), new Position(-2.5, 25), this));
 
         //create tracks inbetween in- and outgoing tracks
-        addTrackBetween(inWest, outNorth);
-        addTrackBetween(inWest, outEast);
-        addTrackBetween(inWest, outSouth);
+        Track track;
+        track = addTrackBetween(inWest, outNorth);
+        track.setPriorityStopPoint(new TrafficPriorityChecker(inWest, 5));
+        track = addTrackBetween(inWest, outEast);
+        track.setPriorityStopPoint(new TrafficPriorityChecker(inWest, 5));
+        track = addTrackBetween(inWest, outSouth);
+        track.setPriorityStopPoint(new TrafficPriorityChecker(inWest, 5));
 
-        addTrackBetween(inEast, outNorth);
-        addTrackBetween(inEast, outSouth);
-        addTrackBetween(inEast, outWest);
+        track = addTrackBetween(inEast, outNorth);
+        track.setPriorityStopPoint(new TrafficPriorityChecker(inWest, 5));
+        track = addTrackBetween(inEast, outSouth);
+        track.setPriorityStopPoint(new TrafficPriorityChecker(inWest, 5));
+        track = addTrackBetween(inEast, outWest);
+        track.setPriorityStopPoint(new TrafficPriorityChecker(inWest, 5));
 
-        addTrackBetween(inNorth, outSouth);
-        addTrackBetween(inNorth, outEast);
-        addTrackBetween(inNorth, outWest);
+        track = addTrackBetween(inNorth, outSouth);
+        track.setPriorityStopPoint(new TrafficPriorityChecker(inWest, 5));
+        track = addTrackBetween(inNorth, outEast);
+        track.setPriorityStopPoint(new TrafficPriorityChecker(inWest, 5));
+        track = addTrackBetween(inNorth, outWest);
+        track.setPriorityStopPoint(new TrafficPriorityChecker(inWest, 5));
 
-        addTrackBetween(inSouth, outNorth);
-        addTrackBetween(inSouth, outEast);
-        addTrackBetween(inSouth, outWest);
+        track = addTrackBetween(inSouth, outNorth);
+        track.setPriorityStopPoint(new TrafficPriorityChecker(inWest, 5));
+        track = addTrackBetween(inSouth, outEast);
+        track.setPriorityStopPoint(new TrafficPriorityChecker(inWest, 5));
+        track = addTrackBetween(inSouth, outWest);
+        track.setPriorityStopPoint(new TrafficPriorityChecker(inWest, 5));
 
         /*addTrackBetween(outNorth, inNorth);
         addTrackBetween(outEast, inEast);

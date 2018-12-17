@@ -5,6 +5,7 @@ import de.trafficsim.gui.views.StreetView;
 import de.trafficsim.logic.streets.tracks.Track;
 import de.trafficsim.logic.streets.tracks.TrackBezier;
 import de.trafficsim.logic.streets.tracks.TrackCurve;
+import de.trafficsim.logic.streets.tracks.TrafficPriorityChecker;
 import de.trafficsim.util.Direction;
 import de.trafficsim.util.geometry.Position;
 
@@ -62,6 +63,11 @@ public class StreetRoundAbout extends Street {
         n1.connectOutToInOf(w0);
         inNorth.connectOutToInOf(n1);
         e1.connectOutToInOf(outNorth);
+
+        inWest.setPriorityStopPoint(new TrafficPriorityChecker(inWest, 10));
+        inEast.setPriorityStopPoint(new TrafficPriorityChecker(inEast, 10));
+        inSouth.setPriorityStopPoint(new TrafficPriorityChecker(inSouth, 10));
+        inNorth.setPriorityStopPoint(new TrafficPriorityChecker(inNorth, 10));
 
 
     }

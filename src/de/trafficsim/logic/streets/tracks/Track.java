@@ -277,4 +277,38 @@ public abstract class Track {
         }
         return minDist;
     }
+
+    public double getDistToNextVehicle(Vehicle vehicle) {
+        double from;
+        if (vehicle.getCurrentTrack() == this) {
+            from = vehicle.getCurrentPosInTrack();
+        } else {
+            from = 0;
+        }
+        double minDist = Double.POSITIVE_INFINITY;
+        if (hasStopPoint()) {
+            if (isStopPointEnabled()) {
+                double delta = getStopPointPosition() - from;
+                System.out.println("Stop Point Delta = " + delta + " Min Dist = " + minDist);
+                if(delta > 0){
+                    minDist = (minDist > delta ? delta : minDist);
+                }
+            }
+        }
+        //Calculate dist to vehicles on Curr Track
+        for (Vehicle vehicleOnTrack : vehiclesOnTrack) {
+            if (vehicleOnTrack != vehicle){
+                double delta = vehicleOnTrack.getCurrentPosInTrack() - VEHICLE_LENGTH/2 - from ;
+                //System.out.println("Delta =" + delta + "Min Dist =" + minDist);
+                if(delta > -VEHICLE_LENGTH /2 && delta <= 0){
+                    minDist = 0;
+                    //System.out.println("Normally this shouldn't happen");
+                }
+                if(delta > 0){
+                    minDist = (minDist > delta ? delta : minDist);
+                }
+            }
+        }
+        return minDist;
+    }
 }

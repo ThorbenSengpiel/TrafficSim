@@ -34,15 +34,18 @@ public class StreetTJunction extends Street {
         inBottom = addInTrack(new TrackStraight(createPosition(2.5, 25), createPosition(2.5, 12.5), this));
         outBottom = addOutTrack(new TrackStraight(createPosition(-2.5, 12.5), createPosition(-2.5, 25), this));
 
+        Track track;
         //create tracks inbetween in- and outgoing tracks
         addTrackBetween(inLeft, outRight);
-        addTrackBetween(inLeft, outBottom);
+        track = addTrackBetween(inLeft, outBottom);
+        track.setPriorityStopPoint(new TrafficPriorityChecker(track, 5));
 
         addTrackBetween(inRight, outLeft);
         addTrackBetween(inRight, outBottom);
 
-        Track track = addTrackBetween(inBottom, outRight);
-        addTrackBetween(inBottom, outLeft);
+        track = addTrackBetween(inBottom, outRight);
+        track.setPriorityStopPoint(new TrafficPriorityChecker(track, 5));
+        track = addTrackBetween(inBottom, outLeft);
         track.setPriorityStopPoint(new TrafficPriorityChecker(track, 5));
     }
 

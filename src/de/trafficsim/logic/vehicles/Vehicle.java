@@ -24,7 +24,7 @@ public class Vehicle {
     private final double maxAcceleration = 7; // m/s²
     private final double maxDeceleration = 10; // m/s²
 
-    private final double maxVelocity = Util.kmhToMs(50); // m/s
+    public final double maxVelocity = Util.kmhToMs(50); // m/s
 
     protected Track currentTrack;
 
@@ -200,7 +200,7 @@ public class Vehicle {
         return (maxVelocity-velocity) / maxAcceleration;
     }
 
-    private double getTimeForDist(double distance) {
+    public double getTimeForDist(double distance) {
         double accDist = accelerationDistance();
         double accTime = accelerationTime();
         if (distance < accDist ) {
@@ -297,5 +297,28 @@ public class Vehicle {
 
     public int getCurrentTrackNumber() {
         return currentTrackNumber;
+    }
+
+    public double getVelocity() {
+        return velocity;
+    }
+
+    public double distanceToTrack(Track target, double maxDist) {
+        double dist = 0;
+        for (int i = currentTrackNumber; i < path.size(); i++) {
+            Track track = path.get(currentTrackNumber);
+            if (track == target) {
+                return dist;
+            }
+            if (i == currentTrackNumber) {
+                dist += track.getLength()-currentPosInTrack;
+            } else {
+                dist += track.getLength();
+            }
+            if (dist > maxDist) {
+                return Double.POSITIVE_INFINITY;
+            }
+        }
+        return dist;
     }
 }
