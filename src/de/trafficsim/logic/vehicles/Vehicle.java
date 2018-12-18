@@ -41,7 +41,6 @@ public class Vehicle {
         this.path = path;
         this.color = Math.random();
     }
-
     public double getLookAheadDist(double position, double lookDistance){
         List<Vehicle> vehicles = currentTrack.getVehiclesOnTrack();
         double minDist = Double.POSITIVE_INFINITY;
@@ -173,7 +172,6 @@ public class Vehicle {
         //System.out.println("Min Dist =" + minDist);
         return minDist;
     }
-
     private void accelerate(double delta, double value) {
         velocity += delta * maxAcceleration * value;
         if (velocity >= maxVelocity) {
@@ -304,10 +302,13 @@ public class Vehicle {
     }
 
     public double distanceToTrack(Track target, double maxDist) {
+        target.select(Color.PURPLE);
         double dist = 0;
         for (int i = currentTrackNumber; i < path.size(); i++) {
-            Track track = path.get(currentTrackNumber);
+            Track track = path.get(i);
+            track.select(Color.LIGHTBLUE);
             if (track == target) {
+                track.select(Color.LIME);
                 return dist;
             }
             if (i == currentTrackNumber) {
@@ -315,10 +316,17 @@ public class Vehicle {
             } else {
                 dist += track.getLength();
             }
+            System.out.println(dist);
             if (dist > maxDist) {
                 return Double.POSITIVE_INFINITY;
             }
         }
         return dist;
     }
+
+
+
+    public List<Vehicle> debug;
+    public Color debugColor;
+    public TrafficPriorityChecker debugPoint;
 }

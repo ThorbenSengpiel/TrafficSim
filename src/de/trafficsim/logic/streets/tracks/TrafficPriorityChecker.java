@@ -1,7 +1,9 @@
 package de.trafficsim.logic.streets.tracks;
 
+import de.trafficsim.gui.graphics.Area;
 import de.trafficsim.logic.vehicles.Vehicle;
 import de.trafficsim.util.Util;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +23,16 @@ public class TrafficPriorityChecker {
     public boolean checkFree(Vehicle vehicle) {
         if (track.getVehiclesOnTrack().contains(vehicle)) {
             if (track.getVehiclesOnTrack().size() > 1) {
+                vehicle.debugPoint = this;
+                vehicle.debugColor = Color.LIME;
+                vehicle.debug = track.getVehiclesOnTrack();
                 return false;
             }
         } else {
             if (track.getVehiclesOnTrack().size() > 0) {
+                vehicle.debugPoint = this;
+                vehicle.debugColor = Color.LIME;
+                vehicle.debug = track.getVehiclesOnTrack();
                 return false;
             }
         }
@@ -40,25 +48,38 @@ public class TrafficPriorityChecker {
             }
             double lookDist = time*vehicle.maxVelocity;
             List<Vehicle> vehicles = checkBack(lookDist);
-            double maxDist = 0;
-            Vehicle maxVehicle = null;
+            if (vehicles.isEmpty()) {
+                return true;
+            }
+            //double maxDist = 0;
+            //Vehicle maxVehicle = null;
+            boolean ok = true;
             for (Vehicle v : vehicles) {
+                double distToNextTack = v.distanceToTrack(nextTrack, lookDist);
                 double d = v.getVelocity()*time;
-                if (d > maxDist) {
-                    maxDist = d;
-                    maxVehicle = v;
+                System.out.println("maxDist: " + lookDist + " " + distToNextTack + " " + d);
+                if (d > distToNextTack) {
+                    ok = false;
+                    break;
                 }
             }
-            if (maxVehicle == null) {
-                return true;
-            }
 
-            if (maxDist < maxVehicle.distanceToTrack(track, maxDist)) {
-                return true;
+            if (ok) {
+                vehicle.debugPoint = this;
+                vehicle.debugColor = Color.BLACK;
+                vehicle.debug = vehicles;
+            } else {
+                vehicle.debugPoint = this;
+                vehicle.debugColor = Color.LIGHTBLUE;
+                vehicle.debug = vehicles;
             }
+            return ok;
+        } else {
+            vehicle.debugPoint = this;
+            vehicle.debugColor = Color.RED;
+            vehicle.debug = nextTrack.getVehiclesOnTrack();
             return false;
         }
-        return false;
 
     }
 
@@ -97,4 +118,7 @@ public class TrafficPriorityChecker {
         return stopPointPos;
     }
 
+    public Track getTrack() {
+        return track;
+    }
 }

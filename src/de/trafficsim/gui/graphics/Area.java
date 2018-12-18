@@ -273,6 +273,17 @@ public class Area extends Pane {
             agc.gc.translate(-position.x, -position.y);
         }
         agc.setEffect(null);
+        if (selectedVehicle != null && selectedVehicle.debug != null) {
+            for (Vehicle v : selectedVehicle.debug) {
+                agc.setStroke(selectedVehicle.debugColor);
+                agc.gc.setLineWidth(2);
+                Position p1 = v.getPosition();
+                Position posOnArea = selectedVehicle.debugPoint.getTrack().getPosOnArea(selectedVehicle.debugPoint.getStopPointPos());
+                agc.gc.strokeLine(posOnArea.x, posOnArea.y, p1.x, p1.y);
+            }
+            selectedVehicle.debug = null;
+            selectedVehicle.debugPoint = null;
+        }
     }
 
 
@@ -319,7 +330,9 @@ public class Area extends Pane {
     private void drawTracks(AreaGraphicsContext agc, List<StreetView> streetViews) {
         if (selectedVehicle != null) {
             for (Track track : selectedVehicle.getPath()) {
-                track.select();
+                if (!track.isSelected()) {
+                    track.select();
+                }
             }
         }
         for (StreetView view : streetViews) {

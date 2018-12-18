@@ -119,7 +119,7 @@ public abstract class Track {
                 agc.gc.setStroke(Color.CYAN.deriveColor(0, 1, 1, 0.2));
             }
         } else {
-            agc.gc.setStroke(Color.ORANGERED);
+            agc.gc.setStroke(debugColor);
         }
 
 
@@ -185,8 +185,16 @@ public abstract class Track {
         return vehiclesOnTrack;
     }
 
+
+    private Color debugColor = Color.ORANGERED;
     public void select() {
         selected = true;
+        debugColor = Color.ORANGERED;
+    }
+
+    public void select(Color color) {
+        selected = true;
+        debugColor = color;
     }
 
     @Override
