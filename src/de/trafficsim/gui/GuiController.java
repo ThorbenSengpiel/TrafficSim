@@ -155,6 +155,9 @@ public class GuiController {
         //set up speed widgets
         speedSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             speedFactor = (float) Math.pow(2, Math.round(newValue.doubleValue()));
+            if (speedFactor < 0.2) {
+                speedFactor = 0;
+            }
             speedLabel.setText(speedFactor+"x");
         });
 

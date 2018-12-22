@@ -14,7 +14,7 @@ import static de.trafficsim.util.Util.CAR_SIZE;
 import static de.trafficsim.util.Util.VEHICLE_LENGTH;
 
 public class Vehicle {
-    private static final double MIN_DIST_SIDEWAY = CAR_SIZE*2;
+    private static final double MIN_DIST_SIDEWAY = CAR_SIZE*3;
     public static final double MIN_DIST = CAR_SIZE + 2;
     protected int LOOKAHEAD_LIMIT = 1;
 
@@ -41,7 +41,11 @@ public class Vehicle {
         this.path = path;
         this.color = Math.random();
     }
+
+    String debugBrakeReason = "";
+
     public double getLookAheadDist(double position, double lookDistance){
+        debugBrakeReason = "";
         List<Vehicle> vehicles = currentTrack.getVehiclesOnTrack();
         double minDist = Double.POSITIVE_INFINITY;
         boolean obstacleFound = false;
@@ -52,6 +56,7 @@ public class Vehicle {
                 System.out.println("Stop Point Delta = " + delta + " Min Dist = " + minDist);
                 if(delta > 0){
                     minDist = (minDist > delta ? delta : minDist);
+                    debugBrakeReason = "Stop ";
                     obstacleFound = true;
                 }
             }
@@ -63,6 +68,7 @@ public class Vehicle {
                 System.out.println("Prio Stop Point Delta = " + delta + " Min Dist = " + minDist);
                 if(delta > 0){
                     minDist = (minDist > delta ? delta : minDist);
+                    debugBrakeReason += "Prio ";
                     obstacleFound = true;
                 }
             }
@@ -70,14 +76,18 @@ public class Vehicle {
         //Calculate dist to vehicles on Curr Track
         for (Vehicle vehicle : vehicles) {
             if (vehicle != this){
-                double delta = vehicle.getCurrentPosInTrack() - VEHICLE_LENGTH/2 - position ;
+                double delta = vehicle.getCurrentPosInTrack() - VEHICLE_LENGTH/2 - position;
                 //System.out.println("Delta =" + delta + "Min Dist =" + minDist);
                 if(delta > -VEHICLE_LENGTH /2 && delta <= 0){
                     minDist = 0;
                     //System.out.println("Normally this shouldn't happen");
                 }
                 if(delta > 0){
-                    minDist = (minDist > delta ? delta : minDist);
+                    if (minDist > delta) {
+                        minDist = delta;
+                    }
+
+                    debugBrakeReason += "Vehicle ";
                     obstacleFound = true;
                 }
             }
@@ -91,15 +101,29 @@ public class Vehicle {
                     if (!track.getVehiclesOnTrack().isEmpty()){
                         double minDistInOtherTrack = Double.POSITIVE_INFINITY;
                         for (Vehicle vehicle : track.getVehiclesOnTrack()) {
-                            minDistInOtherTrack = (vehicle.currentPosInTrack - VEHICLE_LENGTH/2 < minDistInOtherTrack ? vehicle.currentPosInTrack : minDistInOtherTrack);
+                            if (vehicle.currentPosInTrack - VEHICLE_LENGTH/2 < minDistInOtherTrack) {
+                                minDistInOtherTrack = vehicle.currentPosInTrack;
+                            }
+                        }
+                        if (minDistInOtherTrack < CAR_SIZE+2) {
+                            double d = ((currentTrack.getLength() - position) + minDistInOtherTrack) - (VEHICLE_LENGTH/2);
+                            if (d < minDist) {
+                                minDist = d;
+                                debugBrakeReason += "SideWayDist ";
+                                obstacleFound = true;
+                            }
                         }
                         Position posOnPath = nextTrack.getPosOnArea(minDistInOtherTrack);
                         Position posOffPath = track.getPosOnArea(minDistInOtherTrack);
                         double dist = posOnPath.distance(posOffPath);
                         //System.out.println("Dist Sideways First Track= " +dist +"Vehicles ="+this);
                         if(dist < MIN_DIST_SIDEWAY){
-                            obstacleFound = true;
-                            minDist = currentTrack.getLength()-position;
+                            double d = (currentTrack.getLength()-position) + CAR_SIZE + 1;
+                            if (d < minDist) {
+                                debugBrakeReason += "SideWay ";
+                                obstacleFound = true;
+                                minDist = d;
+                            }
                         }
                     }
                 }
@@ -118,6 +142,7 @@ public class Vehicle {
                             minDist = distOfStopPointInTrack + accumulator;
                         }
                         //Found something. No need to check following Tracks
+                        debugBrakeReason += "NextPrio ";
                         obstacleFound = true;
                     }
                 }
@@ -129,6 +154,7 @@ public class Vehicle {
                             minDist = distOfStopPointInTrack + accumulator;
                         }
                         //Found something. No need to check following Tracks
+                        debugBrakeReason += "NextStop ";
                         obstacleFound = true;
                     }
                 }
@@ -139,6 +165,7 @@ public class Vehicle {
                         minDist = distOfVehicleInTrack + accumulator;
                     }
                     //Found something. No need to check following Tracks
+                    debugBrakeReason += "NextVehicle ";
                     obstacleFound = true;
                 }
 
@@ -151,15 +178,29 @@ public class Vehicle {
                                 if (!track.getVehiclesOnTrack().isEmpty()){
                                     double minDistInOtherTrack = Double.POSITIVE_INFINITY;
                                     for (Vehicle vehicle : track.getVehiclesOnTrack()) {
-                                        minDistInOtherTrack = (vehicle.currentPosInTrack < minDistInOtherTrack ? vehicle.currentPosInTrack : minDistInOtherTrack);
+                                        if (vehicle.currentPosInTrack < minDistInOtherTrack) {
+                                            minDistInOtherTrack = vehicle.currentPosInTrack;
+                                        }
                                     }
-                                    Position posOnPath = OutTrackInPath.getPosOnArea(minDistInOtherTrack);
+                                    if (minDistInOtherTrack < CAR_SIZE+2) {
+                                        double d = (accumulator + minDistInOtherTrack + actTrack.getLength()) - (VEHICLE_LENGTH/2);
+                                        if (d < minDist) {
+                                            minDist = d;
+                                            debugBrakeReason += "SideWayDist ";
+                                            obstacleFound = true;
+                                        }
+                                    }
+                                    Position posOnPath = actTrack.getPosOnArea(minDistInOtherTrack);
                                     Position posOffPath = track.getPosOnArea(minDistInOtherTrack);
                                     double dist = posOnPath.distance(posOffPath);
-                                    //System.out.println("Dist Sideways = " +dist +"Vehicles ="+this);
+                                    //System.out.println("Dist Sideways First Track= " +dist +"Vehicles ="+this);
                                     if(dist < MIN_DIST_SIDEWAY){
-                                        obstacleFound = true;
-                                        minDist=accumulator+actTrack.getLength();
+                                        double d = accumulator+actTrack.getLength() + CAR_SIZE + 1;
+                                        if (d < minDist) {
+                                            debugBrakeReason += "SideWay ";
+                                            obstacleFound = true;
+                                            minDist = d;
+                                        }
                                     }
                                 }
                             }
@@ -209,11 +250,16 @@ public class Vehicle {
         }
     }
 
+    public double debugLastLookDist = 0;
+
+    public boolean braking = false;
+
     public void move(double delta) {
         double brakeDist = brakeDistance();
         double dist = getLookAheadDist(currentPosInTrack, VEHICLE_LENGTH + brakeDist + 5);
+        debugLastLookDist = dist;
         //System.out.println("Dist =" + dist);
-        if (velocity * delta + MIN_DIST + brakeDist < dist) {
+        if (!(braking = !(velocity * delta + MIN_DIST + brakeDist < dist))) {
             accelerate(delta, 1);
         } else {
             brake(delta, 1);
@@ -269,13 +315,14 @@ public class Vehicle {
 
     @Override
     public String toString() {
-        return "T:" + currentTrack.id + " P: " + Util.DOUBLE_FORMAT_0_00.format(currentPosInTrack) + " V:" + Util.DOUBLE_FORMAT_0_00.format(velocity);
+        //return "T:" + currentTrack.id + " P: " + Util.DOUBLE_FORMAT_0_00.format(currentPosInTrack) + " V:" + Util.DOUBLE_FORMAT_0_00.format(velocity);
+        return "T:" + currentTrack.id + " -> " + debugBrakeReason;
     }
 
 
 
     public void draw(AreaGraphicsContext agc, boolean selected) {
-        agc.setFill(Color.hsb(color*360, 1, 1, 1));
+        agc.setFill(Color.hsb(color*360, braking ? 1 : 0.4, braking ? 1 : 0.4, 1));
         agc.gc.fillRoundRect(-CAR_SIZE, -(CAR_SIZE /2), CAR_SIZE *2, CAR_SIZE, CAR_SIZE / 2, CAR_SIZE / 2);
         if (selected) {
             agc.gc.setLineWidth(3*agc.scale);
@@ -285,6 +332,13 @@ public class Vehicle {
             agc.gc.setLineWidth(agc.scale*1.5);
             agc.setStroke(Color.WHITE);
             agc.gc.strokeOval(-lookRadius, -lookRadius, lookRadius*2, lookRadius*2);
+
+
+            if (debugLastLookDist < 100000) {
+                agc.gc.setLineWidth(agc.scale*1.5);
+                agc.setStroke(Color.RED);
+                agc.gc.strokeOval(-debugLastLookDist, -debugLastLookDist, debugLastLookDist*2, debugLastLookDist*2);
+            }
 
 
             double brakeDist = brakeDistance();
