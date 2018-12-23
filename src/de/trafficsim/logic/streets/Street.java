@@ -27,6 +27,8 @@ public abstract class Street {
 
     private List<TrafficPriorityChecker> prioStopPoints = new ArrayList<>();
 
+    protected int stoppedCountForDeadLock = 0;
+
     public Street(Position position, StreetType type, Direction rotation) {
         this.rotation = rotation;
         this.position = position;
@@ -185,18 +187,19 @@ public abstract class Street {
             return;
         }
         System.out.println("Check");
-        boolean deadLock = true;
+        int stoppedCount = 0;
         for (TrafficPriorityChecker prioStopPoint : prioStopPoints) {
             //TODO
             prioStopPoint.clearLetThroughs();
             Vehicle currentVehicle = prioStopPoint.getCurrentVehicle();
-            if (currentVehicle == null || currentVehicle.getVelocity() > 0) {
-                deadLock = false;
+            if (currentVehicle != null && currentVehicle.getVelocity() <= 0) {
+                stoppedCount++;
             }
         }
-        if (deadLock) {
+        if (stoppedCount >= stoppedCountForDeadLock) {
             TrafficPriorityChecker selected = prioStopPoints.get((int) (Math.random() * prioStopPoints.size()));
             selected.letThrough();
         }
     }
+
 }

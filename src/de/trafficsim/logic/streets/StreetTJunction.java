@@ -48,6 +48,8 @@ public class StreetTJunction extends Street {
         bottomToRight.setPriorityStopPoint(new TrafficPriorityChecker(bottomToRight, 5, new TrackAndPosition(leftToBottom, 14.75)));
         leftToBottom.setPriorityStopPoint(new TrafficPriorityChecker(leftToBottom, 5, new TrackAndPosition(rightToLeft, 13.75)));
         rightToLeft.setPriorityStopPoint(new TrafficPriorityChecker(rightToLeft, 5, new TrackAndPosition(bottomToRight, 11)));
+
+        stoppedCountForDeadLock = 3;
     }
 
     @Override

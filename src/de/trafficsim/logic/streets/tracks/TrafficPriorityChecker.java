@@ -69,7 +69,6 @@ public class TrafficPriorityChecker {
             for (Vehicle v : vehicles) {
                 double distToNextTrack = v.distanceToTrack(v.getCurrentTrack(), nextTrack, lookDist) - Util.VEHICLE_LENGTH * 2 ;
                 double d = v.maxVelocity*time;
-                System.out.println("maxDist: " + lookDist + " " + distToNextTrack + " " + d);
                 if (distToNextTrack < Util.VEHICLE_LENGTH*2 || d > distToNextTrack) {
                     ok = false;
                     break;
@@ -135,7 +134,10 @@ public class TrafficPriorityChecker {
         List<Vehicle> vehicleList = new ArrayList<>();
         for (Track t : start.getOutTrackList().get(0).getInTrackList()) {
             if (t != start) {
-                checkBack(vehicleList, t, maxCheckDist);
+                //TODO ?????????????
+                if (track.getOutDir().isRightOf(t.getInDir())) {
+                    checkBack(vehicleList, t, maxCheckDist);
+                }
             }
         }
         return vehicleList;
