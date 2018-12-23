@@ -7,6 +7,7 @@ import de.trafficsim.logic.streets.tracks.TrafficPriorityChecker;
 import de.trafficsim.util.Util;
 import de.trafficsim.util.geometry.Position;
 import javafx.scene.paint.Color;
+import javafx.util.Pair;
 
 import java.util.*;
 
@@ -18,6 +19,7 @@ public class Vehicle {
     public static final double MIN_DIST = CAR_SIZE + 2;
     protected int LOOKAHEAD_LIMIT = 1;
 
+    private boolean braking = false;
     protected double velocity = 1.0;
     protected double currentPosInTrack = 0;
 
@@ -35,13 +37,13 @@ public class Vehicle {
     private boolean active = true;
 
     public double color;
+
     public Vehicle(double velocity, Path path){
         this.velocity = velocity;
         switchTrack(path.get(0));
         this.path = path;
         this.color = Math.random();
     }
-
     String debugBrakeReason = "";
 
     public double getLookAheadDist(double position, double lookDistance){
@@ -49,30 +51,6 @@ public class Vehicle {
         List<Vehicle> vehicles = currentTrack.getVehiclesOnTrack();
         double minDist = Double.POSITIVE_INFINITY;
         boolean obstacleFound = false;
-        //Calculate dist to StopPoint on CurrTrack
-        if (currentTrack.hasStopPoint()) {
-            if (currentTrack.isStopPointEnabled()) {
-                double delta = currentTrack.getStopPointPosition() - position;
-                System.out.println("Stop Point Delta = " + delta + " Min Dist = " + minDist);
-                if(delta > 0){
-                    minDist = (minDist > delta ? delta : minDist);
-                    debugBrakeReason = "Stop ";
-                    obstacleFound = true;
-                }
-            }
-        }
-        if (currentTrack.hasPriorityStopPoint()) {
-            TrafficPriorityChecker checker = currentTrack.getPriorityStopPoint();
-            if (!checker.checkFree(this)) {
-                double delta = checker.getStopPointPos() - position;
-                System.out.println("Prio Stop Point Delta = " + delta + " Min Dist = " + minDist);
-                if(delta > 0){
-                    minDist = (minDist > delta ? delta : minDist);
-                    debugBrakeReason += "Prio ";
-                    obstacleFound = true;
-                }
-            }
-        }
         //Calculate dist to vehicles on Curr Track
         for (Vehicle vehicle : vehicles) {
             if (vehicle != this){
@@ -129,11 +107,55 @@ public class Vehicle {
                 }
             }
         }
+        //Calculate dist to StopPoint on CurrTrack
+        if (currentTrack.hasStopPoint()) {
+            if (currentTrack.isStopPointEnabled()) {
+                double delta = currentTrack.getStopPointPosition() - position;
+                System.out.println("Stop Point Delta = " + delta + " Min Dist = " + minDist);
+                if(delta > 0){
+                    minDist = (minDist > delta ? delta : minDist);
+                    debugBrakeReason = "Stop ";
+                    obstacleFound = true;
+                }
+            }
+        }
+        if (currentTrack.hasPriorityStopPoint()) {
+            TrafficPriorityChecker checker = currentTrack.getPriorityStopPoint();
+            if (!checker.checkFree(this)) {
+                double delta = checker.getStopPointPos() - position;
+                System.out.println("Prio Stop Point Delta = " + delta + " Min Dist = " + minDist);
+                if(delta > 0){
+                    minDist = (minDist > delta ? delta : minDist);
+                    debugBrakeReason += "Prio ";
+                    obstacleFound = true;
+                }
+            }
+        }
         if (!obstacleFound){
             double accumulator = currentTrack.getLength() - position;
             for (int i = currentTrackNumber + 1; i < path.size() && accumulator < lookDistance && !obstacleFound ; i++) {
                 Track actTrack = path.get(i);
 
+                for (Vehicle vehicle : actTrack.getVehiclesOnTrack()) {
+                    double distOfVehicleInTrack = vehicle.getCurrentPosInTrack() - VEHICLE_LENGTH/2;
+                    if (distOfVehicleInTrack + accumulator < minDist){
+                        minDist = distOfVehicleInTrack + accumulator;
+                    }
+                    //Found something. No need to check following Tracks
+                    debugBrakeReason += "NextVehicle ";
+                    obstacleFound = true;
+                }
+                if (actTrack.hasStopPoint()) {
+                    if (actTrack.isStopPointEnabled()) {
+                        double distOfStopPointInTrack = actTrack.getStopPointPosition();
+                        if (distOfStopPointInTrack + accumulator < minDist){
+                            minDist = distOfStopPointInTrack + accumulator;
+                        }
+                        //Found something. No need to check following Tracks
+                        debugBrakeReason += "NextStop ";
+                        obstacleFound = true;
+                    }
+                }
                 if (actTrack.hasPriorityStopPoint()) {
                     TrafficPriorityChecker checker = actTrack.getPriorityStopPoint();
                     if (!checker.checkFree(this)) {
@@ -146,29 +168,6 @@ public class Vehicle {
                         obstacleFound = true;
                     }
                 }
-
-                if (actTrack.hasStopPoint()) {
-                    if (actTrack.isStopPointEnabled()) {
-                        double distOfStopPointInTrack = actTrack.getStopPointPosition();
-                        if (distOfStopPointInTrack + accumulator < minDist){
-                            minDist = distOfStopPointInTrack + accumulator;
-                        }
-                        //Found something. No need to check following Tracks
-                        debugBrakeReason += "NextStop ";
-                        obstacleFound = true;
-                    }
-                }
-
-                for (Vehicle vehicle : actTrack.getVehiclesOnTrack()) {
-                    double distOfVehicleInTrack = vehicle.getCurrentPosInTrack() - VEHICLE_LENGTH/2;
-                    if (distOfVehicleInTrack + accumulator < minDist){
-                        minDist = distOfVehicleInTrack + accumulator;
-                    }
-                    //Found something. No need to check following Tracks
-                    debugBrakeReason += "NextVehicle ";
-                    obstacleFound = true;
-                }
-
                 if(!obstacleFound){
                     if (i+1 < path.size()){
                         Track OutTrackInPath = path.get(i+1);
@@ -213,6 +212,7 @@ public class Vehicle {
         //System.out.println("Min Dist =" + minDist);
         return minDist;
     }
+
     private void accelerate(double delta, double value) {
         velocity += delta * maxAcceleration * value;
         if (velocity >= maxVelocity) {
@@ -249,10 +249,8 @@ public class Vehicle {
             return accTime+(remaningDist/maxVelocity);
         }
     }
-
     public double debugLastLookDist = 0;
 
-    public boolean braking = false;
 
     public void move(double delta) {
         double brakeDist = brakeDistance();
@@ -355,14 +353,15 @@ public class Vehicle {
         return velocity;
     }
 
-    public double distanceToTrack(Track target, double maxDist) {
-        target.select(Color.PURPLE);
+    /*public double distanceToTrack(Track target, double maxDist) {
+
+        //target.select(Color.PURPLE);
         double dist = 0;
         for (int i = currentTrackNumber; i < path.size(); i++) {
             Track track = path.get(i);
-            track.select(Color.LIGHTBLUE);
+            //track.select(Color.LIGHTBLUE);
             if (track == target) {
-                track.select(Color.LIME);
+                //track.select(Color.LIME);
                 return dist;
             }
             if (i == currentTrackNumber) {
@@ -376,11 +375,43 @@ public class Vehicle {
             }
         }
         return dist;
+    }*/
+
+    public double distanceToTrack(Track track, Track target, double maxDist) {
+        //track.select(Color.RED.deriveColor(maxDist*3, 1, 1, 1));
+        double length;
+        if (track == currentTrack) {
+            length = track.getLength()-getCurrentPosInTrack();
+        } else {
+            length = track.getLength();
+        }
+        if (track == target) {
+            //track.select(Color.WHITE);
+            return 0;
+        } else {
+            if (track.getLength() < maxDist) {
+                double minDist = Double.POSITIVE_INFINITY;
+                for (Track t0 : track.getOutTrackList()) {
+                    double dist = distanceToTrack(t0, target, maxDist - length);
+                    if (dist < minDist) {
+                        minDist = dist;
+                    }
+                }
+                return length + minDist;
+            } else {
+                return Double.POSITIVE_INFINITY;
+            }
+        }
     }
 
 
 
-    public List<Vehicle> debug;
+
+    public List<Pair<Vehicle, Color>> debug;
     public Color debugColor;
     public TrafficPriorityChecker debugPoint;
+
+    public boolean isBraking() {
+        return braking;
+    }
 }

@@ -24,6 +24,7 @@ public class StreetNetworkManager {
     public void update(double delta) {
         if (running){
             for (Street street : streetList) {
+                street.begin();
                 street.update(delta);
             }
         }
@@ -239,5 +240,11 @@ public class StreetNetworkManager {
             changed = false;
         }
         return trackCount;
+    }
+
+    public void solveDeadLocks(double scaledDelta) {
+        for (Street street : streetList) {
+            street.solveDeadLocks();
+        }
     }
 }

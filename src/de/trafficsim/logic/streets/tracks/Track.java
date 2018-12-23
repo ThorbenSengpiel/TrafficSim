@@ -109,6 +109,12 @@ public abstract class Track {
             agc.gc.setStroke(free ? Color.LIME : Color.ORANGE);
             Position p = getPosOnArea(priorityStopPoint.getStopPointPos()).sub(street.getPosition());
             agc.gc.strokeOval(p.x-1, p.y-1, 2, 2);
+
+            agc.gc.setStroke(Color.MAGENTA);
+            for (TrackAndPosition crossTrack : priorityStopPoint.getCrossTracks()) {
+                Position pt = crossTrack.getTrack().getPosOnArea(crossTrack.getPosition()).sub(street.getPosition());
+                agc.gc.strokeOval(pt.x-1, pt.y-1, 2, 2);
+            }
         }
 
         if (!selected) {
@@ -236,6 +242,7 @@ public abstract class Track {
 
     public void setPriorityStopPoint(TrafficPriorityChecker priorityStopPoint) {
         this.priorityStopPoint = priorityStopPoint;
+        street.addPriorityStopPoint(priorityStopPoint);
     }
 
     public boolean hasPriorityStopPoint() {

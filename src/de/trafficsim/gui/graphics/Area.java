@@ -20,6 +20,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
+import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -274,10 +275,10 @@ public class Area extends Pane {
         }
         agc.setEffect(null);
         if (selectedVehicle != null && selectedVehicle.debug != null) {
-            for (Vehicle v : selectedVehicle.debug) {
-                agc.setStroke(selectedVehicle.debugColor);
-                agc.gc.setLineWidth(2);
-                Position p1 = v.getPosition();
+            for (Pair<Vehicle, Color> pair : selectedVehicle.debug) {
+                agc.setStroke(pair.getValue());
+                agc.gc.setLineWidth(1);
+                Position p1 = pair.getKey().getPosition();
                 Position posOnArea = selectedVehicle.debugPoint.getTrack().getPosOnArea(selectedVehicle.debugPoint.getStopPointPos());
                 agc.gc.strokeLine(posOnArea.x, posOnArea.y, p1.x, p1.y);
             }

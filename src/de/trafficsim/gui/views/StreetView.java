@@ -8,6 +8,7 @@ import de.trafficsim.logic.streets.signs.Sign;
 import de.trafficsim.logic.streets.tracks.Track;
 import de.trafficsim.util.geometry.Position;
 import de.trafficsim.util.geometry.Rectangle;
+import javafx.scene.paint.Color;
 
 public abstract class StreetView {
     protected Street street;
@@ -26,6 +27,10 @@ public abstract class StreetView {
         translate(agc);
         agc.gc.rotate(-street.getRotation().angle+90);
         draw(agc);
+        if (street.debugDeadLock) {
+            agc.setFill(Color.RED.deriveColor(0, 1, 1, 0.2));
+            agc.gc.fillOval(-25, -25,50, 50);
+        }
         agc.gc.rotate(street.getRotation().angle-90);
         translateBack(agc);
     }

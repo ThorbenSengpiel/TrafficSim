@@ -60,15 +60,24 @@ public class TrafficSim extends Application {
         guiController.start(primaryStage);
     }
 
+    double timer = 0;
+
     private void mainLoop(long now) {
         if (lastNow == 0) {
             lastNow = now;
         } else {
             double delta = ((now-lastNow) / 1000) / 1000000.0;
+
+            timer += delta;
+
             double scaledDelta = guiController.getSpeedFactor()*delta;
             lastNow = now;
             streetNetworkManager.update(scaledDelta);
             vehicleManager.update(scaledDelta);
+            if (timer > 0.1) {
+                streetNetworkManager.solveDeadLocks(scaledDelta);
+                timer = 0;
+            }
             guiController.update(delta);
         }
     }

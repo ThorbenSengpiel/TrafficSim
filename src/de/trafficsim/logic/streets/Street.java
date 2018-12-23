@@ -2,10 +2,7 @@ package de.trafficsim.logic.streets;
 
 import de.trafficsim.gui.views.StreetView;
 import de.trafficsim.logic.streets.signs.Sign;
-import de.trafficsim.logic.streets.tracks.Track;
-import de.trafficsim.logic.streets.tracks.TrackBezier;
-import de.trafficsim.logic.streets.tracks.TrackCurve;
-import de.trafficsim.logic.streets.tracks.TrackStraight;
+import de.trafficsim.logic.streets.tracks.*;
 import de.trafficsim.logic.vehicles.Vehicle;
 import de.trafficsim.logic.vehicles.VehicleManager;
 import de.trafficsim.util.Direction;
@@ -27,6 +24,10 @@ public abstract class Street {
     protected final Direction rotation;
 
     protected List<Sign> signList = new ArrayList<>();
+
+    private List<TrafficPriorityChecker> prioStopPoints = new ArrayList<>();
+
+    public boolean debugDeadLock = false;
 
     public Street(Position position, StreetType type, Direction rotation) {
         this.rotation = rotation;
@@ -169,5 +170,38 @@ public abstract class Street {
     @Override
     public String toString() {
         return type + " " + position + " " + rotation;
+    }
+
+    public void addPriorityStopPoint(TrafficPriorityChecker priorityStopPoint) {
+        prioStopPoints.add(priorityStopPoint);
+    }
+
+    public void begin() {
+        for (TrafficPriorityChecker prioStopPoint : prioStopPoints) {
+            prioStopPoint.begin();
+        }
+    }
+
+    public void solveDeadLocks() {
+        if (prioStopPoints.isEmpty()) {
+            return;
+        }
+        System.out.println("Check");
+        boolean deadLock = true;
+        for (TrafficPriorityChecker prioStopPoint : prioStopPoints) {
+            //prioStopPoint.clearLetThroughs();
+            Vehicle currentVehicle = prioStopPoint.getCurrentVehicle();
+            if (currentVehicle == null || currentVehicle.getVelocity() > 0) {
+                deadLock = false;
+            } else {
+                System.out.println("Check Vel -> " + currentVehicle.getVelocity());
+            }
+        }
+        if (deadLock) {
+            TrafficPriorityChecker selected = prioStopPoints.get((int) (Math.random() * prioStopPoints.size()));
+            selected.letThrough();
+            System.out.println("Check -> " + selected);
+        }
+        debugDeadLock = deadLock;
     }
 }

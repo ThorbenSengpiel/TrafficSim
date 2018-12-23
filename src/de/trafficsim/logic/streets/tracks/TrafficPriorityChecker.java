@@ -4,8 +4,10 @@ import de.trafficsim.gui.graphics.Area;
 import de.trafficsim.logic.vehicles.Vehicle;
 import de.trafficsim.util.Util;
 import javafx.scene.paint.Color;
+import javafx.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static de.trafficsim.logic.vehicles.Vehicle.MIN_DIST;
@@ -15,24 +17,38 @@ public class TrafficPriorityChecker {
     private Track track;
     private double stopPointPos;
 
-    public TrafficPriorityChecker(Track track, double stopPointPos) {
+    private Vehicle currentVehicle;
+    private Vehicle letThroughVehicle;
+
+    private List<TrackAndPosition> crossTracks;
+
+
+    public TrafficPriorityChecker(Track track, double stopPointPos, TrackAndPosition... crossTrackPoints) {
         this.track = track;
         this.stopPointPos = stopPointPos;
+        crossTracks = Arrays.asList(crossTrackPoints);
     }
 
     public boolean checkFree(Vehicle vehicle) {
+        if (vehicle == letThroughVehicle) {
+            return true;
+        }
+        currentVehicle = vehicle;
+        vehicle.debug = new ArrayList<>();
         if (track.getVehiclesOnTrack().contains(vehicle)) {
             if (track.getVehiclesOnTrack().size() > 1) {
                 vehicle.debugPoint = this;
-                vehicle.debugColor = Color.LIME;
-                vehicle.debug = track.getVehiclesOnTrack();
+                for (Vehicle debugV : track.getVehiclesOnTrack()) {
+                    vehicle.debug.add(new Pair<>(debugV, Color.LIME));
+                }
                 return false;
             }
         } else {
             if (track.getVehiclesOnTrack().size() > 0) {
                 vehicle.debugPoint = this;
-                vehicle.debugColor = Color.LIME;
-                vehicle.debug = track.getVehiclesOnTrack();
+                for (Vehicle debugV : track.getVehiclesOnTrack()) {
+                    vehicle.debug.add(new Pair<>(debugV, Color.LIME));
+                }
                 return false;
             }
         }
@@ -46,19 +62,15 @@ public class TrafficPriorityChecker {
             } else {
                 time = vehicle.getTimeForDist(track.length + (vehicle.getCurrentTrack().length-vehicle.getCurrentPosInTrack()));
             }
-            double lookDist = time*vehicle.maxVelocity;
-            List<Vehicle> vehicles = checkBack(lookDist);
-            if (vehicles.isEmpty()) {
-                return true;
-            }
-            //double maxDist = 0;
-            //Vehicle maxVehicle = null;
+            double lookDist = time*vehicle.maxVelocity*2;
+            List<Vehicle> vehicles = checkBack(track, lookDist);
+
             boolean ok = true;
             for (Vehicle v : vehicles) {
-                double distToNextTack = v.distanceToTrack(nextTrack, lookDist);
-                double d = v.getVelocity()*time;
+                double distToNextTack = v.distanceToTrack(v.getCurrentTrack(), nextTrack, lookDist);
+                double d = v.maxVelocity*time;
                 System.out.println("maxDist: " + lookDist + " " + distToNextTack + " " + d);
-                if (d > distToNextTack) {
+                if (distToNextTack < Util.VEHICLE_LENGTH*2 || d > distToNextTack) {
                     ok = false;
                     break;
                 }
@@ -66,29 +78,63 @@ public class TrafficPriorityChecker {
 
             if (ok) {
                 vehicle.debugPoint = this;
-                vehicle.debugColor = Color.BLACK;
-                vehicle.debug = vehicles;
+                for (Vehicle debugV : vehicles) {
+                    vehicle.debug.add(new Pair<>(debugV, Color.BLACK));
+                }
+                for (TrackAndPosition crossTrackAndPos : crossTracks) {
+                    Track crossTrack = crossTrackAndPos.getTrack();
+                    double pos = crossTrackAndPos.getPosition();
+                    boolean free = true;
+                    for (Vehicle v : crossTrack.getVehiclesOnTrack()) {
+                        vehicle.debug.add(new Pair<>(v, Color.MEDIUMPURPLE));
+                        if (v.getCurrentPosInTrack() < pos + Util.VEHICLE_LENGTH) {
+                            free = false;
+                        }
+                    }
+                    if (!free) {
+                        return false;
+                    }
+                    List<Vehicle> crossVehicles = checkBack(crossTrack, lookDist);
+                    for (Vehicle debugV : crossVehicles) {
+                        vehicle.debug.add(new Pair<>(debugV, Color.ORANGE));
+                    }
+
+
+                    boolean crossOK = true;
+                    for (Vehicle v : crossVehicles) {
+                        double distToNextTack = (v.distanceToTrack(v.getCurrentTrack(), crossTrack, lookDist) + pos) - Util.VEHICLE_LENGTH;
+                        double d = v.maxVelocity*time;
+                        if (d > distToNextTack) {
+                            crossOK = false;
+                            break;
+                        }
+                    }
+                    return crossOK;
+                }
+                return true;
             } else {
                 vehicle.debugPoint = this;
-                vehicle.debugColor = Color.LIGHTBLUE;
-                vehicle.debug = vehicles;
+                for (Vehicle debugV : vehicles) {
+                    vehicle.debug.add(new Pair<>(debugV, Color.LIGHTBLUE));
+                }
+                return false;
             }
-            return ok;
+
         } else {
             vehicle.debugPoint = this;
             vehicle.debugColor = Color.RED;
-            vehicle.debug = nextTrack.getVehiclesOnTrack();
+            for (Vehicle debugV : nextTrack.getVehiclesOnTrack()) {
+                vehicle.debug.add(new Pair<>(debugV, Color.RED));
+            }
             return false;
         }
 
     }
 
-    private List<Vehicle> checkBack(double maxCheckDist) {
+    private List<Vehicle> checkBack(Track start ,double maxCheckDist) {
         List<Vehicle> vehicleList = new ArrayList<>();
-        List<Track> tracks = new ArrayList<>();
-        for (Track t : track.getOutTrackList().get(0).getInTrackList()) {
-            if (t != track) {
-                tracks.add(t);
+        for (Track t : start.getOutTrackList().get(0).getInTrackList()) {
+            if (t != start) {
                 checkBack(vehicleList, t, maxCheckDist);
             }
         }
@@ -120,5 +166,29 @@ public class TrafficPriorityChecker {
 
     public Track getTrack() {
         return track;
+    }
+
+    public List<TrackAndPosition> getCrossTracks() {
+        return crossTracks;
+    }
+
+    public void begin() {
+        currentVehicle = null;
+    }
+
+    public Vehicle getCurrentVehicle() {
+        return currentVehicle;
+    }
+
+    public void letThrough() {
+        letThroughVehicle = currentVehicle;
+    }
+
+    public void clearLetThroughs() {
+        /*if (letThroughVehicle != null) {
+            if (letThroughVehicle.getCurrentTrack() != track || letThroughVehicle.getCurrentTrack() != track.getInTrackList().get(0)) {
+                letThroughVehicle = null;
+            }
+        }*/
     }
 }

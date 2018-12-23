@@ -5,6 +5,7 @@ import de.trafficsim.gui.views.StreetTJunctionView;
 import de.trafficsim.logic.streets.Street;
 import de.trafficsim.logic.streets.StreetType;
 import de.trafficsim.logic.streets.tracks.Track;
+import de.trafficsim.logic.streets.tracks.TrackAndPosition;
 import de.trafficsim.logic.streets.tracks.TrackStraight;
 import de.trafficsim.logic.streets.tracks.TrafficPriorityChecker;
 import de.trafficsim.util.Direction;
@@ -34,19 +35,19 @@ public class StreetTJunction extends Street {
         inBottom = addInTrack(new TrackStraight(createPosition(2.5, 25), createPosition(2.5, 12.5), this));
         outBottom = addOutTrack(new TrackStraight(createPosition(-2.5, 12.5), createPosition(-2.5, 25), this));
 
-        Track track;
-        //create tracks inbetween in- and outgoing tracks
-        addTrackBetween(inLeft, outRight);
-        track = addTrackBetween(inLeft, outBottom);
-        track.setPriorityStopPoint(new TrafficPriorityChecker(track, 5));
+        Track rightToLeft = addTrackBetween(inRight, outLeft);
+        Track rightToBottom = addTrackBetween(inRight, outBottom);
 
-        addTrackBetween(inRight, outLeft);
-        addTrackBetween(inRight, outBottom);
+        Track leftToRight = addTrackBetween(inLeft, outRight);
+        Track leftToBottom = addTrackBetween(inLeft, outBottom);
 
-        track = addTrackBetween(inBottom, outRight);
-        track.setPriorityStopPoint(new TrafficPriorityChecker(track, 5));
-        track = addTrackBetween(inBottom, outLeft);
-        track.setPriorityStopPoint(new TrafficPriorityChecker(track, 5));
+        Track bottomToRight = addTrackBetween(inBottom, outRight);
+        Track bottomToLeft  = addTrackBetween(inBottom, outLeft);
+
+
+        bottomToRight.setPriorityStopPoint(new TrafficPriorityChecker(bottomToRight, 5, new TrackAndPosition(leftToBottom, 14.75)));
+        leftToBottom.setPriorityStopPoint(new TrafficPriorityChecker(leftToBottom, 5, new TrackAndPosition(rightToLeft, 13.75)));
+        rightToLeft.setPriorityStopPoint(new TrafficPriorityChecker(rightToLeft, 5, new TrackAndPosition(bottomToRight, 11)));
     }
 
     @Override
