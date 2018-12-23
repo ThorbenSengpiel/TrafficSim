@@ -27,10 +27,6 @@ public abstract class StreetView {
         translate(agc);
         agc.gc.rotate(-street.getRotation().angle+90);
         draw(agc);
-        if (street.debugDeadLock) {
-            agc.setFill(Color.RED.deriveColor(0, 1, 1, 0.2));
-            agc.gc.fillOval(-25, -25,50, 50);
-        }
         agc.gc.rotate(street.getRotation().angle-90);
         translateBack(agc);
     }

@@ -67,10 +67,10 @@ public class TrafficPriorityChecker {
 
             boolean ok = true;
             for (Vehicle v : vehicles) {
-                double distToNextTack = v.distanceToTrack(v.getCurrentTrack(), nextTrack, lookDist);
+                double distToNextTrack = v.distanceToTrack(v.getCurrentTrack(), nextTrack, lookDist) - Util.VEHICLE_LENGTH * 2 ;
                 double d = v.maxVelocity*time;
-                System.out.println("maxDist: " + lookDist + " " + distToNextTack + " " + d);
-                if (distToNextTack < Util.VEHICLE_LENGTH*2 || d > distToNextTack) {
+                System.out.println("maxDist: " + lookDist + " " + distToNextTrack + " " + d);
+                if (distToNextTrack < Util.VEHICLE_LENGTH*2 || d > distToNextTrack) {
                     ok = false;
                     break;
                 }
@@ -185,10 +185,10 @@ public class TrafficPriorityChecker {
     }
 
     public void clearLetThroughs() {
-        /*if (letThroughVehicle != null) {
-            if (letThroughVehicle.getCurrentTrack() != track || letThroughVehicle.getCurrentTrack() != track.getInTrackList().get(0)) {
+        if (letThroughVehicle != null) {
+            if (letThroughVehicle.getCurrentTrack() != track && letThroughVehicle.getCurrentTrack() != track.getInTrackList().get(0)) {
                 letThroughVehicle = null;
             }
-        }*/
+        }
     }
 }
