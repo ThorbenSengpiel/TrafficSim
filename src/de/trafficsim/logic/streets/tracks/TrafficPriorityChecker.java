@@ -35,6 +35,7 @@ public class TrafficPriorityChecker {
         }
         currentVehicle = vehicle;
         vehicle.debug = new ArrayList<>();
+        //Check if Track is free
         if (track.getVehiclesOnTrack().contains(vehicle)) {
             if (track.getVehiclesOnTrack().size() > 1) {
                 vehicle.debugPoint = this;
@@ -55,9 +56,11 @@ public class TrafficPriorityChecker {
         //TODO weiter check / seitentracks checken ????
         Track nextTrack = track.getOutTrackList().get(0);
         double dist = nextTrack.getDistToNextVehicle(vehicle);
+        //check if next track is free
         if (dist > Util.VEHICLE_LENGTH + MIN_DIST) {
             double time;
             if (vehicle.getCurrentTrack() == track) {
+                //Todo sollten die autos weiter fahren? track + extra distance auf next track damit kreuzung komplett frei
                 time = vehicle.getTimeForDist(track.length - vehicle.getCurrentPosInTrack());
             } else {
                 time = vehicle.getTimeForDist(track.length + (vehicle.getCurrentTrack().length-vehicle.getCurrentPosInTrack()));
@@ -93,7 +96,7 @@ public class TrafficPriorityChecker {
                     if (!free) {
                         return false;
                     }
-                    List<Vehicle> crossVehicles = checkBack(crossTrack, lookDist);
+                    List<Vehicle> crossVehicles = checkBackCross(crossTrack, lookDist);
                     for (Vehicle debugV : crossVehicles) {
                         vehicle.debug.add(new Pair<>(debugV, Color.ORANGE));
                     }
@@ -130,16 +133,27 @@ public class TrafficPriorityChecker {
 
     }
 
-    private List<Vehicle> checkBack(Track start ,double maxCheckDist) {
+    private List<Vehicle> checkBack(Track start, double maxCheckDist) {
         List<Vehicle> vehicleList = new ArrayList<>();
         for (Track t : start.getOutTrackList().get(0).getInTrackList()) {
             if (t != start) {
                 //TODO ?????????????
-                if (track.getOutDir().isRightOf(t.getInDir())) {
+                System.out.println("checking track 2" + t);
+                if (track instanceof TrackStraight) {
+                    if(t.getInDir().isRightOf(track.getOutDir())) {
+                        checkBack(vehicleList, t, maxCheckDist);
+                    }
+                } else {
                     checkBack(vehicleList, t, maxCheckDist);
                 }
             }
         }
+        return vehicleList;
+    }
+
+    private List<Vehicle> checkBackCross(Track start, double maxCheckDist) {
+        List<Vehicle> vehicleList = new ArrayList<>();
+        checkBack(vehicleList, start, maxCheckDist);
         return vehicleList;
     }
 
@@ -192,5 +206,27 @@ public class TrafficPriorityChecker {
                 letThroughVehicle = null;
             }
         }
+    }
+
+    public boolean isDeadLockFree() {
+        if (track.getVehiclesOnTrack().contains(currentVehicle)) {
+            if (track.getVehiclesOnTrack().size() > 1) {
+                return false;
+            }
+        } else {
+            if (track.getVehiclesOnTrack().size() > 0) {
+                return false;
+            }
+        }
+        Track nextTrack = track.getOutTrackList().get(0);
+        if (!nextTrack.isAreaFree(0, Util.VEHICLE_LENGTH + MIN_DIST)) {
+            return false;
+        }
+        for (Track t : nextTrack.getOutTrackList()) {
+            if (!t.isAreaFree(t.length - (Util.VEHICLE_LENGTH + MIN_DIST), t.length)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

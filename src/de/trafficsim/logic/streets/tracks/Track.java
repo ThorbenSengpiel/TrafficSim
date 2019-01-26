@@ -326,4 +326,14 @@ public abstract class Track {
         }
         return minDist;
     }
+
+    public boolean isAreaFree(double from, double to) {
+        for (Vehicle vehicle : vehiclesOnTrack) {
+            double pos = vehicle.getCurrentPosInTrack();
+            if (pos >= from && pos <= to) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

@@ -169,7 +169,11 @@ public abstract class Street {
 
     @Override
     public String toString() {
-        return type + " " + position + " " + rotation;
+        String s = "";
+        if (debugLetThrough != null) {
+            s+=debugLetThrough.getCurrentVehicle();
+        }
+        return type + " " + position + " " + rotation + " deadlock " + s;
     }
 
     public void addPriorityStopPoint(TrafficPriorityChecker priorityStopPoint) {
@@ -198,8 +202,13 @@ public abstract class Street {
         }
         if (stoppedCount >= stoppedCountForDeadLock) {
             TrafficPriorityChecker selected = prioStopPoints.get((int) (Math.random() * prioStopPoints.size()));
-            selected.letThrough();
+            debugLetThrough = selected;
+            if (selected.isDeadLockFree()) {
+                selected.letThrough();
+            }
         }
     }
+    TrafficPriorityChecker debugLetThrough;
+
 
 }
