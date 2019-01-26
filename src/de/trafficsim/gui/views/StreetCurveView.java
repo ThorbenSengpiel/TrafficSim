@@ -19,11 +19,14 @@ public class StreetCurveView extends StreetView {
     private static Hitbox createHitbox(Direction rotation) {
         //Assume having a curved street with an ingoing car at the bottom which exits the curved street on the left
         Rectangle in;
-        Rectangle out; //the direction is orientated on out
-        return new Hitbox(new Rectangle(Position.ZERO, 25, 5));
+        Rectangle out; //the direction is oriented on out
+
+        return new Hitbox(new Rectangle(new Position(10, 0), 15, 5), new Rectangle(new Position(0, 10), 5, 15));
 /*
         switch (rotation) {
             case NORTH:
+                in = new Rectangle(Position.ZERO, 25, 5);
+                out = new Rectangle(Position.ZERO, 25, 5);
                 break;
             case EAST:
                 break;

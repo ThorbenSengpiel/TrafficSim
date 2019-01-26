@@ -15,20 +15,20 @@ public class StreetCurve extends Street {
     public StreetCurve(Position position, Direction rotation) {
         super(position, StreetType.CURVE, rotation);
 
-        Track inLeft;
-        Track outLeft;
+        Track inRight;
+        Track outRight;
         Track inBottom;
         Track outBottom;
 
         //create in- and outgoing tracks
-        inLeft = addInTrack(new TrackStraight(createPosition(25, -2.5), createPosition(12.5, -2.5), this));
-        outLeft = addOutTrack(new TrackStraight(createPosition(12.5, 2.5), createPosition(25, 2.5), this));
+        inRight = addInTrack(new TrackStraight(createPosition(25, -2.5), createPosition(12.5, -2.5), this));
+        outRight = addOutTrack(new TrackStraight(createPosition(12.5, 2.5), createPosition(25, 2.5), this));
         inBottom = addInTrack(new TrackStraight(createPosition(2.5, 25), createPosition(2.5, 12.5), this));
         outBottom = addOutTrack(new TrackStraight(createPosition(-2.5, 12.5), createPosition(-2.5, 25), this));
 
         //create tracks inbetween in- and outgoing tracks
-        addTrackBetween(inLeft, outBottom);
-        addTrackBetween(inBottom, outLeft);
+        addTrackBetween(inRight, outBottom);
+        addTrackBetween(inBottom, outRight);
     }
 
     @Override
