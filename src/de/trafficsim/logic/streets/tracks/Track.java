@@ -102,12 +102,13 @@ public abstract class Track {
         }
 
         if (hasPriorityStopPoint()) {
-            boolean free = true;
-            for (Vehicle vehicle : vehiclesOnTrack) {
-                free &= priorityStopPoint.checkFree(vehicle);
-            }
-            agc.gc.setStroke(free ? Color.LIME : Color.ORANGE);
+            Vehicle currentVehicle = priorityStopPoint.getCurrentVehicle();
+            agc.gc.setStroke(currentVehicle == null ? Color.LIME : Color.ORANGE);
             Position p = getPosOnArea(priorityStopPoint.getStopPointPos()).sub(street.getPosition());
+            if (currentVehicle != null) {
+                Position vecPos = currentVehicle.getPosition().sub(street.getPosition());
+                agc.gc.strokeLine(p.x, p.y, vecPos.x, vecPos.y);
+            }
             agc.gc.strokeOval(p.x-1, p.y-1, 2, 2);
 
             agc.gc.setStroke(Color.MAGENTA);

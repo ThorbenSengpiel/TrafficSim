@@ -17,7 +17,6 @@ public class TrafficPriorityChecker {
     private Track track;
     private double stopPointPos;
 
-    private Vehicle currentVehicle;
     private Vehicle letThroughVehicle;
 
     private List<TrackAndPosition> crossTracks;
@@ -33,7 +32,6 @@ public class TrafficPriorityChecker {
         if (vehicle == letThroughVehicle) {
             return true;
         }
-        currentVehicle = vehicle;
         vehicle.debug = new ArrayList<>();
         //Check if Track is free
         if (track.getVehiclesOnTrack().contains(vehicle)) {
@@ -138,7 +136,6 @@ public class TrafficPriorityChecker {
         for (Track t : start.getOutTrackList().get(0).getInTrackList()) {
             if (t != start) {
                 //TODO ?????????????
-                System.out.println("checking track 2" + t);
                 if (track instanceof TrackStraight) {
                     if(t.getInDir().isRightOf(track.getOutDir())) {
                         checkBack(vehicleList, t, maxCheckDist);
@@ -157,7 +154,7 @@ public class TrafficPriorityChecker {
         return vehicleList;
     }
 
-    private void checkBack(List<Vehicle> foundVehicles, Track t, double dist) {
+    public void checkBack(List<Vehicle> foundVehicles, Track t, double dist) {
         checkIfOnTrack(foundVehicles, t, dist);
         if (t.length < dist) {
             for (Track t0 : t.getInTrackList()) {
@@ -188,16 +185,41 @@ public class TrafficPriorityChecker {
         return crossTracks;
     }
 
-    public void begin() {
-        currentVehicle = null;
-    }
 
     public Vehicle getCurrentVehicle() {
-        return currentVehicle;
+        Vehicle current = null;
+        for (Vehicle vehicle : track.getVehiclesOnTrack()) {
+            double pos = vehicle.getCurrentPosInTrack();
+            if (pos <= stopPointPos) {
+                if (current == null) {
+                    current = vehicle;
+                } else {
+                    if (pos > current.getCurrentPosInTrack()) {
+                        current = vehicle;
+                    }
+                }
+            }
+        }
+        if (current == null) {
+            for (Vehicle vehicle : track.getInTrackList().get(0).getVehiclesOnTrack()) {
+                double pos = vehicle.getCurrentPosInTrack();
+                if (vehicle.getNextTrack() == track) {
+                    if (current == null) {
+                        current = vehicle;
+                    } else {
+                        if (pos > current.getCurrentPosInTrack()) {
+                            current = vehicle;
+                        }
+                    }
+                }
+            }
+        }
+
+        return current;
     }
 
     public void letThrough() {
-        letThroughVehicle = currentVehicle;
+        letThroughVehicle = getCurrentVehicle();
     }
 
     public void clearLetThroughs() {
@@ -209,7 +231,7 @@ public class TrafficPriorityChecker {
     }
 
     public boolean isDeadLockFree() {
-        if (track.getVehiclesOnTrack().contains(currentVehicle)) {
+        if (track.getVehiclesOnTrack().contains(getCurrentVehicle())) {
             if (track.getVehiclesOnTrack().size() > 1) {
                 return false;
             }

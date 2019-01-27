@@ -24,7 +24,8 @@ public class StreetNetworkManager {
     public void update(double delta) {
         if (running){
             for (Street street : streetList) {
-                street.begin();
+                //TODO löschen
+                //street.begin();
                 street.update(delta);
             }
         }

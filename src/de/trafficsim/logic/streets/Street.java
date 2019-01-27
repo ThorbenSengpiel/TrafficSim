@@ -10,6 +10,7 @@ import de.trafficsim.util.geometry.Position;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class Street {
     protected Position position;
@@ -26,6 +27,8 @@ public abstract class Street {
     protected List<Sign> signList = new ArrayList<>();
 
     private List<TrafficPriorityChecker> prioStopPoints = new ArrayList<>();
+
+    private List<List<TrafficPriorityChecker>> prioStopPointGroups = new ArrayList<>();
 
     protected int stoppedCountForDeadLock = 0;
 
@@ -171,44 +174,115 @@ public abstract class Street {
     public String toString() {
         String s = "";
         if (debugLetThrough != null) {
-            s+=debugLetThrough.getCurrentVehicle();
+            s+=debugLetThrough.getTrack().id;
         }
-        return type + " " + position + " " + rotation + " deadlock " + s;
+        //return type + " " + position + " " + rotation + " deadlock " + s + " " + deadlockCount;
+        return s + " " + deadlockCount + " " + deadlockCount2;
     }
 
     public void addPriorityStopPoint(TrafficPriorityChecker priorityStopPoint) {
         prioStopPoints.add(priorityStopPoint);
+        if (!prioStopPointGroups.isEmpty()) {
+            for (List<TrafficPriorityChecker> group : prioStopPointGroups) {
+                if (priorityStopPoint.getTrack().getInTrackList().size() > 0) {
+                    if (group.get(0).getTrack().getInTrackList().get(0) == priorityStopPoint.getTrack().getInTrackList().get(0)) {
+                        group.add(priorityStopPoint);
+                        return;
+                    }
+                }
+            }
+
+        }
+        List<TrafficPriorityChecker> list = new ArrayList<>();
+        list.add(priorityStopPoint);
+        prioStopPointGroups.add(list);
     }
 
-    public void begin() {
+    //TODO löschen
+    /*public void begin() {
         for (TrafficPriorityChecker prioStopPoint : prioStopPoints) {
             prioStopPoint.begin();
         }
-    }
+    }*/
 
     public void solveDeadLocks() {
         if (prioStopPoints.isEmpty()) {
             return;
         }
-        System.out.println("Check");
-        int stoppedCount = 0;
+        List<List<TrafficPriorityChecker>> groups = new ArrayList<>(prioStopPointGroups);
+        List<TrafficPriorityChecker> waiting = new ArrayList<>();
+
         for (TrafficPriorityChecker prioStopPoint : prioStopPoints) {
-            //TODO
-            prioStopPoint.clearLetThroughs();
             Vehicle currentVehicle = prioStopPoint.getCurrentVehicle();
-            if (currentVehicle != null && currentVehicle.getVelocity() <= 0) {
-                stoppedCount++;
+            if (currentVehicle != null) {
+                if(currentVehicle.getVelocity() <= 0) {
+                    waiting.add(prioStopPoint);
+                    for (List<TrafficPriorityChecker> group : groups) {
+                        if (group.contains(prioStopPoint)) {
+                            groups.remove(group);
+                            break;
+                        }
+                    }
+                } else {
+                    return;
+                }
             }
         }
-        if (stoppedCount >= stoppedCountForDeadLock) {
-            TrafficPriorityChecker selected = prioStopPoints.get((int) (Math.random() * prioStopPoints.size()));
-            debugLetThrough = selected;
+        deadlockCount = groups.size();
+        if (groups.size() == 0) {
+            TrafficPriorityChecker selected = waiting.get((int) (Math.random() * waiting.size()));
+            //debugLetThrough = selected;
             if (selected.isDeadLockFree()) {
                 selected.letThrough();
             }
+        } else if (this instanceof StreetCross && groups.size() == 1) {
+            List<TrafficPriorityChecker> group = groups.get(0);
+            for (TrafficPriorityChecker trafficPriorityChecker : group) {
+                if (!trafficPriorityChecker.getTrack().isFree()) {
+                    return;
+                }
+            }
+            //check empty side for incoming vehicles
+            List<Vehicle> found = new ArrayList<>();
+            group.get(0).checkBack(found, group.get(0).getTrack().getInTrackList().get(0), 100);
+            found = found.stream().filter(v -> v.getVelocity() >= 2).collect(Collectors.toList());
+            if (found.isEmpty()) {
+                TrafficPriorityChecker selected = waiting.get((int) (Math.random() * waiting.size()));
+                if (selected.isDeadLockFree()) {
+                    selected.letThrough();
+                }
+            }
+            deadlockCount2 = found.size();
+        } else if (this instanceof StreetCross && groups.size() == 2) {
+            TrafficPriorityChecker a = null;
+            TrafficPriorityChecker b = null;
+            for (TrafficPriorityChecker trafficPriorityChecker : waiting) {
+                if (trafficPriorityChecker.getTrack() instanceof TrackCurve) {
+                    a = trafficPriorityChecker;
+                }
+            }
+            waiting.remove(a);
+            for (TrafficPriorityChecker trafficPriorityChecker : waiting) {
+                if (trafficPriorityChecker.getTrack() instanceof TrackCurve) {
+                    b = trafficPriorityChecker;
+                }
+            }
+
+            if (b != null) {
+                if (a.getTrack().getInDir().rotateClockWise().rotateClockWise().equals(b.getTrack().getInDir())) {
+                    a.letThrough();
+                    b.letThrough();
+                    System.out.println("IST DAS 1 2er DEADLOCK.... DAS ICH DEN NOCH ERLEBEN DARF");
+                }
+            }
+
+            System.out.println(waiting.size());
+
         }
     }
     TrafficPriorityChecker debugLetThrough;
+    int deadlockCount;
+    int deadlockCount2;
 
 
 }

@@ -349,6 +349,13 @@ public class Vehicle {
         return currentTrackNumber;
     }
 
+    public Track getNextTrack() {
+        if (currentTrackNumber+1 >= path.size()) {
+            return null;
+        }
+        return path.get(currentTrackNumber + 1);
+    }
+
     public double getVelocity() {
         return velocity;
     }
@@ -403,6 +410,8 @@ public class Vehicle {
             }
         }
     }
+
+
 
 
 
