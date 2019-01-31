@@ -111,7 +111,7 @@ public class Vehicle {
         if (currentTrack.hasStopPoint()) {
             if (currentTrack.isStopPointEnabled()) {
                 double delta = currentTrack.getStopPointPosition() - position;
-                System.out.println("Stop Point Delta = " + delta + " Min Dist = " + minDist);
+                //System.out.println("Stop Point Delta = " + delta + " Min Dist = " + minDist);
                 if(delta > 0){
                     minDist = (minDist > delta ? delta : minDist);
                     debugBrakeReason = "Stop ";
@@ -123,7 +123,7 @@ public class Vehicle {
             TrafficPriorityChecker checker = currentTrack.getPriorityStopPoint();
             if (!checker.checkFree(this)) {
                 double delta = checker.getStopPointPos() - position;
-                System.out.println("Prio Stop Point Delta = " + delta + " Min Dist = " + minDist);
+                //System.out.println("Prio Stop Point Delta = " + delta + " Min Dist = " + minDist);
                 if(delta > 0){
                     minDist = (minDist > delta ? delta : minDist);
                     debugBrakeReason += "Prio ";
@@ -253,6 +253,11 @@ public class Vehicle {
 
 
     public void move(double delta) {
+        blinkTimer += delta;
+        if (blinkTimer > blinkTime){
+            blinkerOn = !blinkerOn;
+            blinkTimer = 0;
+        }
         double brakeDist = brakeDistance();
         double dist = getLookAheadDist(currentPosInTrack, VEHICLE_LENGTH + brakeDist + 5);
         debugLastLookDist = dist;
@@ -317,11 +322,43 @@ public class Vehicle {
         return "T:" + currentTrack.id + " -> " + debugBrakeReason;
     }
 
-
+    private double blinkTimer = 0;
+    private boolean blinkerOn = true;
+    private double blinkTime = Math.random()*0.5+0.25;
 
     public void draw(AreaGraphicsContext agc, boolean selected) {
-        agc.setFill(Color.hsb(color*360, braking ? 1 : 0.4, braking ? 1 : 0.4, 1));
+        agc.gc.setFill(Color.hsb(color*360,0.4,0.4,1));
         agc.gc.fillRoundRect(-CAR_SIZE, -(CAR_SIZE /2), CAR_SIZE *2, CAR_SIZE, CAR_SIZE / 2, CAR_SIZE / 2);
+        agc.setFill(Color.hsb(0, braking ? 1 : 0.6, braking ? 1 : 0.6, 1));
+        agc.gc.fillRoundRect(-CAR_SIZE + CAR_SIZE*0.05,-CAR_SIZE/2 + CAR_SIZE*0.1, CAR_SIZE*0.2,CAR_SIZE*0.8,CAR_SIZE / 2, CAR_SIZE / 2);
+
+        boolean leftBlink = false;
+        boolean rightBlink = false;
+        for (Track track : path.subList(currentTrackNumber,(currentTrackNumber+3 <= path.size())?currentTrackNumber+3:path.size())) {
+            if (track.getInDir().isRightOf(track.getOutDir())){
+                rightBlink = true;
+                break;
+            }
+            if (track.getInDir().isRightOf(track.getOutDir().rotateClockWise().rotateClockWise())){
+                leftBlink = true;
+                break;
+            }
+        }
+
+        double blinkerSize = CAR_SIZE*0.2;
+        if (leftBlink && blinkerOn){
+            agc.gc.setFill(Color.rgb(255,255,0));
+        } else{
+            agc.gc.setFill(Color.rgb(133,55,1));
+        }
+        agc.gc.fillRect(CAR_SIZE - blinkerSize,-CAR_SIZE / 2,blinkerSize,blinkerSize);
+        if (rightBlink && blinkerOn){
+            agc.gc.setFill(Color.rgb(255,255,0));
+        } else{
+            agc.gc.setFill(Color.rgb(133,55,1));
+        }
+        agc.gc.fillRect(CAR_SIZE - blinkerSize,CAR_SIZE / 2 - blinkerSize,blinkerSize,blinkerSize);
+
         if (selected) {
             agc.gc.setLineWidth(3*agc.scale);
             agc.setStroke(Color.WHITE);

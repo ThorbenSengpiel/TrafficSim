@@ -272,12 +272,8 @@ public abstract class Street {
                 if (a.getTrack().getInDir().rotateClockWise().rotateClockWise().equals(b.getTrack().getInDir())) {
                     a.letThrough();
                     b.letThrough();
-                    System.out.println("IST DAS 1 2er DEADLOCK.... DAS ICH DEN NOCH ERLEBEN DARF");
                 }
             }
-
-            System.out.println(waiting.size());
-
         }
     }
     TrafficPriorityChecker debugLetThrough;

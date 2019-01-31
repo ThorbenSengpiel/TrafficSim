@@ -109,7 +109,9 @@ public class TrafficPriorityChecker {
                             break;
                         }
                     }
-                    return crossOK;
+                    if (!crossOK){
+                        return false;
+                    }
                 }
                 return true;
             } else {
