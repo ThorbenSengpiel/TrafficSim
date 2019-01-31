@@ -244,7 +244,7 @@ public class TrafficPriorityChecker {
         if (!nextTrack.isAreaFree(0, Util.VEHICLE_LENGTH + MIN_DIST)) {
             return false;
         }
-        for (Track t : nextTrack.getOutTrackList()) {
+        for (Track t : nextTrack.getInTrackList()) {
             if (!t.isAreaFree(t.length - (Util.VEHICLE_LENGTH + MIN_DIST), t.length)) {
                 return false;
             }

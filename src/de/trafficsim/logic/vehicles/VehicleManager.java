@@ -4,10 +4,14 @@ import de.trafficsim.gui.GuiController;
 import de.trafficsim.logic.network.Path;
 import de.trafficsim.logic.network.Pathfinder;
 import de.trafficsim.logic.network.StreetNetworkManager;
+import de.trafficsim.logic.streets.Street;
+import de.trafficsim.logic.streets.StreetStraight;
+import de.trafficsim.logic.streets.StreetStraight2Lane;
 import de.trafficsim.logic.streets.tracks.Track;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class VehicleManager {
 
@@ -72,9 +76,17 @@ public class VehicleManager {
         /*StreetSpawn spawn = StreetNetworkManager.getInstance().getRandomSpawn();
         addVehicle(new Vehicle(50, Pathfinder.getRandomPath(spawn.getStartTrack(), 20)));*/
         Track spawn = StreetNetworkManager.getInstance().getRandomSpawn();
+        List<Street> allStreets = StreetNetworkManager.getInstance().getStreetList();
+        List<Street> allStraights = allStreets.stream().filter(street -> street instanceof StreetStraight2Lane).collect(Collectors.toList());
+        List<Street> intermediateStreets = new ArrayList<>();
+        if (!allStraights.isEmpty()){
+            for (int i = 0; i < 2; i++) {
+                intermediateStreets.add(allStraights.get((int)(Math.random()*allStraights.size())));
+            }
+        }
         Track destination = StreetNetworkManager.getInstance().getRandomEnd();
         if (spawn != null) {
-            Path path = Pathfinder.getPath(spawn, destination);
+            Path path = Pathfinder.getPath(spawn, intermediateStreets,destination);
             if (path != null) {
                 addVehicle(new Vehicle(0,path));
             } else {

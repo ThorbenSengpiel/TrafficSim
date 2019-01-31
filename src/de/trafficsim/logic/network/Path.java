@@ -10,4 +10,12 @@ public class Path extends ArrayList<Track> {
     public Path(Track... tracks) {
         addAll(Arrays.asList(tracks));
     }
+
+    public double distance(){
+        double acc = 0;
+        for (Track track : this) {
+            acc+=track.getLength();
+        }
+        return acc;
+    }
 }
