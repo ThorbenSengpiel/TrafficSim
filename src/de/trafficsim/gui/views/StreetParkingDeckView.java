@@ -3,6 +3,7 @@ package de.trafficsim.gui.views;
 import de.trafficsim.gui.graphics.AreaGraphicsContext;
 import de.trafficsim.gui.graphics.util.Hitbox;
 import de.trafficsim.logic.streets.Street;
+import de.trafficsim.util.Util;
 import de.trafficsim.util.geometry.Position;
 import de.trafficsim.util.geometry.Rectangle;
 import javafx.scene.effect.Bloom;
@@ -18,7 +19,7 @@ import java.util.List;
 public class StreetParkingDeckView extends StreetView {
 
     private List<Position> cars = new ArrayList<>();
-    private List<Double> colors = new ArrayList<>();
+    private List<Color> colors = new ArrayList<>();
     private boolean vertical;
 
     private static DropShadow shadow = new DropShadow(5, Color.BLACK);
@@ -30,11 +31,11 @@ public class StreetParkingDeckView extends StreetView {
         for (int y = 0; y < 8; y++) {
             if (Math.random() < 0.5) {
                 cars.add(new Position(15, (y * 6.25) - 21.875));
-                colors.add(Math.random());
+                colors.add(Util.getRandomColor());
             }
             if (Math.random() < 0.5) {
                 cars.add(new Position(-15, (y * 6.25) - 21.875));
-                colors.add(Math.random());
+                colors.add(Util.getRandomColor());
             }
         }
     }
@@ -75,7 +76,7 @@ public class StreetParkingDeckView extends StreetView {
         agc.setEffect(shadowCars);
         double size = 4;
         for (int i = 0; i < cars.size(); i++) {
-            agc.setFill(Color.hsb(colors.get(i)*360, 1, 1, 1));
+            agc.setFill(colors.get(i));
             Position pos = cars.get(i);
             agc.gc.fillRoundRect(pos.x-size, pos.y-(size/2), size*2, size, size / 2, size / 2);
         }

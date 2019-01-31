@@ -30,7 +30,7 @@ public abstract class Street {
 
     private List<List<TrafficPriorityChecker>> prioStopPointGroups = new ArrayList<>();
 
-    protected int stoppedCountForDeadLock = 0;
+    protected int stoppedCountForDeadLock = -1;
 
     public Street(Position position, StreetType type, Direction rotation) {
         this.rotation = rotation;
@@ -207,6 +207,9 @@ public abstract class Street {
 
     public void solveDeadLocks() {
         if (prioStopPoints.isEmpty()) {
+            return;
+        }
+        if (stoppedCountForDeadLock < 0) {
             return;
         }
         List<List<TrafficPriorityChecker>> groups = new ArrayList<>(prioStopPointGroups);

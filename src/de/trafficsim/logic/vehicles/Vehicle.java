@@ -36,13 +36,14 @@ public class Vehicle {
 
     private boolean active = true;
 
-    public double color;
+    public Color color;
 
     public Vehicle(double velocity, Path path){
         this.velocity = velocity;
         switchTrack(path.get(0));
         this.path = path;
-        this.color = Math.random();
+
+        color = Util.getRandomColor();
     }
     String debugBrakeReason = "";
 
@@ -327,7 +328,10 @@ public class Vehicle {
     private double blinkTime = Math.random()*0.5+0.25;
 
     public void draw(AreaGraphicsContext agc, boolean selected) {
-        agc.gc.setFill(Color.hsb(color*360,0.4,0.4,1));
+        agc.setFill(color);
+        //agc.setFill(Color.hsb(velocity*8.64, 1, 1));
+        //agc.setFill(Color.hsb((currentTrackNumber/((double)path.size()))*120, 1, 1));
+
         agc.gc.fillRoundRect(-CAR_SIZE, -(CAR_SIZE /2), CAR_SIZE *2, CAR_SIZE, CAR_SIZE / 2, CAR_SIZE / 2);
         agc.setFill(Color.hsb(0, braking ? 1 : 0.6, braking ? 1 : 0.6, 1));
         agc.gc.fillRoundRect(-CAR_SIZE + CAR_SIZE*0.05,-CAR_SIZE/2 + CAR_SIZE*0.1, CAR_SIZE*0.2,CAR_SIZE*0.8,CAR_SIZE / 2, CAR_SIZE / 2);

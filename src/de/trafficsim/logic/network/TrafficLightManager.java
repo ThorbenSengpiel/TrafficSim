@@ -18,11 +18,16 @@ public class TrafficLightManager {
 
     private int currentTrafficLight;
 
-    public TrafficLightManager(double greenTime, double yellowTime, double switchingTime, TrafficLight... trafficLights) {
+    boolean grouped;
+    int size;
+
+    public TrafficLightManager(double greenTime, double yellowTime, double switchingTime, boolean grouped, TrafficLight... trafficLights) {
         this.trafficLights = trafficLights;
         this.greenTime = greenTime;
         this.yellowTime = yellowTime;
         this.switchingTime = switchingTime;
+        this.grouped = grouped;
+        size = grouped ? trafficLights.length/2 : trafficLights.length;
         tSwitch = switchingTime;
         tRedYellow = tSwitch + yellowTime;
         tGreen = tRedYellow + greenTime;
@@ -34,17 +39,33 @@ public class TrafficLightManager {
         time += delta;
         if (time <= tSwitch) {
             trafficLights[currentTrafficLight].setState(TrafficLight.RED);
+            if (grouped) {
+                trafficLights[currentTrafficLight+size].setState(TrafficLight.RED);
+            }
         } else if (time <= tRedYellow) {
             trafficLights[currentTrafficLight].setState(TrafficLight.RED_YELLOW);
+            if (grouped) {
+                trafficLights[currentTrafficLight+size].setState(TrafficLight.RED_YELLOW);
+            }
         } else if (time <= tGreen) {
             trafficLights[currentTrafficLight].setState(TrafficLight.GREEN);
+            if (grouped) {
+                trafficLights[currentTrafficLight+size].setState(TrafficLight.GREEN);
+            }
         } else if (time <= tYellow) {
             trafficLights[currentTrafficLight].setState(TrafficLight.YELLOW);
+            if (grouped) {
+                trafficLights[currentTrafficLight+size].setState(TrafficLight.YELLOW);
+            }
         } else {
             trafficLights[currentTrafficLight].setState(TrafficLight.RED);
+            if (grouped) {
+                trafficLights[currentTrafficLight+size].setState(TrafficLight.RED);
+            }
             currentTrafficLight++;
-            currentTrafficLight %= trafficLights.length;
+            currentTrafficLight %= size;
             time -= tYellow;
         }
     }
+
 }

@@ -1,5 +1,7 @@
 package de.trafficsim.util;
 
+import javafx.scene.paint.Color;
+
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
@@ -33,5 +35,28 @@ public class Util {
     }
 
 
+    public static Color getRandomColor() {
+        if (Math.random() < 0.4) {
+            //Gray
+            if (Math.random() > 0.5) {
+                //Light gray
+                return Color.gray(Math.random()*0.3+0.7);
+            } else {
+                //Dark gray
+                return Color.gray(Math.random()*0.3);
+            }
+        } else {
+            //Color
+            if (Math.random() > 0.7) {
+                return Color.hsb(Math.random()*360, 1, 1);
+            } else {
+                if (Math.random() < 0.8) {
+                    return Color.hsb(Math.random()*360, 0.7+Math.random()*0.3, 1);
+                } else {
+                    return Color.hsb(Math.random()*360, 1, 0.15+Math.random()*0.3);
+                }
+            }
 
+        }
+    }
 }

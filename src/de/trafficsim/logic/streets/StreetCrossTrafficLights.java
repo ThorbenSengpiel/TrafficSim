@@ -9,6 +9,7 @@ import de.trafficsim.logic.network.TrafficLightManager;
 import de.trafficsim.logic.streets.signs.TrafficLight;
 import de.trafficsim.logic.streets.tracks.Track;
 import de.trafficsim.logic.streets.tracks.TrackStraight;
+import de.trafficsim.util.Direction;
 import de.trafficsim.util.geometry.Position;
 import de.trafficsim.util.geometry.Rectangle;
 import javafx.geometry.Pos;
@@ -106,12 +107,12 @@ public class StreetCrossTrafficLights extends Street {
         sL1.createStopPoint(21, true);
         sS1.createStopPoint(21, true);
 
-        TrafficLight trafficLight0 = new TrafficLight(new Position(25, 0), eL1, eS1);
-        TrafficLight trafficLight1 = new TrafficLight(new Position(0, 25), sL1, sS1);
-        TrafficLight trafficLight2 = new TrafficLight(new Position(-25, 0), wL1, wS1);
-        TrafficLight trafficLight3 = new TrafficLight(new Position(0, -25), nL1, nS1);
+        TrafficLight trafficLight0 = new TrafficLight(new Position(25, 0), Direction.NORTH, eL1, eS1);
+        TrafficLight trafficLight1 = new TrafficLight(new Position(0, 25), Direction.NORTH, sL1, sS1);
+        TrafficLight trafficLight2 = new TrafficLight(new Position(-25, 0), Direction.NORTH, wL1, wS1);
+        TrafficLight trafficLight3 = new TrafficLight(new Position(0, -25), Direction.NORTH, nL1, nS1);
 
-        trafficLightManager = new TrafficLightManager(16, 2, 2, trafficLight0, trafficLight1, trafficLight2, trafficLight3);
+        trafficLightManager = new TrafficLightManager(16, 2, 2, true, trafficLight0, trafficLight1, trafficLight2, trafficLight3);
 
         signList.add(trafficLight0);
         signList.add(trafficLight1);
