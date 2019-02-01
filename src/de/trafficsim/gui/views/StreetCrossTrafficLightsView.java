@@ -6,6 +6,7 @@ import de.trafficsim.logic.streets.Street;
 import de.trafficsim.util.geometry.Position;
 import de.trafficsim.util.geometry.Rectangle;
 import javafx.scene.shape.ArcType;
+import javafx.scene.shape.StrokeLineCap;
 
 public class StreetCrossTrafficLightsView extends StreetView {
 
@@ -79,6 +80,18 @@ public class StreetCrossTrafficLightsView extends StreetView {
 
         agc.gc.strokeLine(15, -2.5, 35, -2.5);
         agc.gc.strokeArc(7.5, 2.5, 35, 35, 90+45, 45, ArcType.OPEN);
+
+        agc.setFill(AreaGraphicsContext.StreetVisuals.STREET_LINE.stroke);
+        agc.gc.setLineCap(StrokeLineCap.SQUARE);
+        agc.gc.setLineWidth(0.5);
+        agc.gc.strokeLine(20, -1.5, 25, -1.5);
+        agc.gc.strokeLine(20, -1.5, 20, 0);
+        agc.gc.fillPolygon(new double[] {20, 19, 21}, new double[] {1.5, -0.5, -0.5},3);
+        agc.gc.strokeLine(21, -5, 25, -5);
+        agc.gc.fillPolygon(new double[] {19, 21, 21}, new double[] {-5, -6, -4},3);
+        agc.gc.strokeLine(20, -8.5, 25, -8.5);
+        agc.gc.strokeLine(20, -8.5, 20, -10);
+        agc.gc.fillPolygon(new double[] {20, 19, 21}, new double[] {-11.5, -9.5, -9.5},3);
 
         agc.setStroke(AreaGraphicsContext.StreetVisuals.STREET_LINE_DASHED_SMALL);
         agc.gc.strokeLine(15, -2.5, -15, -2.5);

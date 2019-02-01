@@ -9,6 +9,8 @@ import de.trafficsim.logic.network.TrafficLightManager;
 import de.trafficsim.logic.streets.signs.TrafficLight;
 import de.trafficsim.logic.streets.tracks.Track;
 import de.trafficsim.logic.streets.tracks.TrackStraight;
+import de.trafficsim.logic.streets.tracks.TrafficPriorityChecker;
+import de.trafficsim.logic.streets.tracks.TrafficPriorityCheckerRightOverLeft;
 import de.trafficsim.util.Direction;
 import de.trafficsim.util.geometry.Position;
 import de.trafficsim.util.geometry.Rectangle;
@@ -93,10 +95,14 @@ public class StreetCrossTrafficLights extends Street {
         addTrackBetween(sL1, wO);
         addTrackBetween(wL1, nO);
 
-        addTrackBetween(sR1, eO1);
-        addTrackBetween(eR1, nO1);
-        addTrackBetween(nR1, wO1);
-        addTrackBetween(wR1, sO1);
+        Track t = addTrackBetween(sR1, eO1);
+        t.setPriorityStopPoint(new TrafficPriorityChecker(t, 10));
+        t = addTrackBetween(eR1, nO1);
+        t.setPriorityStopPoint(new TrafficPriorityChecker(t, 10));
+        t = addTrackBetween(nR1, wO1);
+        t.setPriorityStopPoint(new TrafficPriorityChecker(t, 10));
+        t = addTrackBetween(wR1, sO1);
+        t.setPriorityStopPoint(new TrafficPriorityChecker(t, 10));
 
         wL1.createStopPoint(21, true);
         wS1.createStopPoint(21, true);
@@ -107,12 +113,12 @@ public class StreetCrossTrafficLights extends Street {
         sL1.createStopPoint(21, true);
         sS1.createStopPoint(21, true);
 
-        TrafficLight trafficLight0 = new TrafficLight(new Position(25, 0), Direction.NORTH, eL1, eS1);
-        TrafficLight trafficLight1 = new TrafficLight(new Position(0, 25), Direction.NORTH, sL1, sS1);
-        TrafficLight trafficLight2 = new TrafficLight(new Position(-25, 0), Direction.NORTH, wL1, wS1);
-        TrafficLight trafficLight3 = new TrafficLight(new Position(0, -25), Direction.NORTH, nL1, nS1);
+        TrafficLight trafficLight0 = new TrafficLight(new Position(15, -2.5), Direction.EAST, eL1, eS1);
+        TrafficLight trafficLight1 = new TrafficLight(new Position(2.5, 15), Direction.SOUTH, sL1, sS1);
+        TrafficLight trafficLight2 = new TrafficLight(new Position(-15, 2.5), Direction.WEST, wL1, wS1);
+        TrafficLight trafficLight3 = new TrafficLight(new Position(-2.5, -15), Direction.NORTH, nL1, nS1);
 
-        trafficLightManager = new TrafficLightManager(16, 2, 2, true, trafficLight0, trafficLight1, trafficLight2, trafficLight3);
+        trafficLightManager = new TrafficLightManager(16, 2, 2, false, trafficLight0, trafficLight1, trafficLight2, trafficLight3);
 
         signList.add(trafficLight0);
         signList.add(trafficLight1);

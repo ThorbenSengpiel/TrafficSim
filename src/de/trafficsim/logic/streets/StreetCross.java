@@ -2,10 +2,7 @@ package de.trafficsim.logic.streets;
 
 import de.trafficsim.gui.views.StreetCrossView;
 import de.trafficsim.gui.views.StreetView;
-import de.trafficsim.logic.streets.tracks.Track;
-import de.trafficsim.logic.streets.tracks.TrackAndPosition;
-import de.trafficsim.logic.streets.tracks.TrackStraight;
-import de.trafficsim.logic.streets.tracks.TrafficPriorityChecker;
+import de.trafficsim.logic.streets.tracks.*;
 import de.trafficsim.util.geometry.Position;
 
 public class StreetCross extends Street {
@@ -43,10 +40,10 @@ public class StreetCross extends Street {
 
         for (int i = 0; i < 4; i++) {
             Track track = betweenTracks[i][(i + 2) % 4];
-            track.setPriorityStopPoint(new TrafficPriorityChecker(track, 5, new TrackAndPosition(betweenTracks[(i+3) % 4][i], 11), new TrackAndPosition(betweenTracks[(i+3) % 4][(i+1) % 4], 10)));
+            track.setPriorityStopPoint(new TrafficPriorityCheckerRightOverLeft(track, 5, new TrackAndPosition(betweenTracks[(i+3) % 4][i], 11), new TrackAndPosition(betweenTracks[(i+3) % 4][(i+1) % 4], 10)));
 
             track = betweenTracks[i][(i + 1) % 4];
-            track.setPriorityStopPoint(new TrafficPriorityChecker(track, 5, new TrackAndPosition(betweenTracks[(i+3) % 4][i], 14.75), new TrackAndPosition(betweenTracks[(i+2) % 4][i], 13.75)));
+            track.setPriorityStopPoint(new TrafficPriorityCheckerRightOverLeft(track, 5, new TrackAndPosition(betweenTracks[(i+3) % 4][i], 14.75), new TrackAndPosition(betweenTracks[(i+2) % 4][i], 13.75)));
         }
 
         stoppedCountForDeadLock = 4;
