@@ -67,7 +67,10 @@ public class TrafficSim extends Application {
             lastNow = now;
         } else {
             double delta = ((now-lastNow) / 1000) / 1000000.0;
-
+            if (delta > 0.05) {
+                delta = 0.05;
+            }
+            System.out.println(delta);
             timer += delta;
 
             double scaledDelta = guiController.getSpeedFactor()*delta;

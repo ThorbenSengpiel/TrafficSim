@@ -48,7 +48,7 @@ public class StreetCrossSmallTrafficLights extends Street {
 
         for (int i = 0; i < 4; i++) {
             Track track = betweenTracks[i][(i + 1) % 4];
-            track.setPriorityStopPoint(new TrafficPriorityChecker(track, 5, new TrackAndPosition(betweenTracks[(i+3) % 4][i], 14.75), new TrackAndPosition(betweenTracks[(i+2) % 4][i], 13.75)));
+            track.setPriorityStopPoint(new TrafficPriorityChecker(track, 5, new TrackAndPosition(betweenTracks[(i+2) % 4][i], 13.75)));
         }
 
         for (Track inTrack : inTracks) {
