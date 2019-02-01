@@ -4,7 +4,6 @@ import de.trafficsim.gui.graphics.AreaGraphicsContext;
 import de.trafficsim.logic.streets.Street;
 import de.trafficsim.util.Direction;
 import de.trafficsim.util.geometry.Position;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 
 public class TrackCurve extends Track {
@@ -30,7 +29,7 @@ public class TrackCurve extends Track {
         }
 
         radius = Math.abs(from.x - to.x);
-        isRight = inDir.isRightOf(outDir);
+        isRight = inDir.isLeftOf(outDir);
         calcCenter();
     }
 

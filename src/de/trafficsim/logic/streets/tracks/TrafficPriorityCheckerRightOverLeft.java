@@ -16,7 +16,7 @@ public class TrafficPriorityCheckerRightOverLeft extends TrafficPriorityChecker 
         for (Track t : start.getOutTrackList().get(0).getInTrackList()) {
             if (t != start) {
                 if (track instanceof TrackStraight) {
-                    if(t.getInDir().isRightOf(track.getOutDir())) {
+                    if(t.getInDir().isLeftOf(track.getOutDir())) {
                         checkBack(vehicleList, t, maxCheckDist);
                     }
                 } else {

@@ -2,6 +2,8 @@ package de.trafficsim.logic.vehicles;
 
 import de.trafficsim.gui.graphics.AreaGraphicsContext;
 import de.trafficsim.logic.network.Path;
+import de.trafficsim.logic.streets.StreetCross;
+import de.trafficsim.logic.streets.StreetRoundAbout;
 import de.trafficsim.logic.streets.tracks.Track;
 import de.trafficsim.logic.streets.tracks.TrafficPriorityChecker;
 import de.trafficsim.util.Util;
@@ -338,15 +340,29 @@ public class Vehicle {
 
         boolean leftBlink = false;
         boolean rightBlink = false;
+
+        Track formerTrack = null;
         for (Track track : path.subList(currentTrackNumber,(currentTrackNumber+3 <= path.size())?currentTrackNumber+3:path.size())) {
-            if (track.getInDir().isRightOf(track.getOutDir())){
-                rightBlink = true;
-                break;
+            if (track.getStreet() instanceof  StreetCross){
+                if (track.getInDir().isLeftOf(track.getOutDir())){
+                    rightBlink = true;
+                    break;
+                }
+                if (track.getInDir().isLeftOf(track.getOutDir().rotateClockWise().rotateClockWise())){
+                    leftBlink = true;
+                    break;
+                }
             }
-            if (track.getInDir().isRightOf(track.getOutDir().rotateClockWise().rotateClockWise())){
-                leftBlink = true;
-                break;
+            if (track.getStreet() instanceof StreetRoundAbout && currentTrack.getStreet() instanceof StreetRoundAbout){
+                if (track.getInDir().isLeftOf(track.getOutDir())){
+                    if (formerTrack != null && formerTrack.getOutDir().isLeftOf(formerTrack.getInDir())){
+                        rightBlink = true;
+                        break;
+                    }
+                }
             }
+            formerTrack = track;
+
         }
 
         double blinkerSize = CAR_SIZE*0.2;

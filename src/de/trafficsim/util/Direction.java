@@ -68,7 +68,7 @@ public enum Direction {
         return this == NORTH || this == SOUTH;
     }
 
-    public boolean isRightOf(Direction dir) {
+    public boolean isLeftOf(Direction dir) {
         return this == NORTH && dir == EAST || this == EAST && dir == SOUTH || this == SOUTH && dir == WEST || this == WEST && dir == NORTH;
     }
 

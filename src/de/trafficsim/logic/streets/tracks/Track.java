@@ -192,6 +192,9 @@ public abstract class Track {
         return vehiclesOnTrack;
     }
 
+    public Street getStreet() {
+        return street;
+    }
 
     private Color debugColor = Color.ORANGERED;
     public void select() {

@@ -2,6 +2,8 @@ package de.trafficsim.logic.streets.tracks;
 
 import de.trafficsim.gui.graphics.Area;
 import de.trafficsim.logic.network.Path;
+import de.trafficsim.logic.streets.Street;
+import de.trafficsim.logic.streets.StreetCross;
 import de.trafficsim.logic.streets.StreetRoundAbout;
 import de.trafficsim.logic.vehicles.Vehicle;
 import de.trafficsim.util.Util;
@@ -67,9 +69,9 @@ public class TrafficPriorityChecker {
             } else {
                 time = vehicle.getTimeForDist(track.length + (vehicle.getCurrentTrack().length-vehicle.getCurrentPosInTrack()));
             }
-            double lookDist = time*vehicle.maxVelocity + MIN_DIST;
+            double lookDist = (time*vehicle.maxVelocity + MIN_DIST) * (track.getStreet() instanceof StreetCross ? 2 : 1);
             //TODO Maybe Revert
-            List<Vehicle> vehicles = checkBackWithTrack(track, lookDist);
+            List<Vehicle> vehicles = (track.getStreet() instanceof StreetRoundAbout ? checkBackWithTrack(track,lookDist) : checkBack(track, lookDist));
 
             boolean ok = true;
             for (Vehicle v : vehicles) {
