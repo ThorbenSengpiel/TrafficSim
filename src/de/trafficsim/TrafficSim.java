@@ -70,7 +70,6 @@ public class TrafficSim extends Application {
             if (delta > 0.05) {
                 delta = 0.05;
             }
-            System.out.println(delta);
             timer += delta;
 
             double scaledDelta = guiController.getSpeedFactor()*delta;

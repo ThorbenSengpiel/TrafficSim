@@ -14,12 +14,12 @@ import static de.trafficsim.logic.vehicles.Vehicle.MIN_DIST;
 
 public class TrafficPriorityChecker {
 
-    private Track track;
-    private double stopPointPos;
+    protected Track track;
+    protected double stopPointPos;
 
-    private Vehicle letThroughVehicle;
+    protected Vehicle letThroughVehicle;
 
-    private List<TrackAndPosition> crossTracks;
+    protected List<TrackAndPosition> crossTracks;
 
 
     public TrafficPriorityChecker(Track track, double stopPointPos, TrackAndPosition... crossTrackPoints) {
@@ -133,18 +133,11 @@ public class TrafficPriorityChecker {
 
     }
 
-    private List<Vehicle> checkBack(Track start, double maxCheckDist) {
+    protected List<Vehicle> checkBack(Track start, double maxCheckDist) {
         List<Vehicle> vehicleList = new ArrayList<>();
         for (Track t : start.getOutTrackList().get(0).getInTrackList()) {
             if (t != start) {
-                //TODO ?????????????
-                if (track instanceof TrackStraight) {
-                    if(t.getInDir().isRightOf(track.getOutDir())) {
-                        checkBack(vehicleList, t, maxCheckDist);
-                    }
-                } else {
-                    checkBack(vehicleList, t, maxCheckDist);
-                }
+                checkBack(vehicleList, t, maxCheckDist);
             }
         }
         return vehicleList;
