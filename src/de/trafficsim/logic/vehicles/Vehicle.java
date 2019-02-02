@@ -112,7 +112,7 @@ public class Vehicle {
         }
         //Calculate dist to StopPoint on CurrTrack
         if (currentTrack.hasStopPoint()) {
-            if (currentTrack.isStopPointEnabled()) {
+            if (currentTrack.isStopPointEnabled() || !(checkIfStopPointPassPossible(currentTrack))) {
                 double delta = currentTrack.getStopPointPosition() - position;
                 //System.out.println("Stop Point Delta = " + delta + " Min Dist = " + minDist);
                 if(delta > 0){
@@ -149,7 +149,7 @@ public class Vehicle {
                     obstacleFound = true;
                 }
                 if (actTrack.hasStopPoint()) {
-                    if (actTrack.isStopPointEnabled()) {
+                    if (actTrack.isStopPointEnabled() || !(checkIfStopPointPassPossible(actTrack))) {
                         double distOfStopPointInTrack = actTrack.getStopPointPosition();
                         if (distOfStopPointInTrack + accumulator < minDist){
                             minDist = distOfStopPointInTrack + accumulator;
@@ -214,6 +214,23 @@ public class Vehicle {
         }
         //System.out.println("Min Dist =" + minDist);
         return minDist;
+    }
+
+    private boolean checkIfStopPointPassPossible(Track currentTrack) {
+        int stopPointIndexInPath = -1;
+        for(int i = currentTrackNumber; i < currentTrackNumber + 10 && i < path.size(); i++){
+            if (path.get(i) == currentTrack){
+                stopPointIndexInPath = i;
+            }
+        }
+        if (stopPointIndexInPath > -1){
+            for(int j = stopPointIndexInPath + 1; j < stopPointIndexInPath + 3 && j < path.size(); j++){
+                if (!path.get(j).getVehiclesOnTrack().isEmpty()){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     private void accelerate(double delta, double value) {
