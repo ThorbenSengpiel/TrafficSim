@@ -12,8 +12,7 @@ public enum StreetType {
 
     PARKING_DECK("Parking Deck", MenuCategory.SPAWNS, StreetParkingDeck.class),
 
-    STRAIGHT("Straight", MenuCategory.TEST, StreetStraight.class),
-    CROSS_TRAFFICLIGHTS("Trafficlight", MenuCategory.TEST, StreetCrossTrafficLights.class),
+    CROSS_TRAFFICLIGHTS("Trafficlight", MenuCategory.JUNCTIONS, StreetCrossTrafficLights.class),
     CROSS_TRAFFICLIGHTS_SMALL("Trafficlight Small", MenuCategory.JUNCTIONS, StreetCrossSmallTrafficLights.class);
 
     public final String uiName;

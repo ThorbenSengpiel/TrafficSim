@@ -256,29 +256,16 @@ public abstract class Street {
                 }
             }
             deadlockCount2 = found.size();
-        } else if (this instanceof StreetCross && groups.size() == 2) {
-            TrafficPriorityChecker a = null;
-            TrafficPriorityChecker b = null;
-            for (TrafficPriorityChecker trafficPriorityChecker : waiting) {
-                if (trafficPriorityChecker.getTrack() instanceof TrackCurve) {
-                    a = trafficPriorityChecker;
-                }
-            }
-            waiting.remove(a);
-            for (TrafficPriorityChecker trafficPriorityChecker : waiting) {
-                if (trafficPriorityChecker.getTrack() instanceof TrackCurve) {
-                    b = trafficPriorityChecker;
-                }
-            }
-
-            if (b != null) {
-                if (a.getTrack().getInDir().rotateClockWise().rotateClockWise().equals(b.getTrack().getInDir())) {
-                    a.letThrough();
-                    b.letThrough();
-                }
-            }
+        } else {
+            extraChecks(groups, waiting);
         }
     }
+
+    protected void extraChecks(List<List<TrafficPriorityChecker>> groups, List<TrafficPriorityChecker> waiting) {
+
+    }
+
+
     TrafficPriorityChecker debugLetThrough;
     int deadlockCount;
     int deadlockCount2;

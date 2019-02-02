@@ -1,8 +1,5 @@
 package de.trafficsim.logic.streets.tracks;
 
-import de.trafficsim.gui.graphics.Area;
-import de.trafficsim.logic.network.Path;
-import de.trafficsim.logic.streets.Street;
 import de.trafficsim.logic.streets.StreetCross;
 import de.trafficsim.logic.streets.StreetRoundAbout;
 import de.trafficsim.logic.vehicles.Vehicle;
@@ -150,7 +147,7 @@ public class TrafficPriorityChecker {
         return vehicleList;
     }
 
-    private List<Vehicle> checkBackCross(Track start, double maxCheckDist) {
+    protected List<Vehicle> checkBackCross(Track start, double maxCheckDist) {
         List<Vehicle> vehicleList = new ArrayList<>();
         checkBack(vehicleList, start, maxCheckDist);
         return vehicleList;
