@@ -1,8 +1,5 @@
 package de.trafficsim.logic.streets.tracks;
 
-import de.trafficsim.gui.graphics.Area;
-import de.trafficsim.logic.network.Path;
-import de.trafficsim.logic.streets.Street;
 import de.trafficsim.logic.streets.StreetCross;
 import de.trafficsim.logic.streets.StreetRoundAbout;
 import de.trafficsim.logic.vehicles.Vehicle;
@@ -69,7 +66,7 @@ public class TrafficPriorityChecker {
             } else {
                 time = vehicle.getTimeForDist(track.length + (vehicle.getCurrentTrack().length-vehicle.getCurrentPosInTrack()));
             }
-            double lookDist = (time*vehicle.maxVelocity + MIN_DIST) * (track.getStreet() instanceof StreetCross ? 2 : 1);
+            double lookDist = (time*vehicle.maxVelocity + MIN_DIST) * (track.getStreet() instanceof StreetCross ? 1 : 1);
             //TODO Maybe Revert
             List<Vehicle> vehicles = (track.getStreet() instanceof StreetRoundAbout ? checkBackWithTrack(track,lookDist) : checkBackWithTrack(track, lookDist));
 
@@ -101,7 +98,7 @@ public class TrafficPriorityChecker {
                     if (!free) {
                         return false;
                     }
-                    List<Vehicle> crossVehicles = checkBackCross(crossTrack, lookDist);
+                    List<Vehicle> crossVehicles = checkBackCross(crossTrack, lookDist*2);
                     for (Vehicle debugV : crossVehicles) {
                         vehicle.debug.add(new Pair<>(debugV, Color.ORANGE));
                     }
@@ -150,7 +147,7 @@ public class TrafficPriorityChecker {
         return vehicleList;
     }
 
-    private List<Vehicle> checkBackCross(Track start, double maxCheckDist) {
+    protected List<Vehicle> checkBackCross(Track start, double maxCheckDist) {
         List<Vehicle> vehicleList = new ArrayList<>();
         checkBack(vehicleList, start, maxCheckDist);
         return vehicleList;

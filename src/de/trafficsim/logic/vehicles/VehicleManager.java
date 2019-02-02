@@ -5,7 +5,6 @@ import de.trafficsim.logic.network.Path;
 import de.trafficsim.logic.network.Pathfinder;
 import de.trafficsim.logic.network.StreetNetworkManager;
 import de.trafficsim.logic.streets.Street;
-import de.trafficsim.logic.streets.StreetStraight;
 import de.trafficsim.logic.streets.StreetStraight2Lane;
 import de.trafficsim.logic.streets.tracks.Track;
 
