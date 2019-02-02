@@ -71,7 +71,7 @@ public class TrafficPriorityChecker {
             }
             double lookDist = (time*vehicle.maxVelocity + MIN_DIST) * (track.getStreet() instanceof StreetCross ? 2 : 1);
             //TODO Maybe Revert
-            List<Vehicle> vehicles = (track.getStreet() instanceof StreetRoundAbout ? checkBackWithTrack(track,lookDist) : checkBack(track, lookDist));
+            List<Vehicle> vehicles = (track.getStreet() instanceof StreetRoundAbout ? checkBackWithTrack(track,lookDist) : checkBackWithTrack(track, lookDist));
 
             boolean ok = true;
             for (Vehicle v : vehicles) {
