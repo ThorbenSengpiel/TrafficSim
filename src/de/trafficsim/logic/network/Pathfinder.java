@@ -93,10 +93,15 @@ public class Pathfinder {
             nextLayer = new LinkedList<>();
             for (int i = 0; i < currentLayer.size() && !found; i++){
                 Track former = currentLayer.get(i);
-                List<Track> outgoing = former.getOutTrackList();
-
-                for(int j = 0; j < outgoing.size() && !found; j++){
-                    Track next = outgoing.get(j);
+                List<Track> outgoing = new ArrayList<Track>(former.getOutTrackList());
+                List<Track> shuffledOutgoing = new ArrayList<>();
+                while(!outgoing.isEmpty()){
+                    int index = (int)(Math.random()*outgoing.size());
+                    shuffledOutgoing.add(outgoing.get(index));
+                    outgoing.remove(index);
+                }
+                for(int j = 0; j < shuffledOutgoing.size() && !found; j++){
+                    Track next = shuffledOutgoing.get(j);
                     if (! paths.containsKey(next)){
                         LinkedList<Track> pathToFormer = paths.get(former);
                         LinkedList<Track> pathToNext = (LinkedList<Track>) pathToFormer.clone();

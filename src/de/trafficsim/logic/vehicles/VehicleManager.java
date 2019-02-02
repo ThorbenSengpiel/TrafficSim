@@ -76,12 +76,15 @@ public class VehicleManager {
         /*StreetSpawn spawn = StreetNetworkManager.getInstance().getRandomSpawn();
         addVehicle(new Vehicle(50, Pathfinder.getRandomPath(spawn.getStartTrack(), 20)));*/
         Track spawn = StreetNetworkManager.getInstance().getRandomSpawn();
-        List<Street> allStreets = StreetNetworkManager.getInstance().getStreetList();
-        List<Street> allStraights = allStreets.stream().filter(street -> street instanceof StreetStraight2Lane).collect(Collectors.toList());
+        int intermediatePointCount = (int) (Math.random() * 2);
         List<Street> intermediateStreets = new ArrayList<>();
-        if (!allStraights.isEmpty()){
-            for (int i = 0; i < 2; i++) {
-                intermediateStreets.add(allStraights.get((int)(Math.random()*allStraights.size())));
+        if (intermediatePointCount > 0){
+            List<Street> allStreets = StreetNetworkManager.getInstance().getStreetList();
+            List<Street> allStraights = allStreets.stream().filter(street -> street instanceof StreetStraight2Lane).collect(Collectors.toList());
+            if (!allStraights.isEmpty()){
+                for (int i = 0; i < intermediatePointCount; i++) {
+                    intermediateStreets.add(allStraights.get((int)(Math.random()*allStraights.size())));
+                }
             }
         }
         Track destination = StreetNetworkManager.getInstance().getRandomEnd();
