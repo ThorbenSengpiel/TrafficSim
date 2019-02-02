@@ -93,7 +93,7 @@ public class Pathfinder {
             nextLayer = new LinkedList<>();
             for (int i = 0; i < currentLayer.size() && !found; i++){
                 Track former = currentLayer.get(i);
-                List<Track> outgoing = new ArrayList(former.getOutTrackList());
+                List<Track> outgoing = new ArrayList<Track>(former.getOutTrackList());
                 List<Track> shuffledOutgoing = new ArrayList<>();
                 while(!outgoing.isEmpty()){
                     int index = (int)(Math.random()*outgoing.size());
