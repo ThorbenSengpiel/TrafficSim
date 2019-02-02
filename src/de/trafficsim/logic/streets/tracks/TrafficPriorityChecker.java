@@ -69,7 +69,7 @@ public class TrafficPriorityChecker {
             } else {
                 time = vehicle.getTimeForDist(track.length + (vehicle.getCurrentTrack().length-vehicle.getCurrentPosInTrack()));
             }
-            double lookDist = (time*vehicle.maxVelocity + MIN_DIST) * (track.getStreet() instanceof StreetCross ? 2 : 1);
+            double lookDist = (time*vehicle.maxVelocity + MIN_DIST) * (track.getStreet() instanceof StreetCross ? 1 : 1);
             //TODO Maybe Revert
             List<Vehicle> vehicles = (track.getStreet() instanceof StreetRoundAbout ? checkBackWithTrack(track,lookDist) : checkBackWithTrack(track, lookDist));
 
@@ -101,7 +101,7 @@ public class TrafficPriorityChecker {
                     if (!free) {
                         return false;
                     }
-                    List<Vehicle> crossVehicles = checkBackCross(crossTrack, lookDist);
+                    List<Vehicle> crossVehicles = checkBackCross(crossTrack, lookDist*2);
                     for (Vehicle debugV : crossVehicles) {
                         vehicle.debug.add(new Pair<>(debugV, Color.ORANGE));
                     }
