@@ -4,12 +4,11 @@ import de.trafficsim.gui.views.StreetCrossView;
 import de.trafficsim.gui.views.StreetView;
 import de.trafficsim.logic.network.TrafficLightManager;
 import de.trafficsim.logic.streets.signs.TrafficLight;
-import de.trafficsim.logic.streets.tracks.Track;
-import de.trafficsim.logic.streets.tracks.TrackAndPosition;
-import de.trafficsim.logic.streets.tracks.TrackStraight;
-import de.trafficsim.logic.streets.tracks.TrafficPriorityChecker;
+import de.trafficsim.logic.streets.tracks.*;
 import de.trafficsim.util.Direction;
 import de.trafficsim.util.geometry.Position;
+
+import java.util.List;
 
 public class StreetCrossSmallTrafficLights extends Street {
 
@@ -48,17 +47,21 @@ public class StreetCrossSmallTrafficLights extends Street {
 
         for (int i = 0; i < 4; i++) {
             Track track = betweenTracks[i][(i + 1) % 4];
-            track.setPriorityStopPoint(new TrafficPriorityChecker(track, 5, new TrackAndPosition(betweenTracks[(i+2) % 4][i], 13.75)));
+            track.setPriorityStopPoint(new TrafficPriorityCheckerTrafficLights(track, 5, new TrackAndPosition(betweenTracks[(i+2) % 4][i], 13.75)));
         }
 
-        for (Track inTrack : inTracks) {
-            inTrack.createStopPoint(10, true);
+        for (Track[] tracks : betweenTracks) {
+            for (Track track : tracks) {
+                if (track != null) {
+                    track.createStopPoint(5, true);
+                }
+            }
         }
 
-        TrafficLight trafficLight0 = new TrafficLight(new Position(-8, -20), Direction.SOUTH, inTracks[0]);
-        TrafficLight trafficLight1 = new TrafficLight(new Position(20, -8), Direction.WEST, inTracks[1]);
-        TrafficLight trafficLight2 = new TrafficLight(new Position(8, 20), Direction.NORTH, inTracks[2]);
-        TrafficLight trafficLight3 = new TrafficLight(new Position(-20, 8), Direction.EAST, inTracks[3]);
+        TrafficLight trafficLight0 = new TrafficLight(new Position(-8, -20), Direction.SOUTH, betweenTracks[0]);
+        TrafficLight trafficLight1 = new TrafficLight(new Position(20, -8), Direction.WEST, betweenTracks[1]);
+        TrafficLight trafficLight2 = new TrafficLight(new Position(8, 20), Direction.NORTH, betweenTracks[2]);
+        TrafficLight trafficLight3 = new TrafficLight(new Position(-20, 8), Direction.EAST, betweenTracks[3]);
 
         trafficLightManager = new TrafficLightManager(16, 2, 2, true, trafficLight0, trafficLight1, trafficLight2, trafficLight3);
 
@@ -67,6 +70,7 @@ public class StreetCrossSmallTrafficLights extends Street {
         signList.add(trafficLight2);
         signList.add(trafficLight3);
 
+        stoppedCountForDeadLock = 4;
 
     }
 
@@ -75,6 +79,33 @@ public class StreetCrossSmallTrafficLights extends Street {
     @Override
     public void update(double delta) {
         trafficLightManager.update(delta);
+    }
+
+    @Override
+    protected void extraChecks(List<List<TrafficPriorityChecker>> groups, List<TrafficPriorityChecker> waiting) {
+        System.out.println("deadlock");
+        if (groups.size() == 2) {
+            TrafficPriorityChecker a = null;
+            TrafficPriorityChecker b = null;
+            for (TrafficPriorityChecker trafficPriorityChecker : waiting) {
+                if (trafficPriorityChecker.getTrack() instanceof TrackCurve) {
+                    a = trafficPriorityChecker;
+                }
+            }
+            waiting.remove(a);
+            for (TrafficPriorityChecker trafficPriorityChecker : waiting) {
+                if (trafficPriorityChecker.getTrack() instanceof TrackCurve) {
+                    b = trafficPriorityChecker;
+                }
+            }
+
+            if (b != null) {
+                if (a.getTrack().getInDir().rotateClockWise().rotateClockWise().equals(b.getTrack().getInDir())) {
+                    a.letThrough();
+                    b.letThrough();
+                }
+            }
+        }
     }
 
     @Override

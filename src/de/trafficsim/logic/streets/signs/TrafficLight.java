@@ -52,7 +52,9 @@ public class TrafficLight extends Sign {
             this.state = 0;
         }
         for (Track track : tracks) {
-            track.enableStopPoint(state != GREEN);
+            if (track != null) {
+                track.enableStopPoint(state != GREEN);
+            }
         }
     }
 }

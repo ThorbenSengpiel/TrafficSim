@@ -5,6 +5,8 @@ import de.trafficsim.gui.views.StreetView;
 import de.trafficsim.logic.streets.tracks.*;
 import de.trafficsim.util.geometry.Position;
 
+import java.util.List;
+
 public class StreetCross extends Street {
 
     public StreetCross() {
@@ -48,6 +50,32 @@ public class StreetCross extends Street {
 
         stoppedCountForDeadLock = 4;
 
+    }
+
+    @Override
+    protected void extraChecks(List<List<TrafficPriorityChecker>> groups, List<TrafficPriorityChecker> waiting) {
+        if (groups.size() == 2) {
+            TrafficPriorityChecker a = null;
+            TrafficPriorityChecker b = null;
+            for (TrafficPriorityChecker trafficPriorityChecker : waiting) {
+                if (trafficPriorityChecker.getTrack() instanceof TrackCurve) {
+                    a = trafficPriorityChecker;
+                }
+            }
+            waiting.remove(a);
+            for (TrafficPriorityChecker trafficPriorityChecker : waiting) {
+                if (trafficPriorityChecker.getTrack() instanceof TrackCurve) {
+                    b = trafficPriorityChecker;
+                }
+            }
+
+            if (b != null) {
+                if (a.getTrack().getInDir().rotateClockWise().rotateClockWise().equals(b.getTrack().getInDir())) {
+                    a.letThrough();
+                    b.letThrough();
+                }
+            }
+        }
     }
 
     @Override

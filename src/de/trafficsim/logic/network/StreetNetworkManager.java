@@ -51,7 +51,7 @@ public class StreetNetworkManager {
         //addStreet(new StreetStraight(new Position(-100,-150),new Position(100,-150)));
 
 
-        int size = 11;
+        int size = 5;
 
         int halfSize = size / 2;
         for (int x = -halfSize; x <= halfSize; x++) {
