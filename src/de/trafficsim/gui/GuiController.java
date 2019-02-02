@@ -40,9 +40,6 @@ public class GuiController {
     private CheckBox checkShowHitBox;
 
     @FXML
-    private Button addCarButton;
-
-    @FXML
     private Button startButton;
 
     @FXML
@@ -50,9 +47,6 @@ public class GuiController {
 
     @FXML
     private Button stopButton;
-
-    @FXML
-    private CheckBox checkShowFancyGraphics;
 
     @FXML
     private CheckBox checkShowVehicleInfo;
@@ -71,14 +65,6 @@ public class GuiController {
 
     @FXML
     private Label speedLabel;
-
-
-    @FXML
-    private TextField posOnTrack;
-    @FXML
-    private TextField trackID;
-    @FXML
-    private Button spawnStaticCar;
 
     private double speedFactor = 1;
     private Area area;
@@ -110,8 +96,6 @@ public class GuiController {
         checkShowTrackInfo.setOnAction(event -> area.setShowTrackInfo(checkShowTrackInfo.isSelected()));
         checkShowBoundingBox.setOnAction(event -> area.setShowBoundingBox(checkShowBoundingBox.isSelected()));
         checkShowHitBox.setOnAction(event -> area.setShowHitBox(checkShowHitBox.isSelected()));
-        addCarButton.setOnAction(event -> vehicleManager.spawnVehicle());
-        checkShowFancyGraphics.setOnAction(event -> area.setFancyGraphics(checkShowFancyGraphics.isSelected()));
 
         stopButton.setDisable(true);
         pauseButton.setDisable(true);
@@ -136,18 +120,18 @@ public class GuiController {
         });
 
         //set up the cars/sec widgets
-        spawnSlider.setValue(vehicleManager.getSpawnPerSecond());
+        spawnSlider.setValue(vehicleManager.getSpawnPerSecond()*60);
         spawnTextField.setText(Util.DOUBLE_FORMAT_0_00.format(spawnSlider.getValue()));
         //change slider value
         spawnSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            vehicleManager.setSpawnPerSecond(newValue.doubleValue());
-            spawnTextField.setText(Util.DOUBLE_FORMAT_0_00.format(vehicleManager.getSpawnPerSecond()));
+            vehicleManager.setSpawnPerSecond(newValue.doubleValue()/60.0);
+            spawnTextField.setText(Util.DOUBLE_FORMAT_0_00.format(vehicleManager.getSpawnPerSecond()*60));
         });
         //change textField value
         spawnTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             try {
                 double value = Double.parseDouble(newValue);
-                vehicleManager.setSpawnPerSecond(value);
+                vehicleManager.setSpawnPerSecond(value/60.0);
                 spawnSlider.setValue(value);
             }catch (NumberFormatException e){
             }
@@ -159,12 +143,6 @@ public class GuiController {
                 speedFactor = 0;
             }
             speedLabel.setText(speedFactor+"x");
-        });
-
-
-
-        spawnStaticCar.setOnAction(event -> {
-            vehicleManager.addVehicle(new StaticVehicle(Double.parseDouble(posOnTrack.getText()), Integer.parseInt(trackID.getText())));
         });
     }
 

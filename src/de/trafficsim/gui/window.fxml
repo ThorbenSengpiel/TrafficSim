@@ -19,35 +19,6 @@
                                 <CheckBox fx:id="checkShowTrackInfo" mnemonicParsing="false" text="Track Info" />
                                 <CheckBox fx:id="checkShowBoundingBox" mnemonicParsing="false" text="BoundingBox" />
                                 <CheckBox fx:id="checkShowHitBox" mnemonicParsing="false" text="HitBox" />
-                                <Button fx:id="addCarButton" mnemonicParsing="false" text="add Car" />
-                                <CheckBox fx:id="checkShowFancyGraphics" mnemonicParsing="false" text="Fancy Graphics" />
-
-                                <Label text="Spawn static Vehicle" />
-                                <GridPane prefHeight="45.0" prefWidth="145.0" scaleShape="false">
-
-                                    <TextField fx:id="posOnTrack" prefHeight="31.0" prefWidth="54.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                        <HBox.margin>
-                                            <Insets left="10.0" top="7.0" />
-                                        </HBox.margin>
-                                    </TextField>
-                                    <TextField fx:id="trackID" prefHeight="31.0" prefWidth="54.0" GridPane.columnIndex="1">
-                                        <HBox.margin>
-                                            <Insets left="10.0" top="7.0" />
-                                        </HBox.margin>
-                                    </TextField>
-                                    <Label text="Track ID"/>
-                                    <Label text="Pos on Track" GridPane.rowIndex="1"/>
-                                    <columnConstraints>
-                                        <ColumnConstraints/>
-                                        <ColumnConstraints/>
-                                    </columnConstraints>
-                                    <rowConstraints>
-                              <RowConstraints />
-                              <RowConstraints />
-                           </rowConstraints>
-                                </GridPane>
-
-                                <Button fx:id="spawnStaticCar" mnemonicParsing="false" text="add Car" />
                             </children>
                         </VBox>
                     </children>
@@ -87,11 +58,11 @@
                                         <Insets left="10.0" top="7.0" />
                                     </HBox.margin>
                                 </Button>
-                        <Label text="Cars/Sec:">
+                        <Label text="Cars/Min:">
                            <HBox.margin>
                               <Insets left="20.0" top="12.0" />
                            </HBox.margin></Label>
-                        <Slider fx:id="spawnSlider" majorTickUnit="2.0" max="10.0" minorTickCount="1" prefHeight="18.0" prefWidth="175.0" showTickLabels="true" showTickMarks="true">
+                        <Slider fx:id="spawnSlider" majorTickUnit="10.0" max="100.0" minorTickCount="1" prefHeight="18.0" prefWidth="180.0" showTickLabels="true" showTickMarks="true">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
@@ -106,7 +77,7 @@
                               <Insets left="20.0" top="12.0" />
                            </HBox.margin>
                         </Label>
-                        <Slider fx:id="speedSlider" blockIncrement="1.0" majorTickUnit="1.0" max="4.0" min="-3.0" minorTickCount="0" prefHeight="45.0" prefWidth="175.0" showTickMarks="true" snapToTicks="true">
+                        <Slider fx:id="speedSlider" blockIncrement="1.0" majorTickUnit="1.0" max="3.0" min="-3.0" minorTickCount="0" prefHeight="45.0" prefWidth="175.0" showTickMarks="true" snapToTicks="true">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>

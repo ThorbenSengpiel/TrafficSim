@@ -51,16 +51,19 @@ public class StreetNetworkManager {
         //addStreet(new StreetStraight(new Position(-100,-150),new Position(100,-150)));
 
 
-        for (int x = -1; x <= 1; x++) {
-            for (int y = -1; y <= 1; y++) {
+        int size = 11;
+
+        int halfSize = size / 2;
+        for (int x = -halfSize; x <= halfSize; x++) {
+            for (int y = -halfSize; y <= halfSize; y++) {
                 addStreet(new StreetCross(new Position(x*50, y*50)));
             }
         }
-        for (int i = -1; i <= 1; i++) {
-            addStreet(new StreetParkingDeck(new Position(100, i*50), Direction.NORTH));
-            addStreet(new StreetParkingDeck(new Position(i*50, 100), Direction.EAST));
-            addStreet(new StreetParkingDeck(new Position(-100, i*50), Direction.SOUTH));
-            addStreet(new StreetParkingDeck(new Position(i*50, -100), Direction.WEST));
+        for (int i = -halfSize; i <= halfSize; i++) {
+            addStreet(new StreetParkingDeck(new Position(halfSize*50+50, i*50), Direction.NORTH));
+            addStreet(new StreetParkingDeck(new Position(i*50, halfSize*50+50), Direction.EAST));
+            addStreet(new StreetParkingDeck(new Position(-halfSize*50-50, i*50), Direction.SOUTH));
+            addStreet(new StreetParkingDeck(new Position(i*50, -halfSize*50-50), Direction.WEST));
         }
 
         /*for (int x = 0; x < 2; x++) {

@@ -19,7 +19,7 @@ public class TrafficLight extends Sign {
     Track[] tracks;
 
     public TrafficLight(Position position, Direction rotation, Track... tracks) {
-        super(position, rotation, SignType.TRAFFIC_LIGHT);
+        super(position, rotation);
         this.tracks = tracks;
     }
 
