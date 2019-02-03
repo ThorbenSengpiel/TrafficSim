@@ -338,8 +338,7 @@ public class Vehicle {
 
     @Override
     public String toString() {
-        //return "T:" + currentTrack.id + " P: " + Util.DOUBLE_FORMAT_0_00.format(currentPosInTrack) + " V:" + Util.DOUBLE_FORMAT_0_00.format(velocity);
-        return "T:" + currentTrack.id + " -> " + debugBrakeReason;
+        return "T:" + currentTrack.id + " P: " + Util.DOUBLE_FORMAT_0_00.format(currentPosInTrack) + " V:" + Util.DOUBLE_FORMAT_0_00.format(velocity);
     }
 
     private double blinkTimer = 0;
@@ -400,10 +399,6 @@ public class Vehicle {
             agc.gc.setLineWidth(3*agc.scale);
             agc.setStroke(Color.WHITE);
             agc.gc.strokeRoundRect(-CAR_SIZE, -(CAR_SIZE /2), CAR_SIZE *2, CAR_SIZE, CAR_SIZE / 2, CAR_SIZE / 2);
-            double lookRadius = VEHICLE_LENGTH + brakeDistance() + 5;
-            agc.gc.setLineWidth(agc.scale*1.5);
-            agc.setStroke(Color.WHITE);
-            agc.gc.strokeOval(-lookRadius, -lookRadius, lookRadius*2, lookRadius*2);
 
 
             if (debugLastLookDist < 100000) {

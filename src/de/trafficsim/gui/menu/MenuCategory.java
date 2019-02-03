@@ -4,6 +4,7 @@ public enum MenuCategory {
 
     LANES("Lanes", null),
     JUNCTIONS("Junctions", null),
+    TRAFFIC_LIGHTS("Trafficlights", null),
     SPAWNS("Spawns", null);
 
     public final String uiName;

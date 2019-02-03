@@ -395,7 +395,7 @@ public class Area extends Pane {
 
         if (showTrackInfo) {
             for (StreetView streetView : streetViewList) {
-                agc.gc.setFont(new Font(agc.gc.getFont().getFamily(), 10));
+                agc.gc.setFont(new Font(agc.gc.getFont().getFamily(), 15));
                 for (Track track : streetView.getStreet().getTracks()) {
                     if (track.isFree()) {
                         agc.setFill(Color.BLACK);
@@ -405,7 +405,7 @@ public class Area extends Pane {
                     Position pos = agc.areaToCanvas(streetView.getStreet().getPosition().add(track.getFrom().getCenterBetween(track.getTo())));
                     agc.gc.fillText(track + "", pos.x, pos.y+10);
                 }
-                agc.gc.setFont(new Font(agc.gc.getFont().getFamily(), 25));
+                agc.gc.setFont(new Font(agc.gc.getFont().getFamily(), 20));
                 agc.gc.setFill(Color.RED);
                 Position pos = agc.areaToCanvas(streetView.getStreet().getPosition());
                 agc.gc.fillText(streetView.getStreet() + "", pos.x, pos.y+10);

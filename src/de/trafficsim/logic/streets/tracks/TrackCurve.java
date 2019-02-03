@@ -63,6 +63,5 @@ public class TrackCurve extends Track {
     @Override
     protected void renderTrack(AreaGraphicsContext agc) {
         agc.gc.strokeArc(center.x - radius, center.y - radius, radius*2, radius*2, isRight ? inDir.angle : inDir.angle-90, 90, ArcType.OPEN);
-
     }
 }

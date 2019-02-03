@@ -103,19 +103,9 @@ public abstract class Track {
 
         if (hasPriorityStopPoint()) {
             Vehicle currentVehicle = priorityStopPoint.getCurrentVehicle();
-            agc.gc.setStroke(currentVehicle == null ? Color.LIME : Color.ORANGE);
+            agc.gc.setStroke(currentVehicle == null ? Color.LIMEGREEN : Color.ORANGE);
             Position p = getPosOnArea(priorityStopPoint.getStopPointPos()).sub(street.getPosition());
-            if (currentVehicle != null) {
-                Position vecPos = currentVehicle.getPosition().sub(street.getPosition());
-                agc.gc.strokeLine(p.x, p.y, vecPos.x, vecPos.y);
-            }
             agc.gc.strokeOval(p.x-1, p.y-1, 2, 2);
-
-            agc.gc.setStroke(Color.MAGENTA);
-            for (TrackAndPosition crossTrack : priorityStopPoint.getCrossTracks()) {
-                Position pt = crossTrack.getTrack().getPosOnArea(crossTrack.getPosition()).sub(street.getPosition());
-                agc.gc.strokeOval(pt.x-1, pt.y-1, 2, 2);
-            }
         }
 
         if (!selected) {
