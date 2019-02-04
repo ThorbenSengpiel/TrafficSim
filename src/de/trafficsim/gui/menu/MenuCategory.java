@@ -1,5 +1,8 @@
 package de.trafficsim.gui.menu;
 
+/**
+ * Enum defining the Categories in the menu
+ */
 public enum MenuCategory {
 
     LANES("Lanes", null),

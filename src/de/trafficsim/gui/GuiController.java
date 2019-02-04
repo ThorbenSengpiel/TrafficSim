@@ -23,10 +23,16 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.util.List;
 
+/**
+ * Class used to implement the GUI Functionality. Is a singleton.
+ */
 public class GuiController {
 
     private static GuiController instance;
 
+    /*
+    Gui Elements Specified via FXML. Injected by the JavaFX Framework
+     */
     @FXML
     private AnchorPane paneCanvas;
 
@@ -66,7 +72,10 @@ public class GuiController {
     @FXML
     private Label speedLabel;
 
+    //Speed Factor to scale the time
     private double speedFactor = 1;
+
+    //Objects controlling the Simulation
     private Area area;
     private VehicleManager vehicleManager;
     private StreetNetworkManager streetNetworkManager;
@@ -77,6 +86,11 @@ public class GuiController {
 
     }
 
+    /**
+     * Function which returns an instance of the GUI- Controller and ensures that there is only one
+     * instance
+     * @return GUIController instance
+     */
     public static GuiController getInstance() {
         if (instance == null) {
             instance = new GuiController();
@@ -84,13 +98,19 @@ public class GuiController {
         return instance;
     }
 
+    /**
+     * Start the simulation. Called by the JavaFX Framework
+     * @param primaryStage - Stage on which the Scene should be rendered. Representing the window
+     */
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
+        //Initialize Manager and Area
         area = new Area();
         vehicleManager = VehicleManager.getInstance();
         streetNetworkManager = StreetNetworkManager.getInstance();
         paneCanvas.getChildren().add(area);
 
+        //Register Event Listener
         checkShowTracks.setOnAction(event -> area.setShowTracks(checkShowTracks.isSelected()));
         checkShowVehicleInfo.setOnAction(event -> area.setShowVehicleInfo(checkShowVehicleInfo.isSelected()));
         checkShowTrackInfo.setOnAction(event -> area.setShowTrackInfo(checkShowTrackInfo.isSelected()));
@@ -146,18 +166,28 @@ public class GuiController {
         });
     }
 
+    /**
+     * Reset Simulation
+     * @param e - ActionEvent
+     */
     @FXML
     private void createNew(ActionEvent e) {
         reset();
     }
 
+    /**
+     * Load a previously saved StreetNetwork from a file
+     * @param e
+     */
     @FXML
     private void openFile(ActionEvent e) {
         FileChooser fileChooser = new FileChooser();
 
+        //Only Select valid files
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Traffic Sim files (*.trafficsim)", "*.trafficsim");
         fileChooser.getExtensionFilters().add(extFilter);
 
+        //Change in Directory
         fileChooser.setInitialDirectory(new File("./data/"));
 
         File file = fileChooser.showOpenDialog(primaryStage);
@@ -173,6 +203,10 @@ public class GuiController {
         }
     }
 
+    /**
+     * Save the current Street network to a file
+     * @param e - ActionEvent
+     */
     @FXML
     private void saveFile(ActionEvent e) {
         FileChooser fileChooser = new FileChooser();
@@ -196,7 +230,11 @@ public class GuiController {
         }
     }
 
+    /**
+     * Reset the simulation
+     */
     private void reset() {
+        //Reset the buttons
         startButton.setDisable(false);
         stopButton.setDisable(true);
         pauseButton.setDisable(true);
@@ -205,52 +243,94 @@ public class GuiController {
         area.reset();
     }
 
+    /**
+     * Update the simulation
+     * @param delta - Time since the last Tick
+     */
     public void update(double delta) {
         area.draw(delta);
     }
 
+    /**
+     * Add a Street to the managed pool
+     * @param street - Street to be added
+     */
     public void addStreet(Street street) {
         area.addStreet(street);
     }
 
+    /**
+     * Remove a Street from the managed pool
+     * @param street - Street to be removed
+     */
     public void removeStreet(Street street) {
         area.removeStreet(street);
     }
 
+    /**
+     * Add a vehicle to the managed pool
+     * @param vehicle - Vehicle to be added
+     */
     public void addVehicle(Vehicle vehicle) {
         area.addVehicle(vehicle);
     }
 
+    /**
+     * Remove a vehicle from the managed pool
+     * @param vehicle - Vehicle to be removed
+     */
     public void removeVehicle(Vehicle vehicle) {
         area.removeVehicle(vehicle);
     }
 
+    /**
+     * Start the simulation objects
+     */
     public void startModules() {
         streetNetworkManager.start();
         vehicleManager.start();
         area.start();
     }
 
+    /**
+     * Stop the simulation objects
+     */
     public void stopModules() {
         streetNetworkManager.stop();
         vehicleManager.stop();
         area.stop();
     }
 
+    /**
+     * Pause the simulation objects
+     */
     public void pauseModules() {
         streetNetworkManager.pause();
         vehicleManager.pause();
         area.pause();
     }
 
+    /**
+     * Pass the key event to the area
+     * @param event - Key Event to be passed
+     */
     public void keyPressed(KeyEvent event) {
         area.keyPressed(event);
     }
 
+    //TODO Comment
+    /**
+     *
+     * @param street
+     */
     public void newEditableStreet(StreetTwoPositions street) {
         area.newEditableStreet(street);
     }
 
+    /**
+     * Getter for the speed factor
+     * @return Double representing the speed factor
+     */
     public double getSpeedFactor() {
         return speedFactor;
     }

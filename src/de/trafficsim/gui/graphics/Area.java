@@ -25,16 +25,23 @@ import javafx.util.Pair;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class representing the Simulation Area on which the vehicles and streets are rendered
+ */
 public class Area extends Pane {
 
+    //Canvas containing the moving entities
     private Canvas foregound;
+    //Canvas containing static entities such as streets
     private Canvas background;
 
+    //Position to Track the x and y offset
     private Position center;
     //Scale in meter per Pixel
     private double scale;
     public static int GRID_SPACING = 25;
 
+    //Variables used for Drag&Drop
     private boolean editingNew;
     private StreetTwoPositions editable;
     private StreetView dragged;
@@ -42,10 +49,12 @@ public class Area extends Pane {
     private Position dragStartPos;
     private Position dragStartCenter;
 
+    //List of the StreetViews to be rendered and the vehicles
     private List<StreetView> streetViewList = new ArrayList<>();
     private List<Vehicle> vehicleList = new ArrayList<>();
 
 
+    //Boolean tracking the checkbox values
     private boolean showTracks = false;
     private boolean showHitBox = false;
     private boolean showBoundingBox = false;
@@ -53,6 +62,7 @@ public class Area extends Pane {
 
     private boolean running = false;
 
+    //Right Click Menu
     private CreateMenu createMenu;
 
     private Vehicle selectedVehicle = null;
@@ -63,16 +73,19 @@ public class Area extends Pane {
         super();
 
         //setBackground(new Background(new BackgroundFill(Color.RED, null, null)));
+        //Init the Pane
         AnchorPane.setBottomAnchor(this, 0.0);
         AnchorPane.setTopAnchor(this, 0.0);
         AnchorPane.setLeftAnchor(this, 0.0);
         AnchorPane.setRightAnchor(this, 0.0);
 
+        //Init the background
         background = new Canvas(200, 200);
         background.widthProperty().bind(widthProperty().subtract(20));
         background.heightProperty().bind(heightProperty().subtract(20));
         getChildren().add(background);
 
+        //Init the foreground
         foregound = new Canvas(200, 200);
         foregound.widthProperty().bind(widthProperty().subtract(20));
         foregound.heightProperty().bind(heightProperty().subtract(20));
@@ -82,7 +95,7 @@ public class Area extends Pane {
         this.center = new Position(0, 0);
         this.scale = 1/* m/Pixel */;
 
-
+        //Register Event Listener
         setOnMouseDragged(this::mouseDrag);
 
         setOnMouseMoved(this::mouseMoved);
@@ -113,6 +126,10 @@ public class Area extends Pane {
         });
     }
 
+    /**
+     * Function to handle movement with dragging an item or offsetting the canvas
+     * @param e - Event
+     */
     private void mouseMoved(MouseEvent e) {
         if (editingNew) {
             if (dragStartPos != null) {
@@ -126,6 +143,10 @@ public class Area extends Pane {
         }
     }
 
+    /**
+     * Function to handle letting go of a mouse button. Thereby revealing Vehicle information when clicked on a vehicle
+     * @param e - MouseEvent
+     */
     private void mouseClicked(MouseEvent e) {
         createMenu.hide();
         Position pos = agcFG.canvasToArea(new Position(e.getX(), e.getY()));
@@ -136,6 +157,10 @@ public class Area extends Pane {
         }
     }
 
+    /**
+     * React to pressing the 'r' Key on the keyboard by rotating the dragged Street
+     * @param e
+     */
     public void keyPressed(KeyEvent e) {
         if (dragged != null) {
             if (e.getCode() == KeyCode.R) {
@@ -148,14 +173,21 @@ public class Area extends Pane {
         }
     }
 
-
+    /**
+     * Function to handle a mouse pressed event
+     * @param e
+     */
     private void mousePressed(MouseEvent e) {
+        //Calculate the effective mouse position
         Position pos = agcFG.canvasToArea(new Position(e.getX(), e.getY()));
         StreetView hit = null;
+        //If the simulation is stopped and no entity is being dragged
         if (!running && !editingNew) {
+            //Get the hit enemy
             hit = getStreetAt(pos);
         }
         pos = agcFG.canvasToAreaNoOffset(new Position(e.getX(), e.getY()));
+        //Begin dragging
         dragStartPos = pos;
         dragCurrentPos = pos;
         if (hit != null) {
@@ -167,6 +199,11 @@ public class Area extends Pane {
         }
     }
 
+    /**
+     * Get the street at a specific position, if there is one
+     * @param pos - Position on the screen to check for
+     * @return StreetView of the Street in the model
+     */
     private StreetView getStreetAt(Position pos) {
         for (int i = streetViewList.size()-1; i >= 0; i--) {
             if (streetViewList.get(i).PointHit(pos)) {
@@ -176,6 +213,10 @@ public class Area extends Pane {
         return null;
     }
 
+    /**
+     * Reacting to global mouse button release event. Thereby stop dragging a dragged street and fix them in place
+     * @param e - MouseEvent
+     */
     private void mouseReleased(MouseEvent e) {
         dragCurrentPos = null;
         dragStartPos = null;
@@ -185,6 +226,7 @@ public class Area extends Pane {
                 editingNew = false;
                 editable = null;
             } else {
+                //Fix the street in place
                 dragged.getStreet().setPosition(dragged.getStreet().getPosition().snapToGrid(GRID_SPACING));
             }
             StreetNetworkManager.getInstance().addStreet(dragged.getStreet());
@@ -192,6 +234,10 @@ public class Area extends Pane {
         }
     }
 
+    /**
+     * Function to handle dragging the mouse. Thereby update the position of a dragged object or the position of the canvas
+     * @param e - MouseEvent
+     */
     private void mouseDrag(MouseEvent e) {
         if (dragStartPos != null) {
             dragCurrentPos = agcFG.canvasToAreaNoOffset(new Position(e.getX(), e.getY()));
@@ -205,17 +251,20 @@ public class Area extends Pane {
     }
 
 
+    //Graphic Contexts for the canvas
     private AreaGraphicsContext agcFG;
     private AreaGraphicsContext agcBG;
+    //Dirty Flag to check whether the background has to be drawn
     private boolean bgDirtyFlag = true;
 
+    //Draw the Scene
     public void draw(double delta) {
         agcFG = new AreaGraphicsContext(foregound.getGraphicsContext2D(), center, scale, getWidth(), getHeight());
         agcFG.setFancyGraphics(showFancyGraphics);
 
         agcBG = new AreaGraphicsContext(background.getGraphicsContext2D(), center, scale, getWidth(), getHeight());
 
-
+        //Check which streets are currently visible
         ArrayList<StreetView> visibleStreetViews = new ArrayList<>();
         for (StreetView view : streetViewList) {
             if (view.isVisible(agcFG)) {
@@ -226,20 +275,24 @@ public class Area extends Pane {
         agcFG.gc.clearRect(0, 0, getWidth(), getHeight());
 
         agcFG.gc.save();
+        //Offset the canvas
         agcFG.gc.translate(agcFG.canvasCenter.x, agcFG.canvasCenter.y);
         agcFG.gc.scale(1/agcFG.scale, 1/agcFG.scale);
         agcFG.gc.translate(-agcFG.center.x, -agcFG.center.y);
 
+        //Only redraw background if it has to be drawn again
         if (bgDirtyFlag) {
             agcBG.gc.clearRect(0, 0, getWidth(), getHeight());
             drawArea(agcBG);
             agcBG.gc.save();
+            //Offset background
             agcBG.gc.translate(agcFG.canvasCenter.x, agcFG.canvasCenter.y);
             agcBG.gc.scale(1/agcFG.scale, 1/agcFG.scale);
             agcBG.gc.translate(-agcFG.center.x, -agcFG.center.y);
 
             drawStreets(agcBG, visibleStreetViews);
 
+            //Draw debug information if set
             if (showBoundingBox) {
                 drawBoundingBoxes(agcBG, visibleStreetViews);
             }
@@ -250,6 +303,7 @@ public class Area extends Pane {
             bgDirtyFlag = false;
         }
 
+        //Draw the foreground Objects
         drawVehicles(agcFG);
         drawStreetsOverVehicles(agcFG, visibleStreetViews);
         drawPreviewElement(agcFG);
@@ -259,10 +313,15 @@ public class Area extends Pane {
         drawOverlay(agcFG, delta);
     }
 
+    /**
+     * Function to draw the vehicles
+     * @param agc - Graphics Context which should be used to draw them
+     */
     private void drawVehicles(AreaGraphicsContext agc) {
         agc.setEffect(shadow);
         for (Vehicle vehicle : vehicleList) {
             Position position = vehicle.getPosition();
+            //Transform the canvas
             agc.gc.translate(position.x, position.y);
             double rot = vehicle.getDirection();
             agc.gc.rotate(rot);
@@ -270,10 +329,12 @@ public class Area extends Pane {
             //agc.gc.drawImage(img, -CAR_SIZE, -(CAR_SIZE/2), CAR_SIZE*2, CAR_SIZE);
             vehicle.draw(agc, vehicle == selectedVehicle);
 
+            //Revert Transformation
             agc.gc.rotate(-rot);
             agc.gc.translate(-position.x, -position.y);
         }
         agc.setEffect(null);
+        //Draw Debug for each selected Vehicle
         if (selectedVehicle != null && selectedVehicle.debug != null) {
             for (Pair<Vehicle, Color> pair : selectedVehicle.debug) {
                 agc.setStroke(pair.getValue());
@@ -287,7 +348,10 @@ public class Area extends Pane {
         }
     }
 
-
+    /**
+     * Draw a shadow of the dragged Element snapped to the grid as a preview
+     * @param agc - Graphics Context to use for drawing
+     */
     private void drawPreviewElement(AreaGraphicsContext agc) {
         if (dragged != null) {
             agc.setTransparent(true);
@@ -299,6 +363,10 @@ public class Area extends Pane {
         }
     }
 
+    /**
+     * Draw the grid
+     * @param agc - Graphics Context to use for Drawing
+     */
     private void drawArea(AreaGraphicsContext agc) {
         agc.gc.setFill(Color.color(0.4, 0.8, 0.3));
         agc.gc.setStroke(Color.gray(0.5, 0.2));
@@ -316,19 +384,36 @@ public class Area extends Pane {
         }
     }
 
+    /**
+     * Draw All streets on the screen
+     * @param agc - Graphics context to use for drawing
+     * @param streetViews - All StreetViews that should be drawn
+     */
     private void drawStreets(AreaGraphicsContext agc, List<StreetView> streetViews) {
         for (StreetView view : streetViews) {
             view.drawI(agc);
         }
     }
 
+    //TODO Add Comment
+    /**
+     *
+     * @param agc
+     * @param streetViews
+     */
     private void drawStreetsOverVehicles(AreaGraphicsContext agc, List<StreetView> streetViews) {
         for (StreetView view : streetViews) {
             view.drawOverVehicleI(agc);
         }
     }
 
+    /**
+     * Draw All Tracks of the given Street View
+     * @param agc - Graphics context to use for drawing
+     * @param streetViews - All StreetViews that should be drawn
+     */
     private void drawTracks(AreaGraphicsContext agc, List<StreetView> streetViews) {
+        // If there is a selected vehicle, then highlight its path
         if (selectedVehicle != null) {
             for (Track track : selectedVehicle.getPath()) {
                 if (!track.isSelected()) {
@@ -341,6 +426,11 @@ public class Area extends Pane {
         }
     }
 
+    /**
+     * Draw the bounding Boxes for debug
+     * @param agc - Graphics context to use for drawing
+     * @param streetViews - All StreetViews for which the Boundingboxes should be drawn
+     */
     private void drawBoundingBoxes(AreaGraphicsContext agc, List<StreetView> streetViews) {
         agc.gc.setFill(Color.TRANSPARENT);
         agc.gc.setLineWidth(2*agc.scale);
@@ -350,6 +440,11 @@ public class Area extends Pane {
         }
     }
 
+    /**
+     * Draw the hit Boxes for debug
+     * @param agc - Graphics context to use for drawing
+     * @param streetViews - All StreetViews for which the Hitboxes should be drawn
+     */
     private void drawHitBoxes(AreaGraphicsContext agc, List<StreetView> streetViews) {
         agc.gc.setFill(Color.TRANSPARENT);
         agc.gc.setLineWidth(2*agc.scale);
@@ -361,6 +456,12 @@ public class Area extends Pane {
 
     private double[] fps = new double[60];
     int current = 0;
+
+    /**
+     * Calculate the Fps for the actual delta.
+     * @param delta - Time since the last Tick
+     * @return Average fps over the last 60 Ticks
+     */
     private double calcFps(double delta) {
         fps[current] = 1/delta;
         current++;
@@ -372,12 +473,19 @@ public class Area extends Pane {
         return avg / fps.length;
     }
 
+    /**
+     * Function to draw the Overlay with more Information for Debug and other purposes
+     * @param agc - Graphics Context to use for drawing
+     * @param delta - Time since the last Tick
+     */
     private void drawOverlay(AreaGraphicsContext agc, double delta) {
 
+        //Setup Fonts
         agc.gc.setFont(new Font(agc.gc.getFont().getFamily(), 15));
         agc.gc.setFill(Color.BLACK);
         agc.gc.setTextAlign(TextAlignment.LEFT);
 
+        //Draw Information about the Fps, Track Count and cars
         agc.gc.fillText(Util.DOUBLE_FORMAT_0_0000.format(calcFps(delta))+" fps", 10, 30);
         agc.gc.fillText(StreetNetworkManager.getInstance().getTrackCount() +" Tracks", 10, 50);
         agc.gc.fillText(VehicleManager.getInstance().getVehicleList().size()+" cars", 10, 70);
@@ -386,13 +494,14 @@ public class Area extends Pane {
         agc.gc.setStroke(Color.BLACK);
         agc.gc.setLineWidth(3);
 
-
+        //Render Scale
         agc.gc.strokeLine(getWidth() - 25, getHeight() - 25, getWidth() - 25, getHeight() - 45);
         agc.gc.strokeLine(getWidth() - 125, getHeight() - 25, getWidth() - 125, getHeight() - 45);
         agc.gc.strokeLine(getWidth() - 125, getHeight() - 25, getWidth() - 25, getHeight() - 25);
         agc.gc.setTextAlign(TextAlignment.CENTER);
         agc.gc.fillText(Util.DOUBLE_FORMAT_0_0000.format(agc.scaleToArea(100)) + "m", getWidth() - 75, getHeight() - 35);
 
+        //If ShowTrackInfo flag is set, then display bonus Track information
         if (showTrackInfo) {
             for (StreetView streetView : streetViewList) {
                 agc.gc.setFont(new Font(agc.gc.getFont().getFamily(), 15));
@@ -403,15 +512,18 @@ public class Area extends Pane {
                         agc.setFill(Color.DARKGREEN);
                     }
                     Position pos = agc.areaToCanvas(streetView.getStreet().getPosition().add(track.getFrom().getCenterBetween(track.getTo())));
+                    //Render the debug information
                     agc.gc.fillText(track + "", pos.x, pos.y+10);
                 }
                 agc.gc.setFont(new Font(agc.gc.getFont().getFamily(), 20));
                 agc.gc.setFill(Color.RED);
                 Position pos = agc.areaToCanvas(streetView.getStreet().getPosition());
+                //Render street information
                 agc.gc.fillText(streetView.getStreet() + "", pos.x, pos.y+10);
             }
         }
         agc.setFill(Color.WHITE);
+        //Render vehicle info if flag is set
         if (showVehicleInfo) {
             for (Vehicle vehicle : vehicleList) {
                 Position pos = agc.areaToCanvas(vehicle.getPosition());
@@ -421,7 +533,7 @@ public class Area extends Pane {
 
     }
 
-
+    //Functions to set flags
     public void setShowTracks(boolean selected) {
         showTracks = selected;
     }
@@ -436,79 +548,16 @@ public class Area extends Pane {
         setBgDirty();
     }
 
-    public void addStreet(Street street) {
-        if (dragged != null && street == dragged.getStreet()) {
-            streetViewList.add(dragged);
-        } else {
-            streetViewList.add(street.createView());
-        }
-        setBgDirty();
-    }
-
-    public void removeStreet(Street street) {
-        for (StreetView streetView : streetViewList) {
-            if (streetView.getStreet() == street) {
-                streetViewList.remove(streetView);
-                break;
-            }
-        }
-        setBgDirty();
-    }
-
-    private StreetView getView(Street street) {
-        for (StreetView streetView : streetViewList) {
-            if (streetView.getStreet() == street) {
-                return streetView;
-            }
-        }
-        return null;
-    }
-
-    public void addVehicle(Vehicle vehicle) {
-        vehicleList.add(vehicle);
-    }
-
-    public void removeVehicle(Vehicle vehicle) {
-        vehicleList.remove(vehicle);
-        if (vehicle == selectedVehicle) {
-            selectedVehicle = null;
-        }
-    }
-
-    public void start() {
-        running = true;
-    }
-    public void stop() {
-        running = false;
-    }
-    public void pause() {
-        running = true;
-    }
-
-    public void reset() {
-        stop();
-    }
-
-    public void removeStreetAt(Position pos) {
-        StreetView street = getStreetAt(pos);
-        if (street != null) {
-            StreetNetworkManager.getInstance().removeStreet(street.getStreet());
-        }
-    }
-
-    public void newEditableStreet(StreetTwoPositions street) {
-        Position pos = street.getPosition();
-        editable = street;
-        editingNew = true;
-        dragStartPos = pos;
-        dragCurrentPos = pos;
-        dragStartCenter = pos;
-        dragged = street.createView();
-    }
-
-    public void setFancyGraphics(boolean selected) {
-        showFancyGraphics = selected;
-    }
+    /**
+     private StreetView getView(Street street) {
+     for (StreetView streetView : streetViewList) {
+     if (streetView.getStreet() == street) {
+     return streetView;
+     }
+     }
+     return null;
+     }
+     **/
 
     private boolean showTrackInfo;
 
@@ -525,4 +574,106 @@ public class Area extends Pane {
     public void setBgDirty() {
         bgDirtyFlag = true;
     }
+
+    /**
+     * Add a street to be managed
+     * @param street - Street to be added
+     */
+    public void addStreet(Street street) {
+        if (dragged != null && street == dragged.getStreet()) {
+            streetViewList.add(dragged);
+        } else {
+            streetViewList.add(street.createView());
+        }
+        setBgDirty();
+    }
+    /**
+     * Remove a street from the managed pool
+     * @param street - Street to be added
+     */
+    public void removeStreet(Street street) {
+        for (StreetView streetView : streetViewList) {
+            if (streetView.getStreet() == street) {
+                streetViewList.remove(streetView);
+                break;
+            }
+        }
+        setBgDirty();
+    }
+    //TODO check if needed
+
+    /**
+     * Add a vehicle to the managed pool
+     * @param vehicle - Vehicle to be added
+     */
+    public void addVehicle(Vehicle vehicle) {
+        vehicleList.add(vehicle);
+    }
+
+    /**
+     * Remove a vehicle from the managed pool
+     * @param vehicle - Vehicle to be removed
+     */
+    public void removeVehicle(Vehicle vehicle) {
+        vehicleList.remove(vehicle);
+        if (vehicle == selectedVehicle) {
+            selectedVehicle = null;
+        }
+    }
+
+    /**
+     * Start the simulation
+     */
+    public void start() {
+        running = true;
+    }
+
+    /**
+     * Stop the simulation
+     */
+    public void stop() {
+        running = false;
+    }
+
+    /**
+     * Pause the simulation
+     */
+    public void pause() {
+        running = true;
+    }
+
+    /**
+     * Reset the simulation
+     */
+    public void reset() {
+        stop();
+    }
+
+    /**
+     * Remove the street at a specified position if there is one
+     * @param pos - Position which should be checked
+     */
+    public void removeStreetAt(Position pos) {
+        StreetView street = getStreetAt(pos);
+        if (street != null) {
+            StreetNetworkManager.getInstance().removeStreet(street.getStreet());
+        }
+    }
+
+    public void newEditableStreet(StreetTwoPositions street) {
+        Position pos = street.getPosition();
+        editable = street;
+        editingNew = true;
+        dragStartPos = pos;
+        dragCurrentPos = pos;
+        dragStartCenter = pos;
+        dragged = street.createView();
+    }
+    //TODO Check if needed
+    /*
+    public void setFancyGraphics(boolean selected) {
+        showFancyGraphics = selected;
+    }
+    */
+
 }
