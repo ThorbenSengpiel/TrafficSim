@@ -172,12 +172,7 @@ public abstract class Street {
 
     @Override
     public String toString() {
-        String s = "";
-        if (debugLetThrough != null) {
-            s+=debugLetThrough.getTrack().id;
-        }
-        //return type + " " + position + " " + rotation + " deadlock " + s + " " + deadlockCount;
-        return s + " " + deadlockCount + " " + deadlockCount2;
+        return type + " " + position + " " + rotation;
     }
 
     public void addPriorityStopPoint(TrafficPriorityChecker priorityStopPoint) {
@@ -231,7 +226,6 @@ public abstract class Street {
                 }
             }
         }
-        deadlockCount = groups.size();
         if (groups.size() == 0) {
             TrafficPriorityChecker selected = waiting.get((int) (Math.random() * waiting.size()));
             //debugLetThrough = selected;
@@ -255,7 +249,6 @@ public abstract class Street {
                     selected.letThrough();
                 }
             }
-            deadlockCount2 = found.size();
         } else {
             extraChecks(groups, waiting);
         }
@@ -264,11 +257,6 @@ public abstract class Street {
     protected void extraChecks(List<List<TrafficPriorityChecker>> groups, List<TrafficPriorityChecker> waiting) {
 
     }
-
-
-    TrafficPriorityChecker debugLetThrough;
-    int deadlockCount;
-    int deadlockCount2;
 
 
 }
