@@ -89,6 +89,9 @@ public class Area extends Pane {
         foregound = new Canvas(200, 200);
         foregound.widthProperty().bind(widthProperty().subtract(20));
         foregound.heightProperty().bind(heightProperty().subtract(20));
+        widthProperty().addListener(observable -> setBgDirty());
+        heightProperty().addListener(observable -> setBgDirty());
+
         getChildren().add(foregound);
 
 

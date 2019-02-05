@@ -83,7 +83,7 @@ public class StreetCrossSmallTrafficLights extends Street {
 
     @Override
     protected void extraChecks(List<List<TrafficPriorityChecker>> groups, List<TrafficPriorityChecker> waiting) {
-        System.out.println("deadlock");
+        //System.out.println("deadlock");
         if (groups.size() == 2) {
             TrafficPriorityChecker a = null;
             TrafficPriorityChecker b = null;

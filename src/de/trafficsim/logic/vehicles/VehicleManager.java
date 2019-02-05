@@ -127,7 +127,7 @@ public class VehicleManager {
             if (path != null) {
                 addVehicle(new Vehicle(0,path));
             } else {
-                System.out.println("no Path found between " + spawn + " and " + destination);
+                //System.out.println("no Path found between " + spawn + " and " + destination);
             }
         }
     }

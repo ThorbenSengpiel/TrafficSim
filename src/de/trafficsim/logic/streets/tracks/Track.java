@@ -254,7 +254,7 @@ public abstract class Track {
         if (hasStopPoint()) {
             if (isStopPointEnabled()) {
                 double delta = getStopPointPosition() - from;
-                System.out.println("Stop Point Delta = " + delta + " Min Dist = " + minDist);
+                //System.out.println("Stop Point Delta = " + delta + " Min Dist = " + minDist);
                 if(delta > 0){
                     minDist = (minDist > delta ? delta : minDist);
                 }
@@ -264,7 +264,7 @@ public abstract class Track {
             TrafficPriorityChecker checker = getPriorityStopPoint();
             if (!checker.checkFree(vehicle)) {
                 double delta = checker.getStopPointPos() - from;
-                System.out.println("Prio Stop Point Delta = " + delta + " Min Dist = " + minDist);
+                //System.out.println("Prio Stop Point Delta = " + delta + " Min Dist = " + minDist);
                 if(delta > 0){
                     minDist = (minDist > delta ? delta : minDist);
                 }
@@ -298,7 +298,7 @@ public abstract class Track {
         if (hasStopPoint()) {
             if (isStopPointEnabled()) {
                 double delta = getStopPointPosition() - from;
-                System.out.println("Stop Point Delta = " + delta + " Min Dist = " + minDist);
+                //System.out.println("Stop Point Delta = " + delta + " Min Dist = " + minDist);
                 if(delta > 0){
                     minDist = (minDist > delta ? delta : minDist);
                 }

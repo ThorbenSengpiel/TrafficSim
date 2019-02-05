@@ -164,9 +164,9 @@ public class TrafficPriorityChecker {
 
     public List<Vehicle> checkBackWithTrack(Track toLookTrack, double maxCheckDist){
         List<Vehicle> foundVehicles = checkBack(toLookTrack, maxCheckDist);
-        System.out.println("Found Vehicles for CheckBackOnTrack " + toLookTrack + " = " + Arrays.toString(foundVehicles.toArray()));
+        //System.out.println("Found Vehicles for CheckBackOnTrack " + toLookTrack + " = " + Arrays.toString(foundVehicles.toArray()));
         List<Vehicle> vehicleColliding = foundVehicles.stream().filter(new collidesWithPath(toLookTrack)).collect(Collectors.toList());
-        System.out.println(" --> " + Arrays.toString(vehicleColliding.toArray()));
+        //System.out.println(" --> " + Arrays.toString(vehicleColliding.toArray()));
         return vehicleColliding;
     }
 
@@ -183,9 +183,9 @@ public class TrafficPriorityChecker {
                 toCheckTracks.addAll(formerTracks.get(0).getOutTrackList());
             }
             if (toCheckTrack.street instanceof StreetRoundAbout){
-                System.out.println("FromTrack = " + toCheckTrack);
-                System.out.println("ToCheck= " + Arrays.toString(toCheckTracks.toArray()));
-                System.out.println("Former =" + formerTracks.get(0));
+                //System.out.println("FromTrack = " + toCheckTrack);
+                //System.out.println("ToCheck= " + Arrays.toString(toCheckTracks.toArray()));
+                //System.out.println("Former =" + formerTracks.get(0));
             }
         }
         @Override
