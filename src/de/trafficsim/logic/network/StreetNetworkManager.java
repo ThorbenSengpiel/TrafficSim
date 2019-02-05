@@ -33,25 +33,8 @@ public class StreetNetworkManager {
     }
 
     public void initialize(){
-        /*Street p0 = new StreetParkingDeck(new Position(100, 50), Direction.NORTH);
-        Street p1 = new StreetParkingDeck(new Position(100, 0), Direction.NORTH);
-        Street p2 = new StreetParkingDeck(new Position(100, -50), Direction.NORTH);
-        addStreet(p0, p1, p2);
-        Street s = new StreetStraight(new Position(-100,-150),new Position(100,-150));*/
 
-        /*Street s0 = new StreetStraight(new Position(-100,-100),new Position(100,-100));
-        Street s1 = new StreetStraight(new Position(100,-100),new Position(100,100));
-        Street s2 = new StreetStraight(new Position(100,100),new Position(-100,100));
-        Street s3 = new StreetStraight(new Position(-100,100),new Position(-100,-100));
-
-
-
-        addStreet(new StreetRoundAbout(new Position(0, -150), true));
-        addStreet(s, s0, s1, s2, s3);*/
-        //addStreet(new StreetStraight(new Position(-100,-150),new Position(100,-150)));
-
-
-        int size = 5;
+        int size = 3;
 
         int halfSize = size / 2;
         for (int x = -halfSize; x <= halfSize; x++) {
@@ -65,16 +48,6 @@ public class StreetNetworkManager {
             addStreet(new StreetParkingDeck(new Position(-halfSize*50-50, i*50), Direction.SOUTH));
             addStreet(new StreetParkingDeck(new Position(i*50, -halfSize*50-50), Direction.WEST));
         }
-
-        /*for (int x = 0; x < 2; x++) {
-            for (int y = 0; y < 2; y++) {
-                streets[x][y].outEast.connectOutToInOf(streets[(x+1)%3][y].inWest);
-                streets[(x+1)%3][y].outWest.connectOutToInOf(streets[x][y].inEast);
-
-                streets[x][y].outSouth.connectOutToInOf(streets[x][(y+1)%3].inNorth);
-                streets[x][(y+1)%3].outNorth.connectOutToInOf(streets[x][y].inSouth);
-            }
-        }*/
     }
 
     public void addStreet(Street... streets){

@@ -16,7 +16,7 @@ public class Pathfinder {
             for (Street street : intermediate) {
                 possibleIntermediateTracks.add(street.getTracks());
             }
-            System.out.println("Intermediate =" + Arrays.toString(possibleIntermediateTracks.toArray()));
+            //System.out.println("Intermediate =" + Arrays.toString(possibleIntermediateTracks.toArray()));
             //All Possible ordered Paths
             List<Path> allTrackSequences = new ArrayList<>();
             allTrackSequences.add(new Path(from));
@@ -59,7 +59,7 @@ public class Pathfinder {
         }
     }
     private static Path getPathByTrack(Track from, List<Track> intermediate, Track to){
-        System.out.println("Calculating Path: From = " + from + " To = " + to + " Via = " + Arrays.toString(intermediate.toArray()));
+        //System.out.println("Calculating Path: From = " + from + " To = " + to + " Via = " + Arrays.toString(intermediate.toArray()));
         if (intermediate == null || intermediate.isEmpty()){
             return getPath(from,to);
         }
