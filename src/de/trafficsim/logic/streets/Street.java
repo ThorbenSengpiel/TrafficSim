@@ -12,24 +12,32 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Class representing a Street. All Street Implementations extend this class
+ */
 public abstract class Street {
     protected Position position;
 
     private List<Track> tracks;
 
+    //In and outgoing Tracks
     private List<Track> inTracks;
     private List<Track> outTracks;
 
+    //Type of the Street
     public final StreetType type;
 
+    //In which direction the street is rotated
     protected final Direction rotation;
 
     protected List<Sign> signList = new ArrayList<>();
 
     private List<TrafficPriorityChecker> prioStopPoints = new ArrayList<>();
 
+    //Groups of the PrioStopPoints by Direction
     private List<List<TrafficPriorityChecker>> prioStopPointGroups = new ArrayList<>();
 
+    //Amount of PrioStopPointsGroups to be blocked for deadlock
     protected int stoppedCountForDeadLock = -1;
 
     public Street(Position position, StreetType type, Direction rotation) {
@@ -42,9 +50,11 @@ public abstract class Street {
 
     }
 
+    //Constructor which assumes a non rotated Street
     public Street(Position position, StreetType type) {
         this(position, type, Direction.NORTH);
     }
+
 
     protected Position createPosition(double x, double y) {
         return new Position(x, y).rotate(rotation);
@@ -89,6 +99,12 @@ public abstract class Street {
         }
     }
 
+    /**
+     * Add a Track between two Tracks
+     * @param from - Track to begin with
+     * @param to - Track to end with
+     * @return Track between the two Tracks
+     */
     protected Track addTrackBetween(Track from, Track to) {
         Track track;
         if (from.getOutDir().isHorizontal() ^ to.getInDir().isHorizontal()) {
@@ -100,6 +116,13 @@ public abstract class Street {
         return addTrack(track);
     }
 
+    /**
+     * Add a Track to a specified Position with a given direction
+     * @param from - Starting Track
+     * @param to - End Track
+     * @param outDir - Out Direction
+     * @return Track
+     */
     protected Track addTrackToPos(Track from, Position to, Direction outDir) {
         Track track;
         if (from.getOutDir().isHorizontal() ^ outDir.isHorizontal()) {
@@ -111,18 +134,39 @@ public abstract class Street {
         return addTrack(track);
     }
 
+    /**
+     * Add a Bezier Track between two Tracks with a given weight
+     * @param from - Starting Track
+     * @param to - End Track
+     * @param weight - Weight influencing the curve
+     * @return Bezier Track
+     */
     protected Track addBezierTrackBetween(Track from, Track to, double weight) {
         Track track = new TrackBezier(from.getTo(), from.getOutDir(), to.getFrom(), to.getInDir(), weight, this);
         from.connectOutToInOf(track); track.connectOutToInOf(to);
         return addTrack(track);
     }
 
+    /**
+     * Add a Bezier Track to a specified Position
+     * @param from - Starting Track
+     * @param to - End Track
+     * @param outDir - Direction at the end of the Bezier Curve
+     * @param weight - Weight influencing the curve
+     * @return Bezier Track
+     */
     protected Track addBezierTrackToPos(Track from, Position to, Direction outDir, double weight) {
         Track track = new TrackBezier(from.getTo(), from.getOutDir(), to, outDir, weight, this);
         from.connectOutToInOf(track);
         return addTrack(track);
     }
 
+    /**
+     * Add a Straight Track of given length pointin in the same direction as the starting Track
+     * @param from - Starting Track
+     * @param length - Length of the Straight Track
+     * @return
+     */
     protected Track addTrackStraight(Track from, double length) {
         Track track = new TrackStraight(from.getTo(), from.getTo().add(from.getOutDir().vector.scale(length)), this);
         from.connectOutToInOf(track);
@@ -139,6 +183,9 @@ public abstract class Street {
         return outTracks;
     }
 
+    /**
+     * Remove All Vehicles from the Street
+     */
     public void removeAllVehicles() {
         List<Vehicle> toRemove = new ArrayList<>();
         for (Track track : getTracks()) {
@@ -158,6 +205,10 @@ public abstract class Street {
         return rotation;
     }
 
+    /**
+     * Export the street into a String
+     * @return String representation of the street
+     */
     public String export() {
         return type + ";"+position.x+";"+position.y+";"+rotation;
     }
@@ -175,6 +226,10 @@ public abstract class Street {
         return type + " " + position + " " + rotation;
     }
 
+    /**
+     * Add a priority Stop Point to the street
+     * @param priorityStopPoint - PriorityStopPoint to be added
+     */
     public void addPriorityStopPoint(TrafficPriorityChecker priorityStopPoint) {
         prioStopPoints.add(priorityStopPoint);
         if (!prioStopPointGroups.isEmpty()) {
@@ -200,6 +255,9 @@ public abstract class Street {
         }
     }*/
 
+    /**
+     * Solve all Deadlocks on the Street
+     */
     public void solveDeadLocks() {
         if (prioStopPoints.isEmpty()) {
             return;
@@ -210,6 +268,7 @@ public abstract class Street {
         List<List<TrafficPriorityChecker>> groups = new ArrayList<>(prioStopPointGroups);
         List<TrafficPriorityChecker> waiting = new ArrayList<>();
 
+        //Group used TrafficPriorityCheckPoints by the direction. So that neighboured PrioStopPoints are not counted twice
         for (TrafficPriorityChecker prioStopPoint : prioStopPoints) {
             Vehicle currentVehicle = prioStopPoint.getCurrentVehicle();
             if (currentVehicle != null) {
@@ -226,6 +285,7 @@ public abstract class Street {
                 }
             }
         }
+        //If all PrioStopPoints are blocked then there has to be a Deadlock
         if (groups.size() == 0) {
             TrafficPriorityChecker selected = waiting.get((int) (Math.random() * waiting.size()));
             //debugLetThrough = selected;

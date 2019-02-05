@@ -6,6 +6,9 @@ import de.trafficsim.util.Direction;
 import de.trafficsim.util.geometry.Position;
 import javafx.scene.paint.Color;
 
+/**
+ * Class implementing a Trafficlight
+ */
 public class TrafficLight extends Sign {
 
 
@@ -16,6 +19,7 @@ public class TrafficLight extends Sign {
 
     private int state = RED;
 
+    //Tracks affected by the Trafficlight
     Track[] tracks;
 
     public TrafficLight(Position position, Direction rotation, Track... tracks) {
@@ -23,6 +27,10 @@ public class TrafficLight extends Sign {
         this.tracks = tracks;
     }
 
+    /**
+     * Function to render the TrafficLight with its color
+     * @param agc - GraphicsContext to use for rendering
+     */
     @Override
     public void render(AreaGraphicsContext agc) {
         agc.gc.translate(position.x, position.y);
@@ -45,6 +53,10 @@ public class TrafficLight extends Sign {
         return state;
     }
 
+    /**
+     * Set the state of the TrafficLight to a given value
+     * @param state - The TrafficLight should be set to
+     */
     public void setState(int state) {
         if (state >= 0 && state < 4) {
             this.state = state;
