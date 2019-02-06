@@ -4,6 +4,7 @@ import de.trafficsim.gui.graphics.AreaGraphicsContext;
 import de.trafficsim.logic.network.Path;
 import de.trafficsim.logic.streets.StreetCross;
 import de.trafficsim.logic.streets.StreetRoundAbout;
+import de.trafficsim.logic.streets.StreetTJunction;
 import de.trafficsim.logic.streets.tracks.Track;
 import de.trafficsim.logic.streets.tracks.TrafficPriorityChecker;
 import de.trafficsim.util.Util;
@@ -368,7 +369,7 @@ public class Vehicle {
 
         Track formerTrack = null;
         for (Track track : path.subList(currentTrackNumber,(currentTrackNumber+3 <= path.size())?currentTrackNumber+3:path.size())) {
-            if (track.getStreet() instanceof  StreetCross){
+            if (track.getStreet() instanceof  StreetCross || track.getStreet() instanceof StreetTJunction){
                 if (track.getInDir().isLeftOf(track.getOutDir())){
                     rightBlink = true;
                     break;
