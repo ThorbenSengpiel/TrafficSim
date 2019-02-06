@@ -2,15 +2,16 @@ package de.trafficsim.logic.network;
 
 import de.trafficsim.logic.streets.signs.TrafficLight;
 
+/**
+ * Manager controlling the Trafficlights of a given Street
+ */
 public class TrafficLightManager {
 
     private final TrafficLight[] trafficLights;
 
     private double time;
-    private double greenTime;
-    private double yellowTime;
-    private double switchingTime;
 
+    //Duration of the Traffic Light phases
     private double tSwitch;
     private double tRedYellow;
     private double tGreen;
@@ -23,9 +24,6 @@ public class TrafficLightManager {
 
     public TrafficLightManager(double greenTime, double yellowTime, double switchingTime, boolean grouped, TrafficLight... trafficLights) {
         this.trafficLights = trafficLights;
-        this.greenTime = greenTime;
-        this.yellowTime = yellowTime;
-        this.switchingTime = switchingTime;
         this.grouped = grouped;
         size = grouped ? trafficLights.length/2 : trafficLights.length;
         tSwitch = switchingTime;
@@ -35,8 +33,13 @@ public class TrafficLightManager {
 
     }
 
+    /**
+     * Update the state of the TrafficLight
+     * @param delta - Delta since last tick
+     */
     public void update(double delta) {
         time += delta;
+        //Switch between the Trafficlight phases and the different Trafficlights
         if (time <= tSwitch) {
             trafficLights[currentTrafficLight].setState(TrafficLight.RED);
             if (grouped) {

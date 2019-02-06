@@ -2,6 +2,9 @@ package de.trafficsim.logic.streets;
 
 import de.trafficsim.gui.menu.MenuCategory;
 
+/**
+ * Enum containing all the different Street types. Mainly used for Organizing and creating Streets
+ */
 public enum StreetType {
     STRAIGHT_2_LANE("Straight", MenuCategory.LANES, StreetStraight2Lane.class),
     CURVE("Curve", MenuCategory.LANES, StreetCurve.class),
@@ -25,6 +28,12 @@ public enum StreetType {
         this.clazz = clazz;
     }
 
+    /**
+     * Dynamically create a Street by calling the default constructor
+     * @return Street of given Type
+     * @throws IllegalAccessException - Thrown when the class cant access the Constructor
+     * @throws InstantiationException - Thrown when the instantiation fails
+     */
     public Street create() throws IllegalAccessException, InstantiationException {
         return (Street) clazz.newInstance();
     }

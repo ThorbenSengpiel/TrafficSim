@@ -25,15 +25,18 @@ public class Vehicle {
     protected double velocity = 1.0;
     protected double currentPosInTrack = 0;
 
+    //Maximal Acceleration and Deceleration
     private final double maxAcceleration = 7; // m/s²
     private final double maxDeceleration = 10; // m/s²
 
+    //Calculate the maxVelocity
     public final double maxVelocity = Util.kmhToMs(50); // m/s
 
     protected Track currentTrack;
 
     protected Path path;
 
+    //Current index in the path
     private int currentTrackNumber;
 
     private boolean active = true;
@@ -49,6 +52,12 @@ public class Vehicle {
     }
     String debugBrakeReason = "";
 
+    /**
+     * Get the distance to the
+     * @param position
+     * @param lookDistance
+     * @return
+     */
     public double getLookAheadDist(double position, double lookDistance){
         debugBrakeReason = "";
         List<Vehicle> vehicles = currentTrack.getVehiclesOnTrack();
