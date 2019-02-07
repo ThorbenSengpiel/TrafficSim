@@ -248,12 +248,6 @@ public abstract class Street {
         prioStopPointGroups.add(list);
     }
 
-    //TODO löschen
-    /*public void begin() {
-        for (TrafficPriorityChecker prioStopPoint : prioStopPoints) {
-            prioStopPoint.begin();
-        }
-    }*/
 
     /**
      * Solve all Deadlocks on the Street
