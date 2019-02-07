@@ -8,7 +8,6 @@ import de.trafficsim.logic.streets.signs.Sign;
 import de.trafficsim.logic.streets.tracks.Track;
 import de.trafficsim.util.geometry.Position;
 import de.trafficsim.util.geometry.Rectangle;
-import javafx.scene.paint.Color;
 
 /**
  * Class representing the visual representation of a street

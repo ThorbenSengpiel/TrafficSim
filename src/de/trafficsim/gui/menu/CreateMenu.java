@@ -80,7 +80,6 @@ public class CreateMenu extends ContextMenu {
             this.streetType = streetType;
             setOnAction(event -> {
                 CreateMenu.this.createStreet(streetType);
-                // EditorContextMenu.this.hide();
             });
 
         }

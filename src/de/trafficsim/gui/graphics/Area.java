@@ -72,7 +72,6 @@ public class Area extends Pane {
     public Area() {
         super();
 
-        //setBackground(new Background(new BackgroundFill(Color.RED, null, null)));
         //Init the Pane
         AnchorPane.setBottomAnchor(this, 0.0);
         AnchorPane.setTopAnchor(this, 0.0);
@@ -168,9 +167,7 @@ public class Area extends Pane {
         if (dragged != null) {
             if (e.getCode() == KeyCode.R) {
                 Street street = dragged.getStreet();
-                //StreetNetworkManager.getInstance().removeStreet(street);
                 Street rotated = street.createRotated();
-                //StreetNetworkManager.getInstance().addStreet(rotated);
                 dragged = rotated.createView();
             }
         }
@@ -329,7 +326,6 @@ public class Area extends Pane {
             double rot = vehicle.getDirection();
             agc.gc.rotate(rot);
 
-            //agc.gc.drawImage(img, -CAR_SIZE, -(CAR_SIZE/2), CAR_SIZE*2, CAR_SIZE);
             vehicle.draw(agc, vehicle == selectedVehicle);
 
             //Revert Transformation
@@ -672,11 +668,4 @@ public class Area extends Pane {
         dragStartCenter = pos;
         dragged = street.createView();
     }
-    //TODO Check if needed
-    /*
-    public void setFancyGraphics(boolean selected) {
-        showFancyGraphics = selected;
-    }
-    */
-
 }

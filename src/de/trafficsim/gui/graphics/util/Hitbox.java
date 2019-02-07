@@ -33,7 +33,6 @@ public class Hitbox {
 
     public Rectangle calcBoundingBox() {
 
-        //Position min = new Position(Double.);
         Rectangle boundingBox = shapes.get(0).getBoundingBox();
         for (int i = 1; i < shapes.size(); i++) {
             boundingBox = boundingBox.getBoundingRect(shapes.get(i).getBoundingBox());
